@@ -39,8 +39,14 @@ To get started with this project:
 ![image](https://github.com/user-attachments/assets/890947e8-a18d-402f-a25b-67cd68a55bcb)
 --More--
 ![image](https://github.com/user-attachments/assets/5f442b28-bca6-498d-9a5d-7fda50d4006b)
---NO CREATE || COPY THE SAME FILE--
+
+
+--NO CREATE OR COPY THE SAME FILE--
+
+
 ![image](https://github.com/user-attachments/assets/5660eeda-de5b-46af-9177-92409b0ce5e4)
+
+
 --When deleting entity it deletes files and values as well--
 ![image](https://github.com/user-attachments/assets/cc4f990c-9f65-4235-910e-97ee041d18d2)
 --2--
