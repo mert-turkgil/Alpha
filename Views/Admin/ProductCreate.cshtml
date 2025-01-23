@@ -1,0 +1,378 @@
+@model Alpha.Models.ProductCreateModel
+
+@{
+    ViewData["Title"] = "Create Product with Translations";
+    var availableLanguages = ViewBag.AvailableLanguages as List<string> ?? new List<string>();
+}
+
+@section Css {
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+    .form-label {
+        font-weight: bold;
+        color: #555;
+    }
+    .form-control {
+        border: 1px solid #ced4da;
+        transition: box-shadow 0.3s;
+    }
+    .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+    }
+</style>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        h2 {
+            color: #ff7b00;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        /* Fade-in animations */
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @@keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-container {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .tab-content {
+            margin-top: 15px;
+        }
+
+        .nav-tabs .nav-link {
+            color: #495057;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: #ff7b00;
+            color: #fff;
+        }
+
+        .tooltip {
+            background-color: #ff7b00;
+            color: #fff;
+        }
+
+        .submit-btn {
+            background-color: #ff7b00;
+            color: #fff;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .submit-btn:hover {
+            background-color: #e56b00;
+        }
+    </style>
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Create Product with Translations</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
+    }
+
+    <form asp-action="ProductCreate" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="form-container">
+            <div class="row">
+                <!-- Product Information -->
+                <div class="col-md-6">
+                    <h4>Product Information</h4>
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Name</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="BodyNo" class="form-label">Body No</label>
+                        <input asp-for="BodyNo" class="form-control" />
+                        <span asp-validation-for="BodyNo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Url" class="form-label">URL</label>
+                        <input asp-for="Url" class="form-control" />
+                        <span asp-validation-for="Url" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Upper" class="form-label">Upper</label>
+                        <input asp-for="Upper" class="form-control" />
+                        <span asp-validation-for="Upper" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Lining" class="form-label">Lining</label>
+                        <input asp-for="Lining" class="form-control" />
+                        <span asp-validation-for="Lining" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Protection" class="form-label">Protection</label>
+                        <input asp-for="Protection" class="form-control" />
+                        <span asp-validation-for="Protection" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Brand" class="form-label">Brand</label>
+                        <input asp-for="Brand" class="form-control" />
+                        <span asp-validation-for="Brand" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Standard" class="form-label">Standard</label>
+                        <input asp-for="Standard" class="form-control" />
+                        <span asp-validation-for="Standard" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Midsole" class="form-label">Midsole</label>
+                        <input asp-for="Midsole" class="form-control" />
+                        <span asp-validation-for="Midsole" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Insole" class="form-label">Insole</label>
+                        <input asp-for="Insole" class="form-control" />
+                        <span asp-validation-for="Insole" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Certificate" class="form-label">Certificate</label>
+                        <input asp-for="Certificate" class="form-control" />
+                        <span asp-validation-for="Certificate" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Size" class="form-label">Size</label>
+                        <input asp-for="Size" class="form-control" />
+                        <span asp-validation-for="Size" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Model" class="form-label">Model</label>
+                        <input asp-for="Model" class="form-control" />
+                        <span asp-validation-for="Model" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Sole" class="form-label">Sole</label>
+                        <input asp-for="Sole" class="form-control" />
+                        <span asp-validation-for="Sole" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select asp-for="CategoryId" asp-items="@ViewBag.Categories" class="form-control"></select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+
+
+                </div>
+
+
+                <!-- Translations -->
+                <div class="col-md-6">
+                    @* FR *@
+                    <h5>French Translations (FR)</h5>
+                    <label asp-for="DescriptionFR" class="form-label">Description (FR)</label>
+                    <textarea asp-for="DescriptionFR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="DescriptionFR" class="text-danger"></span>
+
+                    <label asp-for="UpperFR" class="form-label">Upper (FR)</label>
+                    <textarea asp-for="UpperFR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="UpperFR" class="text-danger"></span>
+
+                    <label asp-for="LiningFR" class="form-label">Lining (FR)</label>
+                    <textarea asp-for="LiningFR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="LiningFR" class="text-danger"></span>
+
+                    <label asp-for="ProtectionFR" class="form-label">Protection (FR)</label>
+                    <textarea asp-for="ProtectionFR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="ProtectionFR" class="text-danger"></span>
+
+                    <label asp-for="MidsoleFR" class="form-label">Midsole (FR)</label>
+                    <textarea asp-for="MidsoleFR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="MidsoleFR" class="text-danger"></span>
+
+                    <label asp-for="InsoleFR" class="form-label">Insole (FR)</label>
+                    <textarea asp-for="InsoleFR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="InsoleFR" class="text-danger"></span>
+
+                    <label asp-for="SoleFR" class="form-label">Sole (FR)</label>
+                    <textarea asp-for="SoleFR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="SoleFR" class="text-danger"></span>
+
+                    <hr>
+
+                    @* US *@
+                    <h5>US Translations</h5>
+                    <label asp-for="DescriptionUS" class="form-label">Description (US)</label>
+                    <textarea asp-for="DescriptionUS" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="DescriptionUS" class="text-danger"></span>
+
+                    <label asp-for="UpperUS" class="form-label">Upper (US)</label>
+                    <textarea asp-for="UpperUS" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="UpperUS" class="text-danger"></span>
+
+                    <label asp-for="LiningUS" class="form-label">Lining (US)</label>
+                    <textarea asp-for="LiningUS" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="LiningUS" class="text-danger"></span>
+
+                    <label asp-for="ProtectionUS" class="form-label">Protection (US)</label>
+                    <textarea asp-for="ProtectionUS" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="ProtectionUS" class="text-danger"></span>
+
+                    <label asp-for="MidsoleUS" class="form-label">Midsole (US)</label>
+                    <textarea asp-for="MidsoleUS" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="MidsoleUS" class="text-danger"></span>
+
+                    <label asp-for="InsoleUS" class="form-label">Insole (US)</label>
+                    <textarea asp-for="InsoleUS" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="InsoleUS" class="text-danger"></span>
+
+                    <label asp-for="SoleUS" class="form-label">Sole (US)</label>
+                    <textarea asp-for="SoleUS" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="SoleUS" class="text-danger"></span>
+
+                    <hr>
+
+                    @* DE *@
+                    <h5>German Translations (DE)</h5>
+                    <label asp-for="DescriptionDE" class="form-label">Description (DE)</label>
+                    <textarea asp-for="DescriptionDE" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="DescriptionDE" class="text-danger"></span>
+
+                    <label asp-for="UpperDE" class="form-label">Upper (DE)</label>
+                    <textarea asp-for="UpperDE" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="UpperDE" class="text-danger"></span>
+
+                    <label asp-for="LiningDE" class="form-label">Lining (DE)</label>
+                    <textarea asp-for="LiningDE" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="LiningDE" class="text-danger"></span>
+
+                    <label asp-for="ProtectionDE" class="form-label">Protection (DE)</label>
+                    <textarea asp-for="ProtectionDE" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="ProtectionDE" class="text-danger"></span>
+
+                    <label asp-for="MidsoleDE" class="form-label">Midsole (DE)</label>
+                    <textarea asp-for="MidsoleDE" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="MidsoleDE" class="text-danger"></span>
+
+                    <label asp-for="InsoleDE" class="form-label">Insole (DE)</label>
+                    <textarea asp-for="InsoleDE" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="InsoleDE" class="text-danger"></span>
+
+                    <label asp-for="SoleDE" class="form-label">Sole (DE)</label>
+                    <textarea asp-for="SoleDE" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="SoleDE" class="text-danger"></span>
+
+                    <hr>
+
+                    @* TR *@
+                    <h5>Turkish Translations (TR)</h5>
+                    <label asp-for="DescriptionTR" class="form-label">Description (TR)</label>
+                    <textarea asp-for="DescriptionTR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="DescriptionTR" class="text-danger"></span>
+
+                    <label asp-for="UpperTR" class="form-label">Upper (TR)</label>
+                    <textarea asp-for="UpperTR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="UpperTR" class="text-danger"></span>
+
+                    <label asp-for="LiningTR" class="form-label">Lining (TR)</label>
+                    <textarea asp-for="LiningTR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="LiningTR" class="text-danger"></span>
+
+                    <label asp-for="ProtectionTR" class="form-label">Protection (TR)</label>
+                    <textarea asp-for="ProtectionTR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="ProtectionTR" class="text-danger"></span>
+
+                    <label asp-for="MidsoleTR" class="form-label">Midsole (TR)</label>
+                    <textarea asp-for="MidsoleTR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="MidsoleTR" class="text-danger"></span>
+
+                    <label asp-for="InsoleTR" class="form-label">Insole (TR)</label>
+                    <textarea asp-for="InsoleTR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="InsoleTR" class="text-danger"></span>
+
+                    <label asp-for="SoleTR" class="form-label">Sole (TR)</label>
+                    <textarea asp-for="SoleTR" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="SoleTR" class="text-danger"></span>
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <button type="submit" class="btn submit-btn px-5">Save Product</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function (e) {
+            let inputs = document.querySelectorAll('input');
+            let hasEmptyField = false;
+
+            inputs.forEach(input => {
+                if (input.value.trim() === "") {
+                    input.style.borderColor = "red";
+                    hasEmptyField = true;
+                } else {
+                    input.style.borderColor = "";
+                }
+            });
+
+            if (hasEmptyField) {
+                e.preventDefault();
+                alert("Please fill in all fields before submitting!");
+            }
+        });
+    </script>
+}

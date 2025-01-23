@@ -1,0 +1,70 @@
+@model List<Alpha.Models.BlogIndexModel>
+
+<h4 class="text-success text-uppercase mb-0 ms-3">@ViewBag.Message</h4>
+<h3 class="text-dark text-uppercase mb-4 ms-3">@ViewBag.Head</h3>
+
+
+<!-- Blog Grid -->
+<section class="container-xxl my-3 masonry-section">
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="blogGrid">
+
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var blog = Model[i];
+
+            // Get Culture
+            string culture = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower();
+
+            // Blog Data
+            var blogData = blog.Blogs?.FirstOrDefault();
+
+            // Handle localized title and content
+            string localizedTitle = blog.GetTitleByCulture(culture) ?? "Untitled";
+            string localizedContent = blog.GetContentByCulture(culture, blogData?.Image) ?? "No content available.";
+
+            // Handle Image URL
+            string imageUrl = !string.IsNullOrEmpty(blogData?.Image)
+                ? Url.Content($"~/img/{blogData.Image}") // Dynamic Path
+                : Url.Content("~/img/default-image.jpg"); // Fallback Image
+
+            // Handle Blog URL
+            string blogUrl = Url.Action("BlogDetails", "Home", new { id = blogData?.BlogId ?? 0, type = "blog" }) ?? "#";
+
+            <!-- Blog Card -->
+            <div class="@(Model.Count == 1 ? "col-12" : "col-md-4")  @(Model.Count == 1 ? "single-card" : "") blog-item @(i >= 3 ? "d-none" : "")" data-index="@i">
+                <!-- Make the card clickable -->
+                <a href="@blogUrl" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm border-0 card-hover">
+                        <!-- Image -->
+                        <img src="@imageUrl"
+                             class="card-img-top" 
+                             alt="@localizedTitle"
+                             loading="lazy" 
+                             onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400?text=Image+Unavailable';">
+
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <h5 class="card-title">@localizedTitle</h5>
+                            <p class="card-text">@Html.Raw(Alpha.Services.HtmlUtility.GetExcerpt(localizedContent, Model.Count == 1 ? 500 : 150))</p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="card-footer">
+                            <small class="text-muted">
+                                Published on @blogData?.Date.ToShortDateString() by <strong>@blogData?.Author</strong>
+                            </small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Load More Button -->
+@if (Model.Count >= 4) // Show only if there are 4 or more blogs
+{
+    <div class="text-center mt-4">
+        <button id="loadMoreBtn" class="btn btn-success">Load More</button>
+    </div>
+}

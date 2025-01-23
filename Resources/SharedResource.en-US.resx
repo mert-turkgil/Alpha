@@ -1,0 +1,646 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ProductDetail_CertificateLabel" xml:space="preserve">
+    <value>Certificate</value>
+  </data>
+  <data name="ProductDetail_StandardLabel" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="ProductDetail_SizeLabel" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="ProductDetail_BrandLabel" xml:space="preserve">
+    <value>Brand</value>
+  </data>
+  <data name="ProductDetail_DescriptionLabel" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ProductDetail_InsoleLabel" xml:space="preserve">
+    <value>Insole</value>
+  </data>
+  <data name="ProductDetail_UpperLabel" xml:space="preserve">
+    <value>Upper</value>
+  </data>
+  <data name="ProductDetail_ImagesLabel" xml:space="preserve">
+    <value>Images</value>
+  </data>
+  <data name="ProductDetail_DateAddedLabel" xml:space="preserve">
+    <value>Date Added</value>
+  </data>
+  <data name="ProductDetail_CategoryLabel" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="ProductDetail_BodyNoLabel" xml:space="preserve">
+    <value>Body Number</value>
+  </data>
+  <data name="ProductDetail_BrandFieldLabel" xml:space="preserve">
+    <value>Brand</value>
+  </data>
+  <data name="ProductDetail_ModelLabel" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="ProductDetail_SoleLabel" xml:space="preserve">
+    <value>Sole</value>
+  </data>
+  <data name="ProductDetail_LiningLabel" xml:space="preserve">
+    <value>Lining</value>
+  </data>
+  <data name="ProductDetail_ProtectionLabel" xml:space="preserve">
+    <value>Protection</value>
+  </data>
+  <data name="ProductDetail_MidsoleLabel" xml:space="preserve">
+    <value>Midsole</value>
+  </data>
+  <data name="ViewButton" xml:space="preserve">
+    <value>View Details</value>
+  </data>
+  <data name="BlogDetail_EmptyCategory" xml:space="preserve">
+    <value>Common use of shoes</value>
+  </data>
+  <data name="BlogDetail_PublishedOn" xml:space="preserve">
+    <value>Published on</value>
+  </data>
+  <data name="BlogDetail_ByAuthor" xml:space="preserve">
+    <value>by</value>
+  </data>
+  <data name="BlogDetail_RecentPosts" xml:space="preserve">
+    <value>Recent Posts</value>
+  </data>
+  <data name="BlogDetail_CategoriesTitle" xml:space="preserve">
+    <value>Brand</value>
+  </data>
+  <data name="BlogDetail_NextPost" xml:space="preserve">
+    <value>Next Post</value>
+  </data>
+  <data name="BlogDetail_PreviousPost" xml:space="preserve">
+    <value>Previous Post</value>
+  </data>
+  <data name="BlogDetail_RelatedCategories" xml:space="preserve">
+    <value>Related Categories</value>
+  </data>
+  <data name="BlogDetail_RelatedProducts" xml:space="preserve">
+    <value>Related Products</value>
+  </data>
+  <data name="BlogDetail_EmptyVideoMsg" xml:space="preserve">
+    <value>No video available.</value>
+  </data>
+  <data name="BlogDetail_EmptyMapMsg" xml:space="preserve">
+    <value>No map available.</value>
+  </data>
+  <data name="Contact_OurAddressValue" xml:space="preserve">
+    <value>123 Industrial Park, Alpha City, Country</value>
+  </data>
+  <data name="Contact_PhoneNumberValue" xml:space="preserve">
+    <value>+1 (555) 123-4567</value>
+  </data>
+  <data name="Contact_EmailAddressValue" xml:space="preserve">
+    <value>info@alphasafetyshoes.com</value>
+  </data>
+  <data name="Contact_Title" xml:space="preserve">
+    <value>Contact Us</value>
+  </data>
+  <data name="Contact_HeroDescription" xml:space="preserve">
+    <value>We’re here to assist you. Reach out to us for any questions, feedback, or support.</value>
+  </data>
+  <data name="Contact_OurAddress" xml:space="preserve">
+    <value>Our Address</value>
+  </data>
+  <data name="Contact_PhoneNumber" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+  <data name="Contact_EmailUs" xml:space="preserve">
+    <value>Email Us</value>
+  </data>
+  <data name="Contact_SendUsMessage" xml:space="preserve">
+    <value>Send Us a Message</value>
+  </data>
+  <data name="Contact_YourName" xml:space="preserve">
+    <value>Your Name</value>
+  </data>
+  <data name="Contact_YourEmail" xml:space="preserve">
+    <value>Your Email</value>
+  </data>
+  <data name="Contact_Subject" xml:space="preserve">
+    <value>Subject</value>
+  </data>
+  <data name="Contact_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Contact_SendMessageButton" xml:space="preserve">
+    <value>Send Message</value>
+  </data>
+  <data name="Contact_OurLocation" xml:space="preserve">
+    <value>Our Location</value>
+  </data>
+  <data name="Contact_FollowUsSocialMedia" xml:space="preserve">
+    <value>Follow Us on Social Media</value>
+  </data>
+  <data name="Services_Title" xml:space="preserve">
+    <value>Our Services</value>
+  </data>
+  <data name="Services_HeroDescription" xml:space="preserve">
+    <value>Discover Alpha Safety Shoes' premium products and services tailored to protect your workforce.</value>
+  </data>
+  <data name="Services_CatalogFilterTitle" xml:space="preserve">
+    <value>Catalog &amp; Filters</value>
+  </data>
+  <data name="Services_ViewCatalogButton" xml:space="preserve">
+    <value>View Our Catalog</value>
+  </data>
+  <data name="Services_FilterProductsTitle" xml:space="preserve">
+    <value>Filter Products</value>
+  </data>
+  <data name="Services_CategoryLabel" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Services_BrandLabel" xml:space="preserve">
+    <value>Brand</value>
+  </data>
+  <data name="Services_BrandPlaceholder" xml:space="preserve">
+    <value>Enter brand name</value>
+  </data>
+  <data name="Services_SearchProductLabel" xml:space="preserve">
+    <value>Search Product</value>
+  </data>
+  <data name="Services_ApplyFiltersButton" xml:space="preserve">
+    <value>Apply Filters</value>
+  </data>
+  <data name="Services_OurProductsTitle" xml:space="preserve">
+    <value>Our Products</value>
+  </data>
+  <data name="Services_NoProductsMessage" xml:space="preserve">
+    <value>No products found matching your criteria.</value>
+  </data>
+  <data name="Privacy_Title" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="Privacy_HeroDescription" xml:space="preserve">
+    <value>At Alpha Safety Shoes, we are committed to protecting your personal information and respecting your privacy.</value>
+  </data>
+  <data name="Privacy_InfoCollectionTitle" xml:space="preserve">
+    <value>1. Information We Collect</value>
+  </data>
+  <data name="Privacy_InfoCollectionPersonal" xml:space="preserve">
+    <value>&lt;strong&gt;Personal Information:&lt;/strong&gt; Name, email address, phone number, and shipping/billing address.</value>
+  </data>
+  <data name="Privacy_InfoCollectionPayment" xml:space="preserve">
+    <value>&lt;strong&gt;Payment Information:&lt;/strong&gt; Payment details when making purchases.</value>
+  </data>
+  <data name="Privacy_InfoCollectionUsage" xml:space="preserve">
+    <value>&lt;strong&gt;Usage Data:&lt;/strong&gt; Information about website usage.</value>
+  </data>
+  <data name="Privacy_InfoCollectionCookies" xml:space="preserve">
+    <value>&lt;strong&gt;Cookies:&lt;/strong&gt; Enhancing your experience and improving site performance.</value>
+  </data>
+  <data name="Privacy_UsageTitle" xml:space="preserve">
+    <value>2. How We Use Your Information</value>
+  </data>
+  <data name="Privacy_UsageIntro" xml:space="preserve">
+    <value>We use the collected data for the following purposes:</value>
+  </data>
+  <data name="Privacy_UsagePurpose1" xml:space="preserve">
+    <value>To process orders, deliver products, and provide customer support.</value>
+  </data>
+  <data name="Privacy_UsagePurpose2" xml:space="preserve">
+    <value>To improve website functionality and experience.</value>
+  </data>
+  <data name="Privacy_UsagePurpose3" xml:space="preserve">
+    <value>To send updates and promotions (opt-in only).</value>
+  </data>
+  <data name="Privacy_ProtectionTitle" xml:space="preserve">
+    <value>3. How We Protect Your Data</value>
+  </data>
+  <data name="Privacy_ProtectionIntro" xml:space="preserve">
+    <value>Your security is our top priority. Measures include:</value>
+  </data>
+  <data name="Privacy_ProtectionSSL" xml:space="preserve">
+    <value>SSL encryption for secure data transfers.</value>
+  </data>
+  <data name="Privacy_ProtectionFirewalls" xml:space="preserve">
+    <value>Firewalls and secure servers.</value>
+  </data>
+  <data name="Privacy_ProtectionAccess" xml:space="preserve">
+    <value>Limited access to authorized personnel only.</value>
+  </data>
+  <data name="Privacy_SharingTitle" xml:space="preserve">
+    <value>4. Sharing Your Information</value>
+  </data>
+  <data name="Privacy_SharingIntro" xml:space="preserve">
+    <value>We share your information only with:</value>
+  </data>
+  <data name="Privacy_SharingThirdParty" xml:space="preserve">
+    <value>Trusted third-party services for payments and orders.</value>
+  </data>
+  <data name="Privacy_SharingLegal" xml:space="preserve">
+    <value>Legal authorities, when required.</value>
+  </data>
+  <data name="Privacy_RightsTitle" xml:space="preserve">
+    <value>5. Your Rights</value>
+  </data>
+  <data name="Privacy_RightsAccess" xml:space="preserve">
+    <value>Access and correct your data.</value>
+  </data>
+  <data name="Privacy_RightsDelete" xml:space="preserve">
+    <value>Request deletion of your data.</value>
+  </data>
+  <data name="Privacy_RightsOptOut" xml:space="preserve">
+    <value>Opt-out of promotional communications.</value>
+  </data>
+  <data name="BlogList_Title" xml:space="preserve">
+    <value>Our Blog</value>
+  </data>
+  <data name="BlogList_SearchLabel" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="BlogList_Description" xml:space="preserve">
+    <value>Explore the latest news, tips, and updates from Alpha Safety Shoes.</value>
+  </data>
+  <data name="BlogList_CategoryLabel" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="BlogList_AllCategories" xml:space="preserve">
+    <value>All Categories</value>
+  </data>
+  <data name="BlogList_BrandLabel" xml:space="preserve">
+    <value>Brand</value>
+  </data>
+  <data name="BlogList_BrandPlaceholder" xml:space="preserve">
+    <value>Enter brand name</value>
+  </data>
+  <data name="BlogList_ApplyFiltersButton" xml:space="preserve">
+    <value>Apply Filters</value>
+  </data>
+  <data name="BlogList_NoPostsMessage" xml:space="preserve">
+    <value>No blog posts available at this time. Check back soon!</value>
+  </data>
+  <data name="BlogList_ReadMoreButton" xml:space="preserve">
+    <value>Read More</value>
+  </data>
+  <data name="Privacy_ContactTitle" xml:space="preserve">
+    <value>Contact Us</value>
+  </data>
+  <data name="Privacy_ContactQuestion" xml:space="preserve">
+    <value>If you have any questions about our Privacy Policy, feel free to reach out to us:</value>
+  </data>
+  <data name="Privacy_ContactEmail" xml:space="preserve">
+    <value>info@alphasafetyshoes.com</value>
+  </data>
+  <data name="Privacy_ContactPhone" xml:space="preserve">
+    <value>+1 (555) 123-4567</value>
+  </data>
+  <data name="Privacy_ContactAddress" xml:space="preserve">
+    <value>123 Industrial Park, Alpha City</value>
+  </data>
+  <data name="About_HeroTitle" xml:space="preserve">
+    <value>About Alpha Safety Shoes</value>
+  </data>
+  <data name="About_HeroDescription" xml:space="preserve">
+    <value>Combining Safety, Innovation, and Comfort to Protect Your Workforce.</value>
+  </data>
+  <data name="About_WhoWeAreTitle" xml:space="preserve">
+    <value>Who We Are</value>
+  </data>
+  <data name="About_WhoWeAreDescription1" xml:space="preserve">
+    <value>&lt;strong&gt;Alpha Safety Shoes&lt;/strong&gt; is committed to providing premium safety footwear that meets the highest occupational safety standards. With years of expertise, advanced technology, and world-class production facilities, we have become a trusted name in workplace safety.</value>
+  </data>
+  <data name="About_WhoWeAreDescription2" xml:space="preserve">
+    <value>From &lt;strong&gt;industrial boots&lt;/strong&gt; to &lt;strong&gt;lightweight personnel shoes&lt;/strong&gt;, our products are designed to deliver superior protection, comfort, and durability.</value>
+  </data>
+  <data name="About_CoreValuesTitle" xml:space="preserve">
+    <value>Our Core Values</value>
+  </data>
+  <data name="About_QualityAssuranceTitle" xml:space="preserve">
+    <value>Quality Assurance</value>
+  </data>
+  <data name="About_QualityAssuranceDescription" xml:space="preserve">
+    <value>Certified products meeting ISO and CE standards.</value>
+  </data>
+  <data name="About_InnovationTitle" xml:space="preserve">
+    <value>Innovation</value>
+  </data>
+  <data name="About_InnovationDescription" xml:space="preserve">
+    <value>State-of-the-art facilities for advanced safety solutions.</value>
+  </data>
+  <data name="About_CustomerFocusTitle" xml:space="preserve">
+    <value>Customer Focus</value>
+  </data>
+  <data name="About_CustomerFocusDescription" xml:space="preserve">
+    <value>We prioritize your safety and comfort at every step.</value>
+  </data>
+  <data name="About_SustainabilityTitle" xml:space="preserve">
+    <value>Sustainability</value>
+  </data>
+  <data name="About_SustainabilityDescription" xml:space="preserve">
+    <value>Eco-friendly practices in production and distribution.</value>
+  </data>
+  <data name="About_WhyChooseUsTitle" xml:space="preserve">
+    <value>Why Choose Us</value>
+  </data>
+  <data name="About_ExperienceTitle" xml:space="preserve">
+    <value>Experience</value>
+  </data>
+  <data name="About_ExperienceDescription" xml:space="preserve">
+    <value>With decades of experience, we bring unparalleled expertise to every project.</value>
+  </data>
+  <data name="About_FocusTitle" xml:space="preserve">
+    <value>Focus</value>
+  </data>
+  <data name="About_FocusDescription" xml:space="preserve">
+    <value>Our customer-centric approach ensures your satisfaction is our priority.</value>
+  </data>
+  <data name="About_TrustTitle" xml:space="preserve">
+    <value>Trust</value>
+  </data>
+  <data name="About_TrustDescription" xml:space="preserve">
+    <value>We have built long-lasting relationships based on trust and reliability.</value>
+  </data>
+  <data name="About_ProductRangeTitle" xml:space="preserve">
+    <value>Our Product Range</value>
+  </data>
+  <data name="About_ProductRangeDescription" xml:space="preserve">
+    <value>Discover our comprehensive range of safety footwear tailored to meet diverse workplace needs.</value>
+  </data>
+  <data name="About_SafetyShoesTitle" xml:space="preserve">
+    <value>Safety Shoes</value>
+  </data>
+  <data name="About_SafetyShoesDescription" xml:space="preserve">
+    <value>Lightweight and robust footwear for everyday workplace safety.</value>
+  </data>
+  <data name="About_IndustrialBootsTitle" xml:space="preserve">
+    <value>Industrial Boots</value>
+  </data>
+  <data name="About_IndustrialBootsDescription" xml:space="preserve">
+    <value>Heavy-duty protection designed for harsh industrial conditions.</value>
+  </data>
+  <data name="About_PersonnelShoesTitle" xml:space="preserve">
+    <value>Personnel Shoes</value>
+  </data>
+  <data name="About_PersonnelShoesDescription" xml:space="preserve">
+    <value>Comfortable, stylish footwear for professional environments.</value>
+  </data>
+  <data name="Company1" xml:space="preserve">
+    <value>OpenAi</value>
+  </data>
+  <data name="Company2" xml:space="preserve">
+    <value>Tesla</value>
+  </data>
+  <data name="Company3" xml:space="preserve">
+    <value>Apple</value>
+  </data>
+  <data name="BodyQuote1" xml:space="preserve">
+    <value>“Alpha safety shoes are lightweight and incredibly durable. Our team loves them!”</value>
+  </data>
+  <data name="BodyQuote2" xml:space="preserve">
+    <value>“A perfect balance between safety and comfort. Highly recommended!”</value>
+  </data>
+  <data name="BodyQuote3" xml:space="preserve">
+    <value>“Alpha safety shoes are lightweight and incredibly durable. Our team loves them!”</value>
+  </data>
+  <data name="Talker1" xml:space="preserve">
+    <value>Mert Türkgil</value>
+  </data>
+  <data name="Talker2" xml:space="preserve">
+    <value>Mahmut Aksöz</value>
+  </data>
+  <data name="Talker3" xml:space="preserve">
+    <value>Deneme deneme</value>
+  </data>
+  <data name="HeaderQuote" xml:space="preserve">
+    <value>What Our Clients Say</value>
+  </data>
+  <data name="QuickLink" xml:space="preserve">
+    <value>QuickLinks</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>Follow Us</value>
+  </data>
+  <data name="FooterHead" xml:space="preserve">
+    <value>Employee Access</value>
+  </data>
+  <data name="FooterBody" xml:space="preserve">
+    <value>Authorized personnel can go dashboard in here.</value>
+  </data>
+  <data name="HeroTitle" xml:space="preserve">
+    <value>Premium Safety Shoes</value>
+  </data>
+  <data name="HeroDescription" xml:space="preserve">
+    <value>Protect your workforce with Alpha's high-quality, durable, and innovative safety footwear.</value>
+  </data>
+  <data name="HeroLink" xml:space="preserve">
+    <value>Explore Products</value>
+  </data>
+  <data name="HomeCategoryBody" xml:space="preserve">
+    <value>Safety First</value>
+  </data>
+  <data name="HomeCategoryHead" xml:space="preserve">
+    <value>Explore our premium Safety shoes</value>
+  </data>
+  <data name="HomeProductHead" xml:space="preserve">
+    <value>Explore our premium safety shoes.</value>
+  </data>
+  <data name="HomeBlogHead" xml:space="preserve">
+    <value>Explore our blog for expert tips on choosing &amp; maintaining</value>
+  </data>
+  <data name="NoRecentProducts" xml:space="preserve">
+    <value>No Recent Products</value>
+  </data>
+  <data name="Recently" xml:space="preserve">
+    <value>Recently</value>
+  </data>
+  <data name="LastYear" xml:space="preserve">
+    <value>Last Year</value>
+  </data>
+  <data name="LastWeek" xml:space="preserve">
+    <value>Last Week</value>
+  </data>
+  <data name="PreviouslyAdded" xml:space="preserve">
+    <value>Previously Added</value>
+  </data>
+  <data name="LastMonth" xml:space="preserve">
+    <value>Last Month</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>Services</value>
+  </data>
+  <data name="Blog" xml:space="preserve">
+    <value>Blog</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="NH1" xml:space="preserve">
+    <value>Reliable</value>
+  </data>
+  <data name="NH2" xml:space="preserve">
+    <value>Solid</value>
+  </data>
+  <data name="NH3" xml:space="preserve">
+    <value>Work Footwear</value>
+  </data>
+  <data name="EmailSubject_ThankYou" xml:space="preserve">
+    <value>Thank You for Contacting Alpha</value>
+  </data>
+  <data name="EmailBody_ThankYou" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ContactSuccessMessage" xml:space="preserve">
+    <value>Your message has been sent successfully.</value>
+  </data>
+  <data name="ContactErrorMessage" xml:space="preserve">
+    <value>There was an error sending your message. Please try again later.</value>
+  </data>
+  <data name="Carousel_3_Title" xml:space="preserve">
+    <value>Discover Nature</value>
+  </data>
+  <data name="Carousel_3_Description" xml:space="preserve">
+    <value>Explore the untouched beauty of nature with our exclusive travel packages.</value>
+  </data>
+  <data name="Carousel_3_LinkText" xml:space="preserve">
+    <value>Learn More</value>
+  </data>
+  <data name="Carousel_4_Title" xml:space="preserve">
+    <value>Steel Toe Work Boots</value>
+  </data>
+  <data name="Carousel_4_Description" xml:space="preserve">
+    <value>Durable steel toe work boots for ultimate protection and comfort on construction sites.</value>
+  </data>
+  <data name="Carousel_4_LinkText" xml:space="preserve">
+    <value>Shop Now</value>
+  </data>
+  <data name="Carousel_5_Title" xml:space="preserve">
+    <value>Slip-Resistant Safety Shoes</value>
+  </data>
+  <data name="Carousel_5_Description" xml:space="preserve">
+    <value>Lightweight safety shoes with slip-resistant soles for wet and oily surfaces.</value>
+  </data>
+  <data name="Carousel_5_LinkText" xml:space="preserve">
+    <value>Learn More</value>
+  </data>
+  <data name="Carousel_6_Title" xml:space="preserve">
+    <value>Waterproof Safety Boots</value>
+  </data>
+  <data name="Carousel_6_Description" xml:space="preserve">
+    <value>Stay dry and safe with waterproof safety boots, ideal for outdoor work environments.</value>
+  </data>
+  <data name="Carousel_6_LinkText" xml:space="preserve">
+    <value>Explore</value>
+  </data>
+  <data name="Carousel_7_Title" xml:space="preserve">
+    <value>Composite Toe Safety Shoes</value>
+  </data>
+  <data name="Carousel_7_Description" xml:space="preserve">
+    <value>Advanced protection with lightweight composite toe safety shoes.</value>
+  </data>
+  <data name="Carousel_7_LinkText" xml:space="preserve">
+    <value>Check Now</value>
+  </data>
+  <data name="Product_1_Description_en-US" xml:space="preserve">
+    <value>Safety shoes designed for optimal protection in industrial environments.</value>
+  </data>
+  <data name="Product_1_Upper_en-US" xml:space="preserve">
+    <value>Durable and sturdy leather upper.</value>
+  </data>
+  <data name="Product_1_Lining_en-US" xml:space="preserve">
+    <value>Breathable lining for added comfort.</value>
+  </data>
+  <data name="Product_1_Protection_en-US" xml:space="preserve">
+    <value>Reinforced steel toe cap for toe protection.</value>
+  </data>
+  <data name="Product_1_Midsole_en-US" xml:space="preserve">
+    <value>Puncture-resistant midsole for enhanced safety</value>
+  </data>
+  <data name="Product_1_Insole_en-US" xml:space="preserve">
+    <value>Memory foam insole for all-day comfort.</value>
+  </data>
+  <data name="Product_1_Sole_en-US" xml:space="preserve">
+    <value>Non-slip rubber outsole for superior grip.</value>
+  </data>
+  <data name="Product_2_Description_en-US" xml:space="preserve">
+    <value>High-quality safety shoes designed for industrial and construction environments.</value>
+  </data>
+  <data name="Product_2_Upper_en-US" xml:space="preserve">
+    <value>Durable Leather Upper</value>
+  </data>
+  <data name="Product_2_Lining_en-US" xml:space="preserve">
+    <value>Breathable Fabric Lining</value>
+  </data>
+  <data name="Product_2_Protection_en-US" xml:space="preserve">
+    <value>Reinforced Steel Toe</value>
+  </data>
+  <data name="Product_2_Midsole_en-US" xml:space="preserve">
+    <value>Puncture-Resistant Kevlar</value>
+  </data>
+  <data name="Product_2_Insole_en-US" xml:space="preserve">
+    <value>Memory Foam for Comfort</value>
+  </data>
+  <data name="Product_2_Sole_en-US" xml:space="preserve">
+    <value>Anti-Slip Rubber Sole</value>
+  </data>
+</root>

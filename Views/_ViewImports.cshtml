@@ -1,0 +1,12 @@
+﻿@using Alpha
+@using Alpha.Models
+@using Alpha.Extensions
+@using Alpha.Services
+@using Newtonsoft.Json
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<SharedResource> Localizer
+@inject INavbarService NavbarService
+@inject IFooterService FooterService
+@inject LanguageService _localization
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

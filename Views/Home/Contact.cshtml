@@ -1,0 +1,94 @@
+@model Alpha.Models.ContactViewModel
+
+@{
+    ViewData["Title"] = @Model.Contact_Title;
+}
+@section Css{ 
+<!-- Include Animate.css CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+}
+
+<!-- Contact Us Section -->
+<div class="container my-5">
+    <h1 class="text-success text-uppercase fw-bold mb-4 animate__animated animate__fadeInDown" style="font-family: Arial, sans-serif;"> @Model.Contact_Title</h1>
+    <p class="text-muted mb-5 animate__animated animate__fadeInUp">@Model.Contact_HeroDescription</p>
+
+    <!-- Contact Information Row -->
+    <div class="row mb-5">
+        <!-- Address -->
+        <div class="col-md-4 text-center mb-4 animate__animated animate__fadeInLeft animate__delay-1s">
+            <div class="card h-100 shadow-sm border-0 p-4">
+                <i class="fa fa-map-marker-alt fa-3x text-success mb-3"></i>
+                <h5 class="fw-bold">@Model.Contact_OurAddress</h5>
+                <p class="text-muted">@Model.Contact_OurAddressValue</p>
+            </div>
+        </div>
+        <!-- Phone -->
+        <div class="col-md-4 text-center mb-4 animate__animated animate__fadeIn animate__delay-1s">
+            <div class="card h-100 shadow-sm border-0 p-4">
+                <i class="fa fa-phone fa-3x text-success mb-3"></i>
+                <h5 class="fw-bold">@Model.Contact_PhoneNumber</h5>
+                <p class="text-muted">@Model.Contact_PhoneNumberValue</p>
+            </div>
+        </div>
+        <!-- Email -->
+        <div class="col-md-4 text-center mb-4 animate__animated animate__fadeInRight animate__delay-1s">
+            <div class="card h-100 shadow-sm border-0 p-4">
+                <i class="fa fa-envelope fa-3x text-success mb-3"></i>
+                <h5 class="fw-bold">@Model.Contact_EmailUs</h5>
+                <p class="text-muted">
+                    <a href="mailto:info@alphasafetyshoes.com" class="text-success">@Model.Contact_EmailAddressValue</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="row">
+        <div class="col-md-7 mb-4 animate__animated animate__slideInLeft">
+            <h4 class="fw-bold mb-3">@Model.Contact_SendUsMessage</h4>
+                <form asp-action="Contact" asp-controller="Home" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="name" class="form-label">@Model.Contact_YourName</label>
+                        <input type="text" class="form-control" id="name" name="Name" placeholder="@Model.Contact_YourName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">@Model.Contact_YourEmail</label>
+                        <input type="email" class="form-control" id="email" name="Email" placeholder="@Model.Contact_YourEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">@Model.Contact_Subject</label>
+                        <input type="text" class="form-control" id="subject" name="Subject" placeholder="@Model.Contact_Subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">@Model.Contact_Message</label>
+                        <textarea class="form-control" id="message" name="Message" rows="5" placeholder="@Model.Contact_Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">@Model.Contact_SendMessageButton</button>
+                </form>
+
+
+        </div>
+
+        <!-- Google Maps Integration -->
+        <div class="col-md-5 animate__animated animate__zoomIn">
+            <h4 class="fw-bold mb-3">@Model.Contact_OurLocation</h4>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1845.9883856369831!2d29.177626559190738!3d40.889669490332906!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cac39baeb70b37%3A0xd4d8ed6cdd18d46f!2zQmHFn2Fr!5e0!3m2!1str!2str!4v1734220831284!5m2!1str!2str"
+                width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+
+    <!-- Social Media Links -->
+    <div class="row text-center mt-5">
+        <h4 class="fw-bold mb-4 animate__animated animate__fadeInUp">@Model.Contact_FollowUsSocialMedia</h4>
+        <div class="d-flex justify-content-center gap-4">
+            <a href="https://twitter.com" target="_blank" class="text-success fs-3 animate__animated animate__bounce animate__infinite"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com" target="_blank" class="text-success fs-3 animate__animated animate__bounce animate__infinite"><i class="fab fa-instagram"></i></a>
+            <a href="https://linkedin.com" target="_blank" class="text-success fs-3 animate__animated animate__bounce animate__infinite"><i class="fab fa-linkedin"></i></a>
+            <a href="https://facebook.com" target="_blank" class="text-success fs-3 animate__animated animate__bounce animate__infinite"><i class="fab fa-facebook"></i></a>
+        </div>
+    </div>
+</div>

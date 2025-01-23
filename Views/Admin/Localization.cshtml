@@ -1,0 +1,139 @@
+@model List<LocalizationModel>
+@{
+    ViewData["Title"] = "Localization Management";
+    var currentLanguage = ViewBag.CurrentLanguage as string;
+    var availableLanguages = ViewBag.AvailableLanguages as List<string>;
+}
+
+@section Css {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" />
+    <style>
+        .edit-btn {
+            background-color: #ffc107;
+            color: #000;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background-color: #e0a800;
+        }
+
+        .lang-selector {
+            margin-bottom: 20px;
+        }
+    </style>
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4" style="color: #ff7b00;">Localization Management</h2>
+
+    <!-- Language Selector -->
+    <form method="get" asp-action="Localization" class="lang-selector">
+        <label for="lang">Select Language:</label>
+        <select name="lang" id="lang" class="form-control" onchange="this.form.submit()">
+            @if (ViewBag.AvailableLanguages != null && ViewBag.AvailableLanguages.Count > 0)
+            {
+                foreach (var lang in ViewBag.AvailableLanguages)
+                {
+                    <option value="@lang" selected="@(lang == ViewBag.CurrentLanguage)">@lang</option>
+                }
+            }
+            else
+            {
+                <option disabled>No languages available</option>
+            }
+        </select>
+    </form>
+
+
+
+
+    <!-- Success/Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <!-- Translations Table -->
+    <table id="localizationTable" class="display">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Value</th>
+                <th>Comment</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+            <tbody>
+                @foreach (var translation in Model)
+                {
+                    <tr>
+                        <form method="post" asp-action="EditTranslation" class="edit-translation-form">
+                            <td>@translation.Key</td>
+                            <td>
+                                <input type="hidden" name="name" value="@translation.Key" />
+                                <input type="hidden" name="lang" value="@currentLanguage" />
+                                <input type="text" name="value" value="@translation.Value" class="form-control" />
+                            </td>
+                            <td>
+                                <input type="text" name="comment" value="@translation.Comment" class="form-control" />
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-success btn-sm">Save</button>
+                            </td>
+                        </form>
+                    </tr>
+                }
+            </tbody>
+
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#localizationTable').DataTable();
+        });
+    </script>
+    <script>
+$(document).ready(function () {
+    $(".edit-translation-form").submit(function (event) {
+        event.preventDefault();
+
+        const form = $(this);
+        const formData = form.serialize();
+        const row = form.closest("tr");
+
+        $.ajax({
+            type: "POST",
+            url: form.attr("action"),
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message); // Show success message
+                    row.css("background-color", "#d4edda"); // Green background for success
+                    setTimeout(() => row.css("background-color", ""), 1000);
+                } else {
+                    alert(response.message); // Show error message
+                    row.css("background-color", "#f8d7da"); // Red background for error
+                }
+            },
+            error: function () {
+                alert("An error occurred while saving the translation.");
+            }
+        });
+    });
+});
+
+    </script>
+}

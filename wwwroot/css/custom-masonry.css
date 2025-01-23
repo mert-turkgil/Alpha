@@ -1,0 +1,43 @@
+.masonry-section .w-100 .card {
+    max-width: 100%;
+}
+.card-img-top {
+    height: 300px; /* Fixed height */
+    object-fit: cover; /* Maintain aspect ratio and crop overflow */
+    width: 100%; /* Ensure it spans the full width of the card */
+}
+
+/* General card hover effect */
+.card-hover {
+    transition: all 0.3s ease-in-out; /* Ensure it can have a z-index */
+    z-index: 1; /* Default z-index */
+}
+/* Hover Effects */
+.card-hover:hover {
+    transform: scale(1.05); /* Slightly enlarge the card */
+    transition: all 0.3s ease-in-out; /* Smooth transition */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    z-index: 10; /* Higher z-index to overlay other elements */
+}
+
+.card-hover:hover .card-body p {
+    max-height: 500px; /* Expand content */
+    overflow: visible;
+}
+
+/* Limit default content height */
+.card-text {
+    max-height: 75px; /* Initially show only a preview */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add '...' for hidden text */
+    white-space: nowrap; /* Prevent text wrapping */
+    transition: max-height 0.3s ease-in-out;
+}
+
+.card-hover:hover .card-text {
+    max-height: 500px; /* Expand height */
+    white-space: normal; /* Allow wrapping */
+    overflow: visible;
+    transition: max-height 0.3s ease-in-out;
+}
+

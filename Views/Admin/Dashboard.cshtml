@@ -1,0 +1,269 @@
+@model Alpha.Models.AlphaInfo
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var alertMessage = TempData.Get<AlertMessage>("AlertMessage");
+}
+@section Css {
+    <style>
+        .shortcut-card {
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shortcut-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+    </style>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+    }
+
+    /* Container and General Styling */
+    .dashboard-container {
+        padding: 40px 20px;
+        margin: 30px auto;
+        max-width: 1200px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .dashboard-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #ff7b00;
+    }
+
+    /* Section Titles */
+    .section-header {
+        font-size: 1.5rem;
+        color: #333;
+        margin: 20px 0 10px 0;
+        border-left: 5px solid #ff7b00;
+        padding-left: 15px;
+    }
+
+    /* Shortcut Cards */
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .shortcut-card {
+        background: #ff9c3f;
+        color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .shortcut-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .shortcut-card i {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    /* Quick Stats */
+    .stats-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .stat-box {
+        background: #ff7b00;
+        color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        flex: 1;
+        margin: 0 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-box:hover {
+        transform: scale(1.05);
+    }
+
+    .stat-box h3 {
+        margin: 0;
+        font-size: 1.8rem;
+    }
+
+    .stat-box p {
+        margin: 5px 0 0 0;
+        font-size: 1rem;
+    }
+</style>
+}
+@if (alertMessage != null)
+{
+    <div class="alert alert-@alertMessage.AlertType container" role="alert">
+        <h4 class="alert-heading">@alertMessage.Title</h4>
+        <p>@alertMessage.Message </p>
+    </div>
+}
+<div class="dashboard-container">
+    <!-- Dashboard Title -->
+    <h1 class="dashboard-title">Alpha Admin Dashboard</h1>
+    <!-- Alpha Info Section -->
+    <div class="section-header">Platform Information</div>
+    <div class="profile-section">
+        @if (Model == null)
+        {
+            <div class="alert alert-danger">
+                Error: Model data is missing.
+            </div>
+            return;
+        }else{
+        <p><strong>Platform Name:</strong> @Model.Name</p>
+        <p><strong>Version:</strong> @Model.Version</p>
+        <p><strong>Last Updated:</strong> @Model.Date.ToShortDateString()</p>
+        <p><strong>Description:</strong> @Model.Description</p> 
+        <p><strong>Status:</strong> @(Model.IsActive ? "Active" : "Inactive")</p>
+        <p><strong>Message:</strong> @Model.Message</p>
+        }
+
+    </div>
+
+    <!-- Quick Stats -->
+    <h2 class="section-header">Quick Overview</h2>
+    <div class="stats-container">
+        <div class="stat-box">
+            <h3>@ViewBag.TotalProducts</h3>
+            <p>Total Products</p>
+        </div>
+        <div class="stat-box">
+            <h3>@ViewBag.TotalCategories</h3>
+            <p>Total Categories</p>
+        </div>
+        <div class="stat-box">
+            <h3>@ViewBag.TotalBlogs</h3>
+            <p>Total Blogs</p>
+        </div> 
+        <div class="stat-box">
+            <h3>@ViewBag.TotalUsers</h3>
+            <p>Registered Users</p>
+        </div>
+        <div class="stat-box">
+            <h3>@ViewBag.TotalCarousel</h3>
+            <p>Registered Carousels</p>
+        </div>
+    </div>
+
+    <!-- Shortcut Cards -->
+    <h2 class="section-header">Quick Navigation</h2>
+    <div class="cards-container">
+        <div class="shortcut-card" onclick="location.href='@Url.Action("Products", "Admin")'">
+            <a asp-controller="Admin" asp-action="Products" class="d-block text-center">
+                <i class="fas fa-box"></i>
+                <h4>Manage Products</h4>
+            </a>
+        </div>
+        <div class="shortcut-card">
+            <a asp-controller="Admin" asp-action="Categories" class="d-block text-center">
+                <i class="fas fa-list"></i>
+                <h4>Manage Categories</h4>
+            </a>
+        </div>
+        <div class="shortcut-card">
+            <a asp-controller="Admin" asp-action="Blogs" class="d-block text-center">
+                <i class="fas fa-newspaper"></i>
+                <h4>Manage Blogs</h4>
+            </a>
+        </div>
+        <div class="shortcut-card">
+            <a asp-controller="Admin" asp-action="Images" class="d-block text-center">
+                <i class="fas fa-image"></i>
+                <h4>Manage Images</h4>
+            </a>
+        </div>
+        <div class="shortcut-card">
+            <a asp-controller="Admin" asp-action="Localization" class="d-block text-center">
+                <i class="fas fa-language"></i>
+                <h4>Manage Localization</h4>
+            </a>
+        </div>
+        <div class="shortcut-card">
+            <a asp-controller="Admin" asp-action="Users" class="d-block text-center">
+                <i class="fas fa-users"></i>
+                <h4>Manage Users</h4>
+            </a>
+        </div>
+        <div class="shortcut-card">
+            <a asp-controller="Admin" asp-action="Carousels" class="d-block text-center">
+                <i class="fa-solid fa-sliders"></i>
+                <h4>Manage Carousels</h4>
+            </a>
+        </div>
+    </div>
+
+    <!-- Shortcut Cards -->
+    <h2 class="section-header">Profile Settings</h2>
+    <div class="cards-container">
+        <!-- Change Password -->
+
+        <!-- Logout -->
+        <a asp-controller="Admin" asp-action="Logout" class="card btn btn-outline-danger text-center text-decoration-none">
+            <i class="fas fa-sign-out-alt"></i>
+            <h4>Logout</h4>
+            <p>Safely log out from your account.</p>
+        </a>
+        <!-- Invite User -->
+
+    </div>
+
+    <!-- Change Password Section -->
+    <h2 class="section-header" id="changePasswordForm">Change Password</h2>
+    <form method="post" asp-action="ChangePassword" asp-antiforgery="true">
+        <input type="password" name="currentPassword" class="form-control mb-2" placeholder="Current Password" required />
+        <input type="password" name="newPassword" class="form-control mb-2" placeholder="New Password" required />
+        <button type="submit" class="btn btn-warning w-100">Update Password</button>
+    </form>
+
+    <!-- Invite User Section -->
+    <h2 class="section-header" id="inviteUserForm">Invite User</h2>
+    <form method="post" asp-action="Invite" asp-antiforgery="true">
+        <input type="email" name="email" class="form-control mb-2" placeholder="User Email Address" required />
+        <select name="tokenDuration" class="form-control mb-2">
+            <option value="1">1 Day</option>
+            <option value="7">7 Days</option>
+        </select>
+        <button type="submit" class="btn btn-primary w-100">Send Invitation</button>
+    </form>
+   
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="alert alert-success mt-3">@ViewBag.SuccessMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">@ViewBag.ErrorMessage</div>
+    }
+
+
+</div>

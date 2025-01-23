@@ -1,0 +1,100 @@
+﻿@model PrivacyViewModel
+
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+@section Css{
+<!-- Include Animate.css for Entrance Animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<!-- Include AOS for Scroll Animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+
+}
+
+<div class="container my-5">
+    <!-- Hero Section -->
+    <div class="text-center mb-5" data-aos="fade-down" data-aos-duration="1000">
+        <h1 class="text-success text-uppercase fw-bold animate__animated animate__fadeInDown" style="font-family: Arial, sans-serif;">@Model.Title</h1>
+        <p class="text-muted animate__animated animate__fadeInUp">
+            @Html.Raw(@Model.HeroDescription)
+        </p>
+    </div>
+
+    <!-- Section 1: Information We Collect -->
+    <div class="mb-4" data-aos="fade-right" data-aos-duration="1000">
+        <h4 class="fw-bold mb-3">@Model.InfoCollectionTitle</h4>
+        <ul class="list-unstyled">
+            <li class="mb-2"><i class="fa fa-check-circle text-success me-2 animate__animated animate__bounceIn" data-aos-delay="200"></i> @Html.Raw(@Model.InfoCollectionPersonal)</li>
+            <li class="mb-2"><i class="fa fa-check-circle text-success me-2 animate__animated animate__bounceIn" data-aos-delay="400"></i> @Html.Raw(@Model.InfoCollectionPayment)</li>
+            <li class="mb-2"><i class="fa fa-check-circle text-success me-2 animate__animated animate__bounceIn" data-aos-delay="600"></i> @Html.Raw(@Model.InfoCollectionUsage)</li>
+            <li><i class="fa fa-check-circle text-success me-2 animate__animated animate__bounceIn" data-aos-delay="800"></i>@Html.Raw(@Model.InfoCollectionCookies)</li>
+        </ul>
+    </div>
+
+    <!-- Section 2: How We Use Your Information -->
+    <div class="mb-4" data-aos="fade-left" data-aos-duration="1000">
+        <h4 class="fw-bold mb-3">@Model.UsageTitle</h4>
+        <p>@Model.UsageIntro</p>
+        <ul class="list-unstyled">
+            <li><i class="fa fa-arrow-right text-success me-2"></i>@Model.UsagePurpose1</li>
+            <li><i class="fa fa-arrow-right text-success me-2"></i>@Model.UsagePurpose2</li>
+            <li><i class="fa fa-arrow-right text-success me-2"></i>@Model.UsagePurpose3</li>
+        </ul>
+    </div>
+
+    <!-- Section 3: How We Protect Your Data -->
+    <div class="mb-4" data-aos="zoom-in" data-aos-duration="1000">
+        <h4 class="fw-bold mb-3">@Model.ProtectionTitle</h4>
+        <p>@Model.ProtectionIntro</p>
+        <ul class="list-unstyled">
+            <li><i class="fa fa-lock text-success me-2"></i>@Model.ProtectionSSL</li>
+            <li><i class="fa fa-lock text-success me-2"></i>@Model.ProtectionFirewalls</li>
+            <li><i class="fa fa-lock text-success me-2"></i>@Model.ProtectionAccess</li>
+        </ul>
+    </div>
+
+    <!-- Section 4: Sharing Your Information -->
+    <div class="mb-4" data-aos="fade-up" data-aos-duration="1000">
+        <h4 class="fw-bold mb-3">@Model.SharingTitle</h4>
+        <p>@Model.SharingIntro</p>
+        <ul class="list-unstyled">
+            <li><i class="fa fa-share text-success me-2"></i>@Model.SharingThirdParty</li>
+            <li><i class="fa fa-share text-success me-2"></i>@Model.SharingLegal</li>
+        </ul>
+    </div>
+
+    <!-- Section 5: Your Rights -->
+    <div class="mb-4" data-aos="flip-left" data-aos-duration="1000">
+        <h4 class="fw-bold mb-3">@Model.RightsTitle</h4>
+        <ul class="list-unstyled">
+            <li><i class="fa fa-user-check text-success me-2"></i> @Model.RightsAccess </li>
+            <li><i class="fa fa-user-check text-success me-2"></i> @Model.RightsDelete </li>
+            <li><i class="fa fa-user-check text-success me-2"></i> @Model.RightsOptOut </li>
+        </ul>
+    </div>
+
+    <!-- Contact Us -->
+    <div class="text-center my-5" data-aos="fade-down" data-aos-duration="1000">
+        <h4 class="fw-bold mb-3">@Model.ContactTitle</h4>
+        <p>@Model.ContactQuestion</p>
+        <ul class="list-unstyled">
+            <li><i class="fa fa-envelope text-success me-2"></i> <a href="mailto:info@alphasafetyshoes.com" class="text-success">@Model.ContactEmail</a></li>
+            <li><i class="fa fa-phone text-success me-2"></i>@Model.ContactPhone</li>
+            <li><i class="fa fa-map-marker-alt text-success me-2"></i>@Model.ContactAddress</li>
+        </ul>
+    </div>
+</div>
+
+<!-- AOS Initialization -->
+@section Scripts{
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000, // Duration for animations
+        once: true,     // Ensures animations run only once
+    });
+</script>
+
+}

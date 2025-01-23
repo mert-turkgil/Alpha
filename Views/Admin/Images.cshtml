@@ -1,0 +1,170 @@
+@model IEnumerable<Alpha.Models.ImageWithProductsViewModel>
+
+@{
+    ViewData["Title"] = "Images Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Css {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <style>
+        .table-container {
+            margin-top: 20px;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-section h2 {
+            color: #ff7b00;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        .upload-btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background-color: #17a2b8;
+        }
+
+        .edit-btn:hover {
+            background-color: #138496;
+            transform: scale(1.1);
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+            transform: scale(1.1);
+        }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .image-preview {
+            width: 60px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+}
+
+<div class="container table-container">
+    <!-- Header -->
+    <div class="header-section">
+        <h2 class="animate__animated animate__fadeInDown">Images Management</h2>
+        <hr>
+    </div>
+
+    <!-- Upload Image Form -->
+    <div class="mb-4">
+        <a asp-controller="Admin" asp-action="ImageCreate" class="upload-btn">Create New Image</a>
+    </div>
+
+    <!-- Images Table -->
+    <table id="imagesTable" class="table table-striped table-bordered">
+        <thead class="bg-dark text-white">
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Text</th>
+                <th>Date Added</th>
+                <th>View on Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var image in Model)
+            {
+                <tr class="animate__animated animate__fadeInUp">
+                    <td>@image.ImageId</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(image.ImageUrl))
+                        {
+                            <img src="~/img/@image.ImageUrl" class="image-preview" alt="Image" />
+                        }
+                    </td>
+                    <td>@image.Text</td>
+                    <td>@image.DateAdded.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        @if (image.ViewPhone)
+                        {
+                            <span class="badge badge-success text-black">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-secondary text-black">No</span>
+                        }
+                    </td>
+                    <td>
+                        <a href="@Url.Action("ImageEdit", "Admin", new { id = image.ImageId })" class="action-btn edit-btn">Edit</a>
+                        <form asp-action="DeleteImage" asp-controller="Admin" method="post" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this image?');">
+                            <input type="hidden" name="id" value="@image.ImageId" />
+                            <button type="submit" class="action-btn delete-btn">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#imagesTable').DataTable({
+                responsive: true,
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ images",
+                    info: "Showing _START_ to _END_ of _TOTAL_ images",
+                    paginate: {
+                        next: "Next",
+                        previous: "Previous"
+                    }
+                },
+                columnDefs: [{ orderable: false, targets: -1 }]
+            });
+        });
+    </script>
+}
+ 

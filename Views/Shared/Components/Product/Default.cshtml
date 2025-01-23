@@ -1,0 +1,68 @@
+@model Alpha.Models.ProductIndexViewModel
+
+<!-- Container to scope all Product Card CSS -->
+
+    <h4 class="text-success text-uppercase mb-0 ms-3">@Model.StatusMessage</h4>
+    <h2 class="fw-bold mb-4 ms-3">@Model.ProductHead</h2>
+
+<div class="container-xxl">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-4 g-4">
+
+        @if (!Model.Products.Any())
+        {
+            <p class="text-center">No products available.</p>
+        }
+        else
+        {
+            @foreach (var product in Model.Products)
+            {
+                // Handle Image URL
+                string imageUrl = (product?.ProductImages != null && product.ProductImages.Any())
+                    ? Url.Content(product.ProductImages.FirstOrDefault()?.Image.ImageUrl ?? "~/img/default-image.jpg")
+                    : Url.Content("~/img/default-image.jpg");
+                 <div class="col">
+                    <span onclick="location.href='@Url.Action("ProductDetail", "Home", new { id = product?.ProductId })'">
+                    <div class="card">
+                        <img src="~/img/@imageUrl"
+                         class="card-img-top"
+                         alt="@(string.IsNullOrWhiteSpace(product?.Name) ? "test data" : product.Name)"
+                         loading="lazy"
+                         onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400?text=Image+Unavailable';">
+                    <div style="  max-height: 200px; overflow-y: auto;" class="card-body">
+                        <h5 class="card-title text-success">@(string.IsNullOrWhiteSpace(product?.Name) ? "test data" : product.Name)</h5>
+                                        <div class="first-content">
+                                            <hr>
+                                            <h4>@(string.IsNullOrWhiteSpace(product?.Brand) ? "test data" : product.Brand)</h4>
+                                            <div class="text-truncate">@(string.IsNullOrWhiteSpace(product?.Description) ? "test data" : product.Description)</div>
+                                        </div>
+                                            <!-- Put additional product details here -->
+                                            <table class="table table-sm table-bordered border-success table-responsive fs-6 fw-bold align-items-center second-content m-auto">
+                                            <tr>
+                                                <td scope="col">@(string.IsNullOrWhiteSpace(product?.Protection) ? "test data" : product.Protection)</td>
+                                                <td scope="col">@(string.IsNullOrWhiteSpace(product?.Lining) ? "test data" : product.Lining)</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td scope="col">@(string.IsNullOrWhiteSpace(product?.Sole) ? "test data" : product.Sole)</td>
+                                                <td scope="col">@(string.IsNullOrWhiteSpace(product?.Upper) ? "test data" : product.Upper)</td>
+                                            </tr>
+                                            <tr>
+                                                <td scope="col">@(string.IsNullOrWhiteSpace(product?.Midsole) ? "test data" : product.Midsole)</td>
+                                                <td scope="col">@(string.IsNullOrWhiteSpace(product?.Insole) ? "test data" : product.Insole)</td>
+                                            </tr>
+                                            </table>
+                        
+                    </div>
+                    <div class="card-footer">
+                        @(string.IsNullOrWhiteSpace(product?.Certificate) ? "CE Certified" : product.Certificate)
+                    </div>
+                    </div>
+                    </span>
+                </div>
+
+            }
+
+        }
+    </div>
+
+</div> 

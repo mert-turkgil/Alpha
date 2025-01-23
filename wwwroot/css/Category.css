@@ -1,0 +1,60 @@
+/* Basic card styling */
+.category-card {
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    background-color: #fff;
+    position: relative;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .category-card:hover {
+    transform: scale(1.02);
+  }
+  
+  .image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9; /* ensures consistent height or use ratio classes in Bootstrap */
+    overflow: hidden;
+  }
+  
+  .category-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* fill area, cropping if needed */
+    transition: transform 0.5s ease;
+    display: block;
+  }
+  
+  /* The overlay that appears on hover */
+  .img-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  
+  /* Animate the image and overlay on hover */
+  .category-card:hover .category-img {
+    transform: scale(1.1);
+  }
+  
+  .category-card:hover .img-overlay {
+    opacity: 1;
+  }
+  
+  /* Card body */
+  .category-card .card-body {
+    background-color: #f8f9fa; 
+    /* or your site background color */
+    text-align: center;
+    padding: 1rem;
+  }
+  .row > .col-12:last-child {
+    flex: 1 1 100%;
+  }
+    

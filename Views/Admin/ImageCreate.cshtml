@@ -1,0 +1,86 @@
+@model Alpha.Models.ImageCreateViewModel
+
+@{
+    ViewData["Title"] = "Create New Image";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Css {
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .form-container h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .submit-btn {
+            background-color: #28a745;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+    </style>
+}
+
+<div class="form-container">
+    <h2>Create New Image</h2>
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <form asp-action="ImageCreate" asp-controller="Admin" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <!-- File Upload -->
+        <div class="mb-3">
+            <label asp-for="File" class="form-label">Image File</label>
+            <input asp-for="File" class="form-control" />
+            <span asp-validation-for="File" class="text-danger"></span>
+        </div>
+
+        <!-- Text Input -->
+        <div class="mb-3">
+            <label asp-for="Text" class="form-label">Description</label>
+            <input asp-for="Text" class="form-control" placeholder="Enter image description" />
+            <span asp-validation-for="Text" class="text-danger"></span>
+        </div>
+
+        <!-- ViewPhone Checkbox -->
+        <div class="mb-3 form-check">
+            <input asp-for="ViewPhone" class="form-check-input" />
+            <label asp-for="ViewPhone" class="form-check-label">View on Phone</label>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn submit-btn">Upload Image</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

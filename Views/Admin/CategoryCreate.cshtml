@@ -1,0 +1,72 @@
+@model Alpha.Models.CategoryEditModel
+
+@{
+    ViewData["Title"] = "Create Category";
+}
+
+<style>
+    .image-preview {
+        width: 100px;
+        height: 100px;
+        border: 2px dashed #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        background-size: cover;
+        background-position: center;
+    }
+</style>
+
+<h2 class="ms-5">Create Category</h2>
+<div class="container">
+<form asp-action="CategoryCreate" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Category Name</label>
+        <input asp-for="Name" class="form-control" placeholder="Enter category name" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Url" class="form-label">Category URL</label>
+        <input asp-for="Url" class="form-control" placeholder="Enter URL (e.g., category-name)" />
+        <span asp-validation-for="Url" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ImageFile" class="form-label">Upload Image</label>
+        <input asp-for="ImageFile" type="file" class="form-control" accept=".png, .jpg, .jpeg, .gif" id="imageInput" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+
+        <!-- Image Preview -->
+        <div id="imagePreview" class="image-preview">
+            <span>Preview</span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Live Image Preview
+        document.getElementById('imageInput').addEventListener('change', function (event) {
+            const imagePreview = document.getElementById('imagePreview');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imagePreview.style.backgroundImage = `url('${e.target.result}')`;
+                    imagePreview.textContent = '';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.style.backgroundImage = '';
+                imagePreview.textContent = 'Preview';
+            }
+        });
+    </script>
+}

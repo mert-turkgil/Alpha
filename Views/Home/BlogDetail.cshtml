@@ -1,0 +1,236 @@
+@model Alpha.Models.BlogDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Blog.Title;
+}
+
+<section class="py-5 bg-light text-center" data-aos="fade-down">
+    <div class="container">
+        <h1 class="fw-bold display-5 text-success text-uppercase">@Model.Blog.Title</h1>
+        <p class="text-muted">
+            @Model.BlogDetail_PublishedOn @Model.Blog.Date.ToString("MMMM dd, yyyy")
+            @Model.BlogDetail_ByAuthor <span class="fw-bold text-success">@Model.Blog.Author</span>
+        </p>
+        @if (!string.IsNullOrEmpty(Model.Blog.Image))
+        {
+            <img src="~/img/@Model.Blog.Image"
+                 alt="@Model.Blog.Title"
+                 class="img-fluid rounded shadow-sm mt-3"
+                 style="max-height: 400px; object-fit: cover;"
+                 onerror="this.onerror=null;this.src='https://via.placeholder.com/800x400?text=Image+Unavailable';">
+        }
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8" data-aos="fade-up">
+            <article>
+                <div class="mb-4">
+                    @Html.Raw(Model.Blog.Content)
+                </div>
+
+                <!-- YouTube -->
+                @if (!string.IsNullOrEmpty(Model.Blog.RawYT))
+                {
+                    <div class="ratio ratio-16x9 mb-4">
+                        <iframe src="@Model.Blog.RawYT" title="YouTube Video" allowfullscreen></iframe>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-secondary">
+                        @Model.BlogDetail_EmptyVideoMsg
+                    </div>
+                }
+
+                <!-- Map -->
+                @if (!string.IsNullOrEmpty(Model.Blog.RawMaps))
+                {
+                    <div class="ratio ratio-16x9 mb-4">
+                        <iframe src="@Model.Blog.RawMaps" title="Location Map" allowfullscreen></iframe>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-secondary">
+                        @Model.BlogDetail_EmptyMapMsg
+                    </div>
+                }
+
+            </article>
+
+            <!-- Post Navigation -->
+            <div class="d-flex justify-content-between mt-5">
+                <a href="@Url.Action("BlogDetails", "Home", new { id = Model.Blog.BlogId - 1, type = "blog" })"
+                   class="btn btn-outline-success btn-sm @(Model.Blog.BlogId <= 1 ? "disabled" : "")">
+                    &larr; @Model.BlogDetail_PreviousPost
+                </a>
+                <a href="@Url.Action("BlogDetails", "Home", new { id = Model.Blog.BlogId + 1, type = "blog" })"
+                   class="btn btn-outline-success btn-sm">
+                    @Model.BlogDetail_NextPost &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="col-lg-4">
+            <!-- Recent Posts -->
+            <div class="card mb-4 shadow-sm" data-aos="fade-left">
+                <div class="card-body">
+                    <h5 class="fw-bold text-success">@Model.BlogDetail_RecentPosts</h5>
+                    <ul class="list-unstyled">
+                        @if (ViewBag.RecentBlogs != null)
+                        {
+                            foreach (var b in ViewBag.RecentBlogs)
+                            {
+                                <li class="mb-2">
+                                    <a href="@Url.Action("BlogDetails", "Home", new { id = b.BlogId, type = "blog" })"
+                                       class="text-decoration-none text-muted">
+                                        <i class="fa fa-arrow-right text-success me-2"></i>@b.Title
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <!-- All Categories -->
+            <div class="card mb-4 shadow-sm" data-aos="fade-left">
+                <div class="card-body">
+                <!-- Related Categories -->
+                @if (Model.RelatedCategories.Count() == 1 && Model.RelatedCategories.Any())
+                {
+                    <div class="mt-5">
+                        <h5 class="fw-bold text-success">@Model.BlogDetail_RelatedCategories</h5>
+                        <ul class="list-unstyled d-flex flex-wrap gap-2">
+                            @foreach (var cat in Model.RelatedCategories)
+                            {
+                                <li>
+                                    <a href="@Url.Action("Services", "Home", new { category = cat.Url })"
+                                       class="badge bg-success text-decoration-none">
+                                        @cat.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div class="mt-5">
+                        <h5 class="fw-bold text-success">@Model.BlogDetail_RelatedCategories</h5>
+                        <p class="text-muted">@Model.BlogDetail_EmptyCategory</p>
+                    </div>
+                }
+                </div>
+            </div>
+            <!-- Related Products (Horizontal Slider) -->
+
+            @if (Model.RelatedProducts != null && Model.RelatedProducts.Any())
+            {
+            <div class="card mb-4 shadow-sm" data-aos="fade-left">
+                <div class="card-body p-3 position-relative" id="relatedProductsSection">
+                    <h5 class="fw-bold text-success mb-3">@Model.BlogDetail_RelatedProducts</h5>
+
+                    <!-- Prev Button (inside the card, on the left) -->
+                    <button id="prevBtn"
+                            class="btn btn-outline-success btn-sm position-absolute top-50 start-0 translate-middle-y"
+                            style="margin-left: 0.1rem; z-index: 5;">
+                        <i class="fa-solid fa-arrow-left-long fa-beat"></i>
+                    </button>
+
+                    <!-- Next Button (inside the card, on the right) -->
+                    <button id="nextBtn"
+                            class="btn btn-outline-success btn-sm position-absolute top-50 end-0 translate-middle-y"
+                            style="margin-right: 0.1rem; z-index: 5;">
+                        <i class="fa-solid fa-arrow-right-long fa-beat"></i>
+                    </button>
+
+                    <!-- Overflow container, leaving space for buttons -->
+                    <div class="overflow-hidden" style="margin: 0 3rem;">
+                        <div id="productSlider" class="d-flex" style="transition: transform 0.4s ease;">
+                            @foreach (var prod in Model.RelatedProducts)
+                            {
+                                <div class="card me-3 shadow-sm border-0"
+                                    style="min-width: 250px; max-width: 250px; text-align: left;">
+                                    <img src="~/img/@(prod.ProductImages?.FirstOrDefault()?.Image?.ImageUrl ?? "default-image.jpg")"
+                                        class="card-img-top"
+                                        alt="@prod.Name"
+                                        style="height: 150px; object-fit: cover;"
+                                        onerror="this.onerror=null;this.src='https://via.placeholder.com/300x200?text=Image+Unavailable';" />
+                                    <div class="card-body text-start">
+                                        <h6 class="card-title fw-bold">@prod.Name</h6>
+                                        <p class="card-text mb-2">
+                                            <strong>@Model.BlogDetail_CategoriesTitle:</strong> @prod.Brand
+                                        </p>
+                                        <a href="@Url.Action("ProductDetail", "Home", new { id = prod.ProductId })"
+                                        class="btn btn-outline-success btn-sm">
+                                        <i class="fa-solid fa-circle-info fa-beat-fade"></i>
+                                            @Model.ViewButton
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }else{
+                    <div class="mt-5">
+                        <h5 class="fw-bold text-success">@Model.BlogDetail_RelatedCategories</h5>
+                        <p class="text-muted">@Model.BlogDetail_EmptyCategory</p>
+                    </div>
+            }
+            
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            easing: 'ease-in-out'
+        });
+
+        // Simple horizontal slider
+        const productSlider = document.getElementById('productSlider');
+        if (productSlider) {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const relatedSection = document.getElementById('relatedProductsSection');
+
+            let offset = 0;
+            const CARD_WIDTH = 270; // each card's width + margin
+            const totalSlides = @Model.RelatedProducts?.Count() ?? 0;
+
+            // How many items can be shown at once
+            let visibleCount = Math.floor((relatedSection.offsetWidth - 60) / CARD_WIDTH);
+
+            prevBtn.addEventListener('click', () => {
+                if (offset < 0) {
+                    offset += CARD_WIDTH;
+                    productSlider.style.transform = `translateX(${offset}px)`;
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                const maxOffset = -(CARD_WIDTH * (totalSlides - visibleCount));
+                if (offset > maxOffset) {
+                    offset -= CARD_WIDTH;
+                    productSlider.style.transform = `translateX(${offset}px)`;
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                visibleCount = Math.floor((relatedSection.offsetWidth - 60) / CARD_WIDTH);
+            });
+        }
+    </script>
+}
+

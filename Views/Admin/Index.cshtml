@@ -1,0 +1,549 @@
+@model Alpha.Models.AdminPageModel
+@{
+    ViewData["Title"] = "Admin";
+}
+
+@section Css
+{
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+     
+}
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">TradingView</span></a></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+  {
+  "symbols": [
+    [
+      "FX_IDC:TRYUSD|1D"
+    ],
+    [
+      "FX:EURUSD|1D"
+    ],
+    [
+      "FX_IDC:TRYEUR|1D"
+    ],
+    [
+      "FX_IDC:TRYGBP|1D"
+    ],
+    [
+      "FX_IDC:TRYWCU|1D"
+    ],
+    [
+      "BINANCE:BTCUSDT|1D"
+    ]
+  ],
+  "chartOnly": false,
+  "width": "100%",
+  "height": "100%",
+  "locale": "en",
+  "colorTheme": "dark",
+  "autosize": true,
+  "showVolume": false,
+  "showMA": false,
+  "hideDateRanges": false,
+  "hideMarketStatus": false,
+  "hideSymbolLogo": false,
+  "scalePosition": "right",
+  "scaleMode": "Normal",
+  "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
+  "fontSize": "10",
+  "noTimeScale": false,
+  "valuesTracking": "1",
+  "changeMode": "price-and-percent",
+  "chartType": "area",
+  "maLineColor": "#2962FF",
+  "maLineWidth": 1,
+  "maLength": 9,
+  "lineWidth": 2,
+  "lineType": 0,
+  "dateRanges": [
+    "1d|1",
+    "1m|30",
+    "3m|60",
+    "12m|1D",
+    "60m|1W",
+    "all|1M"
+  ]
+}
+  </script>
+</div>
+<!-- TradingView Widget END -->
+
+        <a asp-controller="Admin" asp-action="ProductCreate" class="btn btn-warning">
+            <i class="fa-solid fa-cart-plus"></i> Add Product
+        </a>
+        <a asp-controller="Admin" asp-action="BlogCreate" class="btn btn-warning">
+            <i class="fa-solid fa-cart-plus"></i> Add Blog
+        </a>
+        <a asp-controller="Admin" asp-action="UserCreate" class="btn btn-warning">
+            <i class="fa-solid fa-cart-plus"></i> Add User
+        </a>
+        <a asp-controller="Admin" asp-action="RoleCreate" class="btn btn-warning">
+            <i class="fa-solid fa-cart-plus"></i> Add Role
+        </a>
+        <a asp-controller="Admin" asp-action="CarouselCreate" class="btn btn-warning">
+            <i class="fa-solid fa-cart-plus"></i> Add Carousel
+        </a>
+        <a asp-controller="Admin" asp-action="CategoryCreate" class="btn btn-warning">
+            <i class="fa-solid fa-cart-plus"></i> Add Category
+        </a>
+        <a asp-controller="Admin" asp-action="ImageCreate" class="btn btn-warning">
+            <i class="fa-solid fa-cart-plus"></i> Add Image
+        </a>
+        @* Product Alanı *@
+        <hr>
+        <div class="container-fluid">
+        <h1 class="h-2 m-3">Admin Product</h1>
+        <hr>
+
+        <table id="myTable" class="table table-striped table-hover table-bordered dt-responsive nowrap mt-2" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>BodyNo</th>
+                    <th>Url</th>
+                    <th>Upper</th>
+                    <th>Lining</th>
+                    <th>Protection</th>
+                    <th>Brand</th>
+                    <th>Standart</th>
+                    <th>Midsole</th>
+                    <th>Insole</th>
+                    <th>Certificate</th>
+                    <th>Size</th>
+                    <th>Model</th>
+                    <th>Sole</th>
+                    <th>DateAdded</th>
+                    <th>Action</th>
+                    <th>Images</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Products.Count > 0)
+                {
+                    @foreach (var item in Model.Products)
+                    {
+                        <tr>
+                            <td class="text-center">@item.ProductId</td>
+                            <td class="text-center">@item.Name</td>
+                            <td>@item.BodyNo</td>
+                            <td class="text-center">@item.Url</td>
+                            <td class="text-center">@item.Upper</td>
+                            <td class="text-center">@item.Lining</td>
+                            <td class="text-center">@item.Protection</td>
+                            <td class="text-center">@item.Brand</td>
+                            <td class="text-center">@item.Standard</td>
+                            <td class="text-center">@item.Midsole</td>
+                            <td class="text-center">@item.Insole</td>
+                            <td class="text-center">@item.Certificate</td>
+                            <td class="text-center">@item.Size</td>
+                            <td class="text-center">@item.Model</td>
+                            <td class="text-center">@item.Sole</td>
+                            <td class="text-center">@item.DateAdded</td>
+                            <td>
+                                <a asp-controller="Admin" asp-action="ProductEdit" asp-route-id="@item.ProductId" class="btn btn-primary btn-sm mr-2">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </a>
+                                <form asp-action="DeleteProduct" asp-controller="Admin" method="post">
+                                    <input type="hidden" name="id" value="@item.ProductId" />
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    @Html.AntiForgeryToken()
+                                </form>
+                            </td>
+                            <td class="text-center">
+                                
+                                @foreach (var i in item.ProductImages)
+                                {
+                                    <img src="~/img/@i.Image.ImageUrl" alt="@i.Image.ImageUrl" width="50">
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        <h3>NO PRODUCTS</h3>
+                    </div>
+                }
+            </tbody>
+        </table>
+        </div>
+    @* Alan bitimi *@
+    @* Kategori Alanı *@
+    <div class="container-fluid">
+    
+        <h1 class="h-2 m-3">Admin Categories</h1>
+        <hr>
+        <table id="myTableCategory" class="table table-striped table-hover table-bordered dt-responsive nowrap mt-2" style="width:100%">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">Id</th>
+                    <th>Name</th>
+                    <th style="width: 150px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(Model.Categories.Count() > 0)
+                {
+                       @foreach (var item in Model.Categories)
+                        {
+                            <tr>
+                                <td>@item.CategoryId</td>
+                                <td>@item.Name</td>  
+                                <td>
+                                    <a asp-controller="Admin" asp-action="CategoryEdit" asp-route-id="@item.CategoryId" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                    <form asp-controller="Admin" asp-action="DeleteCategory" method="post" style="display: inline;">
+                                        <input type="hidden" name="categoryId" value="@item.CategoryId">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+
+                                </td> 
+                            </tr>
+                        }
+                }else{
+                    <div class="alert alert-warning">
+                        <h3>No Categories</h3>
+                    </div>
+                } 
+            </tbody>
+        </table>
+    
+    </div>
+    @* Alan bitimi *@
+
+    @* Blog Alanı *@
+    <div class="container-fluid">
+        <h1 class="h-2 m-3">Admin Blogs</h1>
+        <hr>
+         <table id="myTableBlog" class="table table-striped table-hover table-bordered dt-responsive nowrap mt-2" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Image</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Blog.Count() > 0)
+                {
+                    @foreach (var key in Model.Blog)
+                    {
+                        <tr>
+                            <td class="text-center">@key.BlogId</td>
+                            <td class="text-center">@key.Title</td>
+                            <td class="text-center">@key.Image</td>
+                            <td class="text-center">@key.Date</td>
+                            <td>
+                                <a asp-controller="Admin" asp-action="BlogEdit" asp-route-id="@key.BlogId" class="btn btn-primary btn-sm mr-2">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </a>
+                                <form asp-controller="Admin" asp-action="BlogDelete" method="post" style="display: inline;">
+                                    <input type="hidden" name="productId" value="@key.BlogId">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fa-solid fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        <h3>NO PRODUCTS</h3>
+                    </div>
+                }
+         </table>
+    </div>
+    @* Alan bitimi *@
+
+    @* Role Listesi *@
+        <div class="container-fluid">
+         <h1 class="h-2 m-3">Role List </h1>
+         <hr>         
+        <table id="myTableRole" class="table table-hover table-bordered mt-2">
+            <thead>
+                <tr>
+                    <td class="col">
+                        Id
+                    </td>
+                    <td class="col">
+                        Role Name
+                    </td>
+                    <td class="col">
+                        Normalized Name
+                    </td>
+                     <td class="col">
+                        Action
+                    </td>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Roles.Count()>0)
+                {
+                       @foreach (var item in Model.Roles)
+                {
+                     <tr>
+                    <td>
+                        @item.Id
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.NormalizedName
+                    </td>
+                    <td>
+                        <div class="row">
+                            <div class="col">
+                            <a asp-action="RoleEdit" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-primary btn-sm w-100">
+                                <i class="fa-solid fa-pen-to-square"></i>Edit
+                            </a>
+                            </div>
+                            <div class="col">
+                                <form asp-action="RoleDelete" asp-controller="Admin" method="post">
+                                    <input type="hidden" name="roleName" value="@item.Name">
+                                    <button type="submit" class="btn btn-danger btn-sm w-100"><i class="fa-solid fa-trash"></i>Delete</button>
+                                </form>
+
+                            </div>
+                       </div>
+                    </td>
+                      </tr>
+                }
+                }
+                else{
+                    <div class="alert alert-warning">
+                        <h3>NO ROLES</h3>
+                    </div>
+                }
+             
+            </tbody>
+        </table>
+    </div>
+    @* Alan bitimi *@
+    @* User Kısmı *@
+    <div class="container-fluid">
+    <h1 class="h3 m-3">User List</h1>
+            <hr>
+        <table data-page-length='25' id="myTableUsers" class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <td>FirstName</td>
+                    <td>LastName</td>
+                    <td>UserName</td>
+                    <td>Email</td>
+                    <td>EmailConfirmed</td>
+                    <td style="width: 160px;"></td>
+                </tr>
+            </thead>
+            <tbody>
+                @if(Model.Users.Count()>0)
+                {
+                       @foreach (var item in Model.Users)
+                        {
+                            <tr class="@(item.EmailConfirmed?"":"bg-warning")">
+                                <td>@item.FirstName</td>
+                                <td>@item.LastName</td>                              
+                                <td>@item.UserName</td>                              
+                                <td>@item.Email</td>                              
+                                <td>@item.EmailConfirmed</td>                              
+                                <td>
+                                    <a href="/admin/user/edit/@item.Id" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                    
+                                    <form asp-controller="admin" asp-action="UserDelete" method="POST" style="display: inline;">
+                                        <input type="hidden" name="UserId" value="@item.Id">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                        </tr>
+                        }
+                }else{
+                    <div class="alert alert-warning">
+                        <h3>No Users</h3>
+                    </div>
+                }
+
+             
+            </tbody>
+        </table>
+    </div>  
+    @* Alan bitimi *@
+    @* İmage Alanı *@
+    <div class="container-fluid">
+        <h1 class="h3 m-3">Image List</h1>
+        <hr>
+       <table id="myTableImage" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Url</th>
+                <th scope="col">ViewPhone</th>
+                <th scope="col">Text</th>
+                <th scope="col">Date Added</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Images)
+            {
+                <tr>
+                    <td>@item.ImageId</td>
+                    <td><img src="~/img/@item.ImageUrl" style="width: 6.5rem; object-fit: contain;" alt="@item.ImageUrl">@item.ImageUrl</td>
+                    <td>
+                        @item.ViewPhone
+                    </td>
+                    <td>
+                        @item.Text
+                    </td>
+                    <td>@item.DateAdded</td>
+                    <td>
+                        <form asp-controller="Admin" asp-action="ImageDelete" method="post" style="display: inline;">
+                            <a asp-controller="Admin" asp-action="ImageEdit" asp-route-id="@item.ImageId" class="btn btn-primary btn-sm mr-2">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </a>
+                            <input type="hidden" name="imageId" value="@item.ImageId">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+    @* Alan bitimi *@
+    @* Afiş Kısmı *@
+    <div class="container-fluid">
+        <h1 class="h3 m-3">Advertisement List</h1>
+        <hr>
+                <table id="myTableCarousel" class="table table-bordered mt-2">
+            <thead>
+                <tr>
+                    <td style="width: 30px;">
+                        Id
+                    </td>
+                    <td style="width: 100px;">
+                        Image
+                    </td>
+                    <td>
+                        Name
+                    </td>
+                    <td style="width: 150px;">
+                        
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Carousel.Count>0)
+                {
+                       @foreach (var item in Model.Carousel)
+                {
+                     <tr>
+                    <td>
+                        @item.CarouselId
+                    </td>
+                    <td>
+                        <img src="~/img/@item.CarouselImage" class="img-fluid" width="80">
+                    </td>
+                    <td>
+                        @item.CarouselTitle
+                    </td>
+                    <td>
+                        <a asp-controller="Admin" asp-action="CarouselEdit" asp-route-id="@item.CarouselId" class="btn btn-primary btn-sm mr-2"><i class="fa-solid fa-pen-to-square"></i>Edit</a>
+                        <form asp-controller="Admin" asp-action="DeleteCourser" method="post" style="display: inline;">
+                            <input type="hidden" name="courserId" value="@item.CarouselId">
+                              <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i>Delete</button>
+                        </form>     
+                    </td>
+                      </tr>
+                }
+                }
+                else{
+                    <div class="alert alert-warning">
+                        <h3>NO Slider Found</h3>
+                    </div>
+                }
+             
+            </tbody>
+        </table>
+    </div>
+    @* Alan bitimi *@
+@section Scripts
+{
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/bs5/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable({
+                responsive: true,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 1 }, // Prioritize the 'Name' column
+                    { responsivePriority: 2, targets: -2 }, // Prioritize the 'Action' column (second last)
+                    { responsivePriority: 3, targets: -1 }  // Prioritize the 'Images' column (last)
+                ]
+            });
+        });
+    </script>
+     <script>
+        $(document).ready(function() {
+            $('#myTableCategory').DataTable({
+                responsive: true                
+            });
+        });
+    </script>
+         <script>
+        $(document).ready(function() {
+            $('#myTableUsers').DataTable({
+                responsive: true                
+            });
+        });
+    </script>
+             <script>
+        $(document).ready(function() {
+            $('#myTableImage').DataTable({
+                responsive: true                
+            });
+        });
+    </script>
+        <script>
+        $(document).ready(function() {
+            $('#myTableRole').DataTable({
+                responsive: true                
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#myTableCarousel').DataTable({
+                responsive: true                
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#myTableBlog').DataTable({
+                responsive: true ,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 1 }, // Prioritize the 'Name' column
+                    { responsivePriority: 2, targets: -2 }, // Prioritize the 'Action' column (second last)
+                    { responsivePriority: 3, targets: -1 }  // Prioritize the 'Images' column (last)
+                ]               
+            });
+        });
+    </script>
+}

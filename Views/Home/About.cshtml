@@ -1,0 +1,146 @@
+@model AboutViewModel
+@{
+    ViewData["Title"] = "About Us";
+}
+@section Css{
+
+    <!-- Include Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<!-- Include AOS Library for Scroll Animations -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+}
+
+
+<!-- Hero Section -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h1 class="display-4 text-success fw-bold animate__animated animate__fadeInDown"> @Model.HeroTitle</h1>
+        <p class="lead text-muted animate__animated animate__fadeInUp">
+             @Model.HeroDescription
+        </p>
+        <img src="~/img/about-us-hero.jpg" alt="About Us" class="img-fluid rounded shadow-sm mt-3" 
+             style="max-height: 400px;" data-aos="zoom-in">
+    </div>
+</section>
+
+<!-- Company Overview -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6" data-aos="fade-right">
+                <h2 class="text-success fw-bold mb-4">@Model.WhoWeAreTitle</h2>
+                <p>
+                    @Html.Raw(Model.WhoWeAreDescription1)
+                </p>
+                <p>
+                    @Html.Raw(Model.WhoWeAreDescription2)
+                </p>
+            </div>
+            <div class="col-md-6" data-aos="fade-left">
+                <img src="~/img/company-overview.jpg" alt="Company Overview" class="img-fluid rounded shadow-sm">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Values Section -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="text-success fw-bold mb-5" data-aos="fade-up">@Model.CoreValuesTitle</h2>
+        <div class="row g-4">
+            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="100">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold">@Model.QualityAssuranceTitle</h5>
+                        <p class="text-muted">@Model.QualityAssuranceDescription</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="200">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold">@Model.InnovationTitle</h5>
+                        <p class="text-muted">@Model.InnovationDescription</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="300">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold">@Model.CustomerFocusTitle</h5>
+                        <p class="text-muted">@Model.CustomerFocusDescription</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="400">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold">@Model.SustainabilityTitle</h5>
+                        <p class="text-muted">@Model.SustainabilityDescription</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="py-5">
+    <div class="container">
+        <div class="row my-5 text-center">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <i class="fa-solid fa-briefcase fa-3x text-success mb-3"></i>
+                <h4 class="fw-bold">@Model.ExperienceTitle</h4>
+                <p class="text-muted">@Model.ExperienceDescription</p>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <i class="fa-solid fa-bullseye fa-3x text-success mb-3"></i>
+                <h4 class="fw-bold">@Model.FocusTitle</h4>
+                <p class="text-muted">@Model.FocusDescription</p>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <i class="fa-solid fa-handshake fa-3x text-success mb-3"></i>
+                <h4 class="fw-bold">@Model.TrustTitle</h4>
+                <p class="text-muted">@Model.TrustDescription</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Showcase -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="text-success fw-bold mb-4" data-aos="fade-down">@Model.ProductRangeTitle</h2>
+        <p class="lead text-muted mb-5">@Model.ProductRangeDescription</p>
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="flip-left">
+                <img src="~/img/safety-shoes.jpg" alt="Safety Shoes" class="img-fluid rounded shadow-sm mb-3">
+                <h5 class="fw-bold">@Model.SafetyShoesTitle</h5>
+                <p class="text-muted">@Model.SafetyShoesDescription</p>
+            </div>
+            <div class="col-md-4" data-aos="flip-left" data-aos-delay="200">
+                <img src="~/img/industrial-boots.jpg" alt="Industrial Boots" class="img-fluid rounded shadow-sm mb-3">
+                <h5 class="fw-bold">@Model.IndustrialBootsTitle</h5>
+                <p class="text-muted">@Model.IndustrialBootsDescription</p>
+            </div>
+            <div class="col-md-4" data-aos="flip-left" data-aos-delay="400">
+                <img src="~/img/personnel-shoes.jpg" alt="Personnel Shoes" class="img-fluid rounded shadow-sm mb-3">
+                <h5 class="fw-bold">@Model.PersonnelShoesTitle</h5>
+                <p class="text-muted">@Model.PersonnelShoesDescription</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+<!-- AOS Initialization Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000, // Animation duration
+        once: true, // Animate only once
+    });
+</script>
+
+}

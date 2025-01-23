@@ -1,0 +1,17 @@
+@model List<SelectListItem>
+
+<form id="language-selector" asp-controller="Home" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post">
+<select class="form-select border-success" name="culture" id="culture" onchange="this.form.submit()">
+  @foreach (var culture in Model.Where(c => c.Value == "en-US" || c.Value == "tr-TR" || c.Value == "fr-FR" || c.Value == "de-DE"))
+{
+    if (culture.Selected)
+    {
+        <option value="@culture.Value" selected>@culture.Text</option>
+    }
+    else
+    {
+        <option value="@culture.Value">@culture.Text</option>
+    }
+}
+</select>
+</form>

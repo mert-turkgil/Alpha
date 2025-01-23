@@ -1,0 +1,220 @@
+@model Alpha.Models.ProductDetailViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+@section Css{
+    <link rel="stylesheet" href="~/css/Category.css" />
+}
+<!-- Hero Section -->
+<section class="py-5 bg-light text-center">
+    <div class="container">
+        <h1 class="fw-bold text-success text-uppercase">@Model.Name</h1>
+        <p class="text-muted">
+            <span class="fw-bold">@ViewBag.BodyNoLabel:</span> @Model.BodyNo |
+            <span class="fw-bold">@ViewBag.BrandLabel:</span> @Model.Brand |
+            <span class="fw-bold">@ViewBag.DateAddedLabel:</span> @Model.DateAdded.ToString("MMMM dd, yyyy")
+        </p>
+        <p class="text-muted">
+            <span class="fw-bold">@ViewBag.CategoryLabel:</span> @Model.CategoryName
+        </p>
+    </div>
+</section>
+
+<!-- Main Section -->
+<div class="container my-5">
+    <div class="row">
+        <!-- Left Column: Image Gallery -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <i class="fas fa-images me-2"></i>@ViewBag.ImagesLabel
+                </div>
+                <div class="card-body">
+                    @if (Model.ProductImages != null && Model.ProductImages.Any())
+                    {
+                        <!-- Main Image -->
+                        var mainImgUrl = Model.ProductImages.First().Image?.ImageUrl ?? "default-image.jpg";
+                        <div class="text-center mb-3">
+                            <img src="~/img/@mainImgUrl"
+                                 alt="@Model.Name"
+                                 class="img-fluid rounded shadow-sm"
+                                 style="max-height: 400px; object-fit: cover;"
+                                 onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Unavailable';" />
+                        </div>
+
+                        <!-- Thumbnails -->
+                        @if (Model.ProductImages.Count > 1)
+                        {
+                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                                @foreach (var img in Model.ProductImages)
+                                {
+                                    <a href="~/img/@img.Image.ImageUrl" data-fslightbox="gallery">
+                                        <img src="~/img/@img.Image.ImageUrl"
+                                             alt="@Model.Name"
+                                             class="img-thumbnail"
+                                             style="width: 100px; height: 100px; object-fit: cover;"
+                                             onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=Image+Unavailable';" />
+                                    </a>
+                                }
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">No images available for this product.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Product Details Table -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <i class="fas fa-info-circle me-2"></i>Product Information
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-bordered mb-0">
+                        <tbody>
+                            <tr>
+                                <th>@ViewBag.DescriptionLabel</th>
+                                <td>@Model.Description</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.UpperLabel</th>
+                                <td>@Model.Upper</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.LiningLabel</th>
+                                <td>@Model.Lining</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.ProtectionLabel</th>
+                                <td>@Model.Protection</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.MidsoleLabel</th>
+                                <td>@Model.Midsole</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.InsoleLabel</th>
+                                <td>@Model.Insole</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.SoleLabel</th>
+                                <td>@Model.Sole</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.ModelLabel</th>
+                                <td>@Model.Model</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.StandardLabel</th>
+                                <td>@Model.Standard</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.CertificateLabel</th>
+                                <td>@Model.Certificate</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.SizeLabel</th>
+                                <td>@Model.Size</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.BodyNoLabel</th>
+                                <td>@Model.BodyNo</td>
+                            </tr>
+                            <tr>
+                                <th>@ViewBag.BrandLabel</th>
+                                <td>@Model.Brand</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section>
+        <!-- Related Blogs -->
+        @if (Model.RelatedBlogs != null && Model.RelatedBlogs.Any())
+        {
+            <div class="mt-5">
+                <h4 class="fw-bold text-success">Related Blogs</h4>
+                <ul class="list-unstyled">
+                    @foreach (var blog in Model.RelatedBlogs)
+                    {
+                        <li>
+                            <a href="@Url.Action("BlogDetails", "Home", new { id = blog.BlogId, type = "blog" })" class="text-decoration-none">
+                                <i class="fas fa-arrow-right text-success me-2"></i>@blog.Title
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </section>
+    <section>
+        <h4 class="fw-bold text-success">@ViewBag.Message</h4>
+        <div class="container-xxl">
+            <hr>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 justify-content-center">
+            <!-- Related Categories -->
+            @if (Model.RelatedCategories != null && Model.RelatedCategories.Any())
+            {
+
+                        @foreach (var category in Model.RelatedCategories)
+                        {
+                            <div class="col category-card category-item">
+                                <div class="card h-100 shadow-sm position-relative overflow-hidden border-1 rounded-5 shadow-sm" 
+                                    onclick="window.location.href='@Url.Action("Services", "Home", new { category = category.Url })'">
+                                    <img src="~/img/@category.ImageUrl" 
+                                        onerror="this.onerror=null; this.src='https://via.placeholder.com/150x150?text=Image+Unavailable';" 
+                                        alt="@category.Name" class="card-img-top img-fluid category-img p-2" style="object-fit: cover; border-radius: 8px;" />
+                                    <div class="card-footer text-center p-2 bg-light">
+                                        <h6 class="card-title fw-bold m-0 text-truncate">@category.Name</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+            }
+                </div>
+            </div>
+    </section>
+    <section>
+    <!-- Recent Products -->
+    @if (Model.RecentProducts != null && Model.RecentProducts.Any())
+    {
+        <div class="mt-5">
+            <h4 class="fw-bold text-success">Recent Products</h4>
+            <div class="row">
+                @foreach (var recentProduct in Model.RecentProducts)
+                {
+                    <div class="col-md-4">
+                        <div class="card shadow-sm mb-3">
+                            <img src="~/img/@recentProduct.ProductImages.FirstOrDefault()?.Image?.ImageUrl"
+                                 alt="@recentProduct.Name"
+                                 class="card-img-top"
+                                 style="height: 150px; object-fit: cover;"
+                                 onerror="this.onerror=null;this.src='https://via.placeholder.com/150x150?text=Image+Unavailable';" />
+                            <div class="card-body">
+                                <h6 class="card-title">@recentProduct.Name</h6>
+                                <a href="@Url.Action("ProductDetail", "Home", new { id = recentProduct.ProductId })"
+                                   class="btn btn-outline-success btn-sm">@ViewBag.BTN</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    </section>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>
+    <script>
+        fsLightboxInstances["gallery"].props.loadOnlyCurrentSource = true;
+    </script>
+}

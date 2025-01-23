@@ -1,0 +1,238 @@
+/* Global Styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+/* Header and Footer Width Fix */
+header, footer {
+  width: 100%;
+  overflow-x: hidden; /* Prevent any horizontal overflow */
+}
+
+
+
+/* Buttons Focus and Hover States */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.btn-success {
+  background-color: green;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+  background-color: darkgreen;
+}
+
+/* Navbar */
+.navbar-brand {
+  font-size: 1.5rem;
+}
+
+#orta .nav-link {
+  color: black;
+  position: relative;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+#orta .nav-link:hover,
+#orta .nav-link:focus {
+  color: green; /* Turns green on hover */
+}
+
+#orta .nav-link.active {
+  color: green; /* Keeps "active" link green */
+  text-decoration: underline;
+}
+
+#orta .nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background-color: green;
+  bottom: -3px;
+  left: 0;
+  transition: width 0.3s ease-in-out;
+}
+
+#orta .nav-link:hover::after {
+  width: 100%;
+}
+
+
+/* Store Link */
+.storeLink {
+  position: relative;
+  display: inline-block;
+  width: 240px;
+  height: 80px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: black;
+}
+
+.storeLink > img {
+  --width: 100%;
+  position: absolute;
+  width: var(--width);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Card Animations */
+@keyframes enterFromStart {
+  from {
+      opacity: 0;
+      transform: translateX(-100%);
+  }
+  to {
+      opacity: 1;
+      transform: translateX(0);
+  }
+}
+
+@keyframes enterFromEnd {
+  from {
+      opacity: 0;
+      transform: translateX(100%);
+  }
+  to {
+      opacity: 1;
+      transform: translateX(0);
+  }
+}
+
+.card-animate-start {
+  animation: enterFromStart 1s ease-out forwards;
+}
+
+.card-animate-end {
+  animation: enterFromEnd 1s ease-out forwards;
+}
+
+/* Fade In Elements */
+.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+/* Footer Styling */
+.footer-container {
+  background-color: #222;
+  color: #fff;
+  padding: 40px 0;
+  font-family: 'Arial', sans-serif;
+  border-top: 5px solid #ff7b00;
+  animation: fadeInFooter 1s ease-in-out;
+}
+
+.footer-heading {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #ff7b00;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.footer-link, .footer-btn {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  margin: 5px 0;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.footer-link:hover, .footer-btn:hover {
+  color: #ff7b00;
+  transform: translateX(5px);
+}
+
+.footer-btn {
+  background-color: #ff7b00;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  display: inline-block;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.footer-btn:hover {
+  background-color: #fff;
+  color: #ff7b00;
+}
+
+
+/* Social Media Icons Container */
+.socialContainer a {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  font-size: 2rem; /* Icon size */
+  color: #ffffff; /* Default color */
+  background-color: #333; /* Default background */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Circle shape */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  text-decoration: none; /* Removes underline */
+}
+
+/* Stable Hover Effect */
+.socialContainer a:hover {
+  transform: scale(1.1); /* Slight scale up */
+  background-color: inherit; /* Ensures no extra color on non-hover */
+  color: #fff; /* Default color for safety */
+}
+
+/* Brand Colors for Hover Background */
+.socialContainer a:nth-child(1):hover {
+  background-color: #1DA1F2; /* Twitter Blue */
+}
+
+.socialContainer a:nth-child(2):hover {
+  background-color: #E4405F; /* Instagram Pink */
+}
+
+.socialContainer a:nth-child(3):hover {
+  background-color: #25D366; /* WhatsApp Green */
+}
+
+.socialContainer a:nth-child(4):hover {
+  background-color: #0077B5; /* LinkedIn Blue */
+}
+
+
+
+/* Map Styling */
+.map-container iframe {
+  border: none;
+  width: 100%;
+  height: 200px;
+  border-radius: 10px;
+}
+
+/* Fade-In Footer Animation */
+@keyframes fadeInFooter {
+  from {
+      opacity: 0;
+      transform: translateY(30px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}

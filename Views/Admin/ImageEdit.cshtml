@@ -1,0 +1,55 @@
+@model Alpha.Models.ImageEditModel
+
+@{
+    ViewData["Title"] = "Edit Image";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Edit Image</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <form asp-action="ImageEdit" asp-controller="Admin" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.ImageId)
+
+        <!-- Current Image Preview -->
+        <div class="mb-3">
+            <label class="form-label">Current Image</label>
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="~/img/@Model.ImageUrl" class="img-thumbnail" style="width: 200px;" alt="Current Image" />
+            }
+        </div>
+
+        <!-- New Image Upload -->
+        <div class="mb-3">
+            <label for="newImageFile" class="form-label">Upload New Image</label>
+            <input type="file" name="newImageFile" class="form-control" />
+        </div>
+
+        <!-- Text -->
+        <div class="mb-3">
+            <label asp-for="Text" class="form-label">Description</label>
+            <input asp-for="Text" class="form-control" />
+            <span asp-validation-for="Text" class="text-danger"></span>
+        </div>
+
+        <!-- View on Phone -->
+        <div class="form-check mb-3">
+            <input asp-for="ViewPhone" class="form-check-input" />
+            <label asp-for="ViewPhone" class="form-check-label">View on Phone</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-action="Images" asp-controller="Admin" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

@@ -1,0 +1,124 @@
+@model Alpha.Models.CategoryEditModel
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+@section Css {
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <style>
+        /* Container fade-in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-in-out forwards;
+        }
+
+        @@keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Smooth hover effect for buttons */
+        .btn-animated {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-animated:hover {
+            background-color: #0d6efd;
+            color: #ffffff;
+            transform: scale(1.03);
+        }
+
+        /* Responsive image preview */
+        .img-preview {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            object-fit: cover;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+        
+        /* Ensure form fields look good */
+        .form-label {
+            font-weight: 500;
+        }
+
+        /* Add some spacing at the top (optional) */
+        .edit-category-container {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+    </style>
+}
+
+<div class="container edit-category-container">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success fade show" role="alert">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger fade show" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6 fade-in">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white border-0">
+                    <h1 class="h4 mb-0 text-center">Edit Category</h1>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-controller="Admin" asp-action="CategoryEdit" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.CategoryId)
+                        
+                        <!-- Category Name -->
+                        <div class="mb-3">
+                            <label for="Name" class="form-label">Category Name</label>
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @placeholder = "Enter category name", @required = "required", @aria_label = "Category Name" })
+                            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Url -->
+                        <div class="mb-3">
+                            <label for="Url" class="form-label">Url</label>
+                            @Html.TextAreaFor(m => m.Url, new { @class = "form-control", @placeholder = "Enter category URL", rows = "3", @aria_label = "Url" })
+                            @Html.ValidationMessageFor(m => m.Url, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Current Image Preview -->
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <div class="mb-3 text-center">
+                                <label class="form-label d-block">Current Image:</label>
+                                <img src="~/img/@Model.ImageUrl" alt="Current Category Image" class="img-preview mb-3" />
+                            </div>
+                        }
+
+                        <!-- Image Upload -->
+                        <div class="mb-3">
+                            <label for="ImageFile" class="form-label">Upload New Image (Optional)</label>
+                            <input asp-for="ImageFile" type="file" class="form-control" aria-label="Image File" />
+                            @Html.ValidationMessageFor(m => m.ImageFile, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Submit & Cancel Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-primary btn-animated">Save Changes</button>
+                            <!-- Adjust the controller name if necessary -->
+                            <a href="@Url.Action("Categories", "Admin")" class="btn btn-outline-secondary btn-animated">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

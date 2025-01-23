@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@{
+    ViewData["Title"] = ViewData["Title"] ?? "Default Title";}- Alpha</title>
+    
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://kit.fontawesome.com/24d5ca79c2.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/splash.css">
+    @await RenderSectionAsync("Css", required: false)
+</head>
+<body style="font-family: Oswald, sans-serif;">
+
+    <!-- Placeholder for splash screen -->
+    <div id="splash-placeholder"></div>
+
+    <header class="sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+        @{
+            var navbarModel = await NavbarService.GetNavbarViewModelAsync();
+        }
+        @await Html.PartialAsync("_Navbar", navbarModel)
+    </nav>
+    </header>
+        @if (TempData["message"]!=null)
+          {
+            <partial name="_ResultMessage" model="@(TempData.Get<AlertMessage>("message"))" />
+          }
+    <div>
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    @{
+        var footerModel = FooterService.GetFooterViewModelAsync();
+    }
+    <footer>
+        @await Html.PartialAsync("_Footer", footerModel)
+    </footer>
+    <script src="~/js/splash.js"></script>
+    <script src="https://unpkg.com/@@popperjs/core@2"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/resize-observer-polyfill@1.5.1/dist/ResizeObserver.global.js"></script>
+    <!-- Use your script -->
+    <script type="module" src="/js/site.js"></script>
+    <script src="~/js/type-writer.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

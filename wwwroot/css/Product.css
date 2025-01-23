@@ -1,0 +1,47 @@
+.first-content {
+  display: block;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.second-content {
+  display: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Hover Effects without Layout Shift */
+.card:hover .first-content {
+  display: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.card:hover .second-content {
+  display: block;
+  opacity: 1;  
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Fix Card Dimensions */
+.card {
+  transition: all 0.3s ease;
+}
+
+.card img {
+  object-fit: cover;
+  height: 200px; /* Fixed height for images */
+}
+
+/* Ensure card body doesn't expand dynamically */
+.card-body {
+  min-height: 200px;
+}
+
+/* Button alignment inside footer */
+.card-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

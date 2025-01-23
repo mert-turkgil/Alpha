@@ -1,0 +1,61 @@
+<!-- Footer Section -->
+<div class="container-fluid footer-container">
+    <div class="row text-center">
+
+        <!-- Column 1: Quick Links -->
+        <div class="col-md-4">
+            <h3 class="footer-heading">@Model.QuickLinks</h3>
+            <a asp-action="Index" asp-controller="Home" class="footer-link">@Model.Home</a><br />
+            <a asp-action="Services" asp-controller="Home" class="footer-link">@Model.Services</a><br />
+            <a asp-action="Contact" asp-controller="Home" class="footer-link">@Model.Contact</a><br />
+            <a asp-action="Blog" asp-controller="Home" class="footer-link">@Model.Blog</a>
+        </div>
+
+        <!-- Column 2: Employee Login -->
+        <div class="col-md-4">
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <h3 class="footer-heading">@Model.footerHeader</h3>
+                 <p>@Model.footerBody</p>
+                <a asp-action="Dashboard" asp-controller="Admin" class="footer-btn">
+                    @(User.Identity.Name ?? "User") <i class="fa-solid fa-arrow-right fa-beat-fade"></i> Dashboard
+                </a>
+            }
+            else
+            {
+            <h3 class="footer-heading">@Model.footerHeader</h3>
+            <p>@Model.footerBody</p>
+                <a asp-action="Login" asp-controller="Admin" class="footer-btn">@Model.footerHeader</a>
+            }
+
+   
+        </div>
+
+        <!-- Column 3: Social Media -->
+        <div class="col-md-4">
+            <h3 class="footer-heading">@Model.Follow</h3>
+            <div class="socialContainer">
+                <a href="#" class="text-white"><i class="fa-brands fa-square-x-twitter fa-2xl"></i></a>
+                <a href="#" class="text-white"><i class="fa-brands fa-square-instagram fa-2xl"></i></a>
+                <a href="#" class="text-white"><i class="fa-brands fa-square-whatsapp fa-2xl"></i></a>
+                <a href="#" class="text-white"><i class="fa-brands fa-linkedin fa-2xl"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Row: Google Map -->
+    <div class="row mt-4">
+        <div class="col map-container">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1845.9883856369831!2d29.177626559190738!3d40.889669490332906!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cac39baeb70b37%3A0xd4d8ed6cdd18d46f!2zQmHFn2Fr!5e0!3m2!1str!2str!4v1734220831284!5m2!1str!2str"
+                loading="lazy" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- Copyright Row -->
+    <div class="row mt-4 text-center">
+        <div class="col">
+            <p>&copy; 2024 Alpha Company | <a asp-action="Privacy" class="footer-link">@Model.Privacy </a></p>
+        </div>
+    </div>
+</div>
