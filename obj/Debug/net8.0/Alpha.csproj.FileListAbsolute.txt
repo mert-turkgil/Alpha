@@ -471,3 +471,4 @@ C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\refint\Alpha.dll
 C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\Alpha.pdb
 C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\Alpha.genruntimeconfig.cache
 C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\ref\Alpha.dll
+C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\Alpha.sourcelink.json

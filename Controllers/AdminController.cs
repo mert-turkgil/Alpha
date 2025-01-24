@@ -2349,7 +2349,7 @@ public async Task<IActionResult> BlogCreate()
     }).ToList();
 
     // Initialize a new model for the view
-    var model = new BlogEditModel
+    var model = new BlogCreateModel
     {
         SelectedCategoryIds = new List<int>(),
         SelectedProductIds = new List<int>()
