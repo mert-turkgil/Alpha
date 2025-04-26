@@ -2,7 +2,7 @@
 
 <!-- Container to scope all Product Card CSS -->
 
-    <h4 class="text-success text-uppercase mb-0 ms-3">@Model.StatusMessage</h4>
+    <h4 style="color: #e79c00;" class="text-uppercase mb-0 ms-3">@Model.StatusMessage</h4>
     <h2 class="fw-bold mb-4 ms-3">@Model.ProductHead</h2>
 
 <div class="container-xxl">
@@ -29,7 +29,7 @@
                          loading="lazy"
                          onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400?text=Image+Unavailable';">
                     <div style="  max-height: 200px; overflow-y: auto;" class="card-body">
-                        <h5 class="card-title text-success">@(string.IsNullOrWhiteSpace(product?.Name) ? "test data" : product.Name)</h5>
+                        <h5 style="color: #e79c00;" class="card-title">@(string.IsNullOrWhiteSpace(product?.Name) ? "test data" : product.Name)</h5>
                                         <div class="first-content">
                                             <hr>
                                             <h4>@(string.IsNullOrWhiteSpace(product?.Brand) ? "test data" : product.Brand)</h4>

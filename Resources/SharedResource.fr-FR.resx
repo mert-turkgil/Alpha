@@ -601,48 +601,6 @@
   <data name="Carousel_7_LinkText" xml:space="preserve">
     <value>Vérifiez Maintenant</value>
   </data>
-  <data name="Product_1_Description_fr-FR" xml:space="preserve">
-    <value>Chaussures de sécurité conçues pour une protection optimale dans des environnements industriels.</value>
-  </data>
-  <data name="Product_1_Upper_fr-FR" xml:space="preserve">
-    <value>Dessus en cuir durable et résistant.</value>
-  </data>
-  <data name="Product_1_Lining_fr-FR" xml:space="preserve">
-    <value>Doublure respirante pour plus de confort.</value>
-  </data>
-  <data name="Product_1_Protection_fr-FR" xml:space="preserve">
-    <value>Embout en acier renforcé pour protéger les orteils.</value>
-  </data>
-  <data name="Product_1_Midsole_fr-FR" xml:space="preserve">
-    <value>Semelle intermédiaire résistante à la perforation.</value>
-  </data>
-  <data name="Product_1_Insole_fr-FR" xml:space="preserve">
-    <value>Semelle intérieure en mousse à mémoire pour un confort tout au long de la journée.</value>
-  </data>
-  <data name="Product_1_Sole_fr-FR" xml:space="preserve">
-    <value>Semelle extérieure en caoutchouc antidérapant pour une meilleure adhérence.</value>
-  </data>
-  <data name="Product_2_Description_fr-FR" xml:space="preserve">
-    <value>Chaussures de sécurité de haute qualité conçues pour les environnements industriels.</value>
-  </data>
-  <data name="Product_2_Upper_fr-FR" xml:space="preserve">
-    <value>Dessus en cuir durable</value>
-  </data>
-  <data name="Product_2_Lining_fr-FR" xml:space="preserve">
-    <value>Doublure en tissu respirant</value>
-  </data>
-  <data name="Product_2_Protection_fr-FR" xml:space="preserve">
-    <value>Embout en acier renforcé</value>
-  </data>
-  <data name="Product_2_Midsole_fr-FR" xml:space="preserve">
-    <value>Kevlar résistant aux perforations</value>
-  </data>
-  <data name="Product_2_Insole_fr-FR" xml:space="preserve">
-    <value>Mousse à mémoire de forme pour le confort</value>
-  </data>
-  <data name="Product_2_Sole_fr-FR" xml:space="preserve">
-    <value>Semelle en caoutchouc antidérapante</value>
-  </data>
   <data name="Title_1_exploring-the-future-of-renewable-energy_fr" xml:space="preserve">
     <value>Comment les technologies innovantes façonnent un monde durable</value>
   </data>
@@ -653,5 +611,42 @@
 
 &lt;p&gt;En tant qu&amp;#39;individus, nous pouvons contribuer &amp;agrave; cette transformation en soutenant les initiatives d&amp;#39;&amp;eacute;nergie propre, en adoptant des habitudes &amp;eacute;co&amp;eacute;nerg&amp;eacute;tiques et en nous tenant inform&amp;eacute;s des derni&amp;egrave;res innovations. Ensemble, nous pouvons diriger le monde vers un avenir plus vert.&lt;img src="/blog/gif/7489db83ec06622f7aaa58f85e747dd8.gif" style="height:480px; width:480px" /&gt;&lt;/p&gt;
 </value>
+  </data>
+  <data name="Carousel_1_Title" xml:space="preserve">
+    <value>S1-S1P</value>
+  </data>
+  <data name="Carousel_1_Description" xml:space="preserve">
+    <value>İş ayakkabılarını satın alırken kararsızlık yaşamak doğal olabilir...</value>
+  </data>
+  <data name="Carousel_1_LinkText" xml:space="preserve">
+    <value>Buraya Tıkla</value>
+  </data>
+  <data name="Title_1_toeergy_fr" xml:space="preserve">
+    <value>L'avenir des maisons intelligentes : Quand la technologie rencontre le confort</value>
+  </data>
+  <data name="Content_1_toeergy_fr" xml:space="preserve">
+    <value>&lt;p&gt;aaaaaaaaaaaaaaaaaaaaa&lt;/p&gt;
+</value>
+  </data>
+  <data name="Product_4_Description_fr-FR" xml:space="preserve">
+    <value>aaaaaaaaa</value>
+  </data>
+  <data name="Product_4_Upper_fr-FR" xml:space="preserve">
+    <value>aaaaaaaaaaaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Product_4_Lining_fr-FR" xml:space="preserve">
+    <value>awdawd</value>
+  </data>
+  <data name="Product_4_Protection_fr-FR" xml:space="preserve">
+    <value>aaaaaaaaaaaaaaaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Product_4_Midsole_fr-FR" xml:space="preserve">
+    <value>aaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Product_4_Insole_fr-FR" xml:space="preserve">
+    <value>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Product_4_Sole_fr-FR" xml:space="preserve">
+    <value>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</value>
   </data>
 </root>

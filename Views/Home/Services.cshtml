@@ -21,7 +21,7 @@
 }
 
 .btn-outline-success:hover {
-    background-color: #198754;
+    background-color: #e79c00;
     color: #fff;
 }
 
@@ -65,7 +65,7 @@
         /* Text Styling */
         .card-title {
             font-size: 1.2rem;
-            color: #28a745;
+            color: #e79c00;
         }
 
         .card-text {
@@ -79,9 +79,9 @@
         }
 
         .btn-outline-success:hover {
-            background-color: #28a745;
+            background-color: #e79c00;
             color: white;
-            border-color: #28a745;
+            border-color: #e79c00;
             transform: scale(1.05);
         }
     </style>
@@ -90,7 +90,7 @@
 <!-- Hero Section -->
 <section class="py-5 bg-light text-center" data-aos="fade-down">
     <div class="container">
-        <h1 class="display-4 fw-bold text-success text-uppercase">@Model.Services_Title</h1>
+        <h1 style="color: #e79c00;" class="display-4 fw-bold text-uppercase">@Model.Services_Title</h1>
         <p class="lead text-muted">
            @Model.Services_HeroDescription
         </p>
@@ -102,10 +102,10 @@
     <div class="row">
         <!-- Sidebar -->
         <aside class="col-md-3 mb-4" data-aos="fade-right">
-            <h4 class="fw-bold text-success">@Model.Services_CatalogFilterTitle</h4>
+            <h4 style="color: #e79c00;" class="fw-bold">@Model.Services_CatalogFilterTitle</h4>
             <!-- PDF Catalog -->
             <div class="mb-4">
-                <a href="~/catalog/Alpha-Catalog.pdf" target="_blank" class="btn btn-outline-success w-100">
+                <a href="~/catalog/Alpha-Catalog.pdf" target="_blank" class="btn btn-outline-e79c00 w-100">
                     <i class="fa fa-file-pdf me-2"></i> @Model.Services_ViewCatalogButton
                 </a>
             </div>
@@ -148,7 +148,7 @@
 
         <!-- Main Content -->
         <div class="col-md-9" data-aos="fade-up">
-            <h4 class="fw-bold text-uppercase text-success mb-4">@Model.Services_OurProductsTitle</h4>
+            <h4 style="color: #e79c00;" class="fw-bold text-uppercase mb-4">@Model.Services_OurProductsTitle</h4>
 
             @if (Model != null && Model.Products.Any())
             {
@@ -170,7 +170,7 @@
                                     <p class="card-text text-muted mb-2">
                                         <strong>Brand:</strong> @product.Brand
                                     </p>
-                                <a href="@Url.Action("ProductDetail", "Home", new { id = product.ProductId })" class="btn btn-outline-success btn-sm">
+                                <a href="@Url.Action("ProductDetail", "Home", new { id = product.ProductId })" class="btn btn-outline-e79c00 btn-sm">
                                         <i class="fa-solid fa-circle-info fa-beat-fade"></i>
                                             @Model.button
                                 </a>

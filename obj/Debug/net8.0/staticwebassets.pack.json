@@ -61,24 +61,20 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\0a3ed658-63e0-47ea-8642-1e300a43edb2.jpg",
-      "PackagePath": "staticwebassets\\img\\0a3ed658-63e0-47ea-8642-1e300a43edb2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\0e75b48e-6bff-4cdb-8084-222d86b812d6.webp",
-      "PackagePath": "staticwebassets\\img\\0e75b48e-6bff-4cdb-8084-222d86b812d6.webp"
-    },
-    {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\0f54b7eb-1692-4a57-af8c-ddd1332845bd.jpg",
       "PackagePath": "staticwebassets\\img\\0f54b7eb-1692-4a57-af8c-ddd1332845bd.jpg"
     },
     {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\2a04644f-b887-44c8-b2ad-5ff6851d0aa3.jpg",
-      "PackagePath": "staticwebassets\\img\\2a04644f-b887-44c8-b2ad-5ff6851d0aa3.jpg"
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\1200w-Carousel1.jpg",
+      "PackagePath": "staticwebassets\\img\\1200w-Carousel1.jpg"
     },
     {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\2c1a2a44-50c0-4701-9f6c-6e0643b82c76.png",
-      "PackagePath": "staticwebassets\\img\\2c1a2a44-50c0-4701-9f6c-6e0643b82c76.png"
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\1200w-Carousel2.jpg",
+      "PackagePath": "staticwebassets\\img\\1200w-Carousel2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\2a04644f-b887-44c8-b2ad-5ff6851d0aa3.jpg",
+      "PackagePath": "staticwebassets\\img\\2a04644f-b887-44c8-b2ad-5ff6851d0aa3.jpg"
     },
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\3001b50e-2894-4cce-9e1d-887a9a7bfa56.jpg",
@@ -105,16 +101,16 @@
       "PackagePath": "staticwebassets\\img\\5be2d5b2-5f3e-49ef-94e5-8f7bafbf68cd.jpg"
     },
     {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\600w-Carousel1.jpg",
+      "PackagePath": "staticwebassets\\img\\600w-Carousel1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\600w-Carousel2.jpg",
+      "PackagePath": "staticwebassets\\img\\600w-Carousel2.jpg"
+    },
+    {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\60faa593-2cf4-482f-bad0-f66a42b18ce7.jpg",
       "PackagePath": "staticwebassets\\img\\60faa593-2cf4-482f-bad0-f66a42b18ce7.jpg"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\6ab164f3-b551-4664-866a-1e13ec6a8465.webp",
-      "PackagePath": "staticwebassets\\img\\6ab164f3-b551-4664-866a-1e13ec6a8465.webp"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\7c74a553-d542-4372-99f0-077fd0aeed17.webp",
-      "PackagePath": "staticwebassets\\img\\7c74a553-d542-4372-99f0-077fd0aeed17.webp"
     },
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\7f8614b8-3159-424b-8d66-30ec50b63953.jpg",
@@ -137,16 +133,20 @@
       "PackagePath": "staticwebassets\\img\\9d11016f-bba5-4309-840e-02ee1efc9162.webp"
     },
     {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\Carousel1.jpg",
+      "PackagePath": "staticwebassets\\img\\Carousel1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\Carousel2.jpg",
+      "PackagePath": "staticwebassets\\img\\Carousel2.jpg"
+    },
+    {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\about-us-hero.jpg",
       "PackagePath": "staticwebassets\\img\\about-us-hero.jpg"
     },
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\accbbf46-def4-447c-a2ae-923da15a9bab.jpg",
       "PackagePath": "staticwebassets\\img\\accbbf46-def4-447c-a2ae-923da15a9bab.jpg"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\b4f539cf-f989-41ff-9a9b-16ce4f37fdec.webp",
-      "PackagePath": "staticwebassets\\img\\b4f539cf-f989-41ff-9a9b-16ce4f37fdec.webp"
     },
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\bg.jpg",
@@ -195,10 +195,6 @@
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\e75770f0-e3fc-4dae-be7d-ffb46cdf36be.jpg",
       "PackagePath": "staticwebassets\\img\\e75770f0-e3fc-4dae-be7d-ffb46cdf36be.jpg"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\ee0c342b-f3e8-4e9c-ac15-7a6d3b826440.webp",
-      "PackagePath": "staticwebassets\\img\\ee0c342b-f3e8-4e9c-ac15-7a6d3b826440.webp"
     },
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\exploring-the-future-of-renewable-energy_cover.jpg",

@@ -1,3 +1,6 @@
+:root {
+  --main-accent: #e79c00;
+}
 /* Global Styles */
 html, body {
   margin: 0;
@@ -22,13 +25,13 @@ header, footer {
 }
 
 .btn-success {
-  background-color: green;
+  background-color: #e79c00;
   border: none;
   transition: background-color 0.3s ease;
 }
 
 .btn-success:hover {
-  background-color: darkgreen;
+  background-color: #e79c00;
 }
 
 /* Navbar */
@@ -45,11 +48,11 @@ header, footer {
 
 #orta .nav-link:hover,
 #orta .nav-link:focus {
-  color: green; /* Turns green on hover */
+  color: #e79c00; /* Turns green on hover */
 }
 
 #orta .nav-link.active {
-  color: green; /* Keeps "active" link green */
+  color: #e79c00; /* Keeps "active" link green */
   text-decoration: underline;
 }
 
@@ -58,7 +61,7 @@ header, footer {
   position: absolute;
   width: 0;
   height: 2px;
-  background-color: green;
+  background-color: #e79c00;
   bottom: -3px;
   left: 0;
   transition: width 0.3s ease-in-out;
@@ -236,3 +239,17 @@ header, footer {
       transform: translateY(0);
   }
 }
+
+.btn-outline-e79c00 {
+  color: #e79c00;
+  border: 1px solid #e79c00;
+}
+
+.btn-outline-e79c00:hover,
+.btn-outline-e79c00:focus,
+.btn-outline-e79c00:active {
+  background-color: #e79c00;
+  color: white;
+  border-color: #e79c00;
+}
+

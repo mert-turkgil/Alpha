@@ -9,7 +9,7 @@
 <!-- Hero Section -->
 <section class="py-5 bg-light text-center">
     <div class="container">
-        <h1 class="fw-bold text-success text-uppercase">@Model.Name</h1>
+        <h1 style="color: #e79c00;" class="fw-bold text-uppercase">@Model.Name</h1>
         <p class="text-muted">
             <span class="fw-bold">@ViewBag.BodyNoLabel:</span> @Model.BodyNo |
             <span class="fw-bold">@ViewBag.BrandLabel:</span> @Model.Brand |
@@ -27,7 +27,7 @@
         <!-- Left Column: Image Gallery -->
         <div class="col-lg-6 mb-4">
             <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
+                <div style="background-color: #e79c00;" class="card-header text-white">
                     <i class="fas fa-images me-2"></i>@ViewBag.ImagesLabel
                 </div>
                 <div class="card-body">
@@ -71,7 +71,7 @@
         <!-- Right Column: Product Details Table -->
         <div class="col-lg-6">
             <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
+                <div style="background-color: #e79c00;" class="card-header text-white">
                     <i class="fas fa-info-circle me-2"></i>Product Information
                 </div>
                 <div class="card-body p-0">
@@ -140,13 +140,13 @@
         @if (Model.RelatedBlogs != null && Model.RelatedBlogs.Any())
         {
             <div class="mt-5">
-                <h4 class="fw-bold text-success">Related Blogs</h4>
+                <h4 style="color: #e79c00;" class="fw-bold">Related Blogs</h4>
                 <ul class="list-unstyled">
                     @foreach (var blog in Model.RelatedBlogs)
                     {
                         <li>
                             <a href="@Url.Action("BlogDetails", "Home", new { id = blog.BlogId, type = "blog" })" class="text-decoration-none">
-                                <i class="fas fa-arrow-right text-success me-2"></i>@blog.Title
+                                <i style="color: #e79c00;" class="fas fa-arrow-right me-2"></i>@blog.Title
                             </a>
                         </li>
                     }
@@ -155,7 +155,7 @@
         }
     </section>
     <section>
-        <h4 class="fw-bold text-success">@ViewBag.Message</h4>
+        <h4 style="color: #e79c00;" class="fw-bold">@ViewBag.Message</h4>
         <div class="container-xxl">
             <hr>
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 justify-content-center">
@@ -187,7 +187,7 @@
     @if (Model.RecentProducts != null && Model.RecentProducts.Any())
     {
         <div class="mt-5">
-            <h4 class="fw-bold text-success">Recent Products</h4>
+            <h4 style="color: #e79c00;" class="fw-bold">Recent Products</h4>
             <div class="row">
                 @foreach (var recentProduct in Model.RecentProducts)
                 {

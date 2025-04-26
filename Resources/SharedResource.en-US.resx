@@ -601,48 +601,6 @@
   <data name="Carousel_7_LinkText" xml:space="preserve">
     <value>Check Now</value>
   </data>
-  <data name="Product_1_Description_en-US" xml:space="preserve">
-    <value>Safety shoes designed for optimal protection in industrial environments.</value>
-  </data>
-  <data name="Product_1_Upper_en-US" xml:space="preserve">
-    <value>Durable and sturdy leather upper.</value>
-  </data>
-  <data name="Product_1_Lining_en-US" xml:space="preserve">
-    <value>Breathable lining for added comfort.</value>
-  </data>
-  <data name="Product_1_Protection_en-US" xml:space="preserve">
-    <value>Reinforced steel toe cap for toe protection.</value>
-  </data>
-  <data name="Product_1_Midsole_en-US" xml:space="preserve">
-    <value>Puncture-resistant midsole for enhanced safety</value>
-  </data>
-  <data name="Product_1_Insole_en-US" xml:space="preserve">
-    <value>Memory foam insole for all-day comfort.</value>
-  </data>
-  <data name="Product_1_Sole_en-US" xml:space="preserve">
-    <value>Non-slip rubber outsole for superior grip.</value>
-  </data>
-  <data name="Product_2_Description_en-US" xml:space="preserve">
-    <value>High-quality safety shoes designed for industrial and construction environments.</value>
-  </data>
-  <data name="Product_2_Upper_en-US" xml:space="preserve">
-    <value>Durable Leather Upper</value>
-  </data>
-  <data name="Product_2_Lining_en-US" xml:space="preserve">
-    <value>Breathable Fabric Lining</value>
-  </data>
-  <data name="Product_2_Protection_en-US" xml:space="preserve">
-    <value>Reinforced Steel Toe</value>
-  </data>
-  <data name="Product_2_Midsole_en-US" xml:space="preserve">
-    <value>Puncture-Resistant Kevlar</value>
-  </data>
-  <data name="Product_2_Insole_en-US" xml:space="preserve">
-    <value>Memory Foam for Comfort</value>
-  </data>
-  <data name="Product_2_Sole_en-US" xml:space="preserve">
-    <value>Anti-Slip Rubber Sole</value>
-  </data>
   <data name="Title_1_exploring-the-future-of-renewable-energy_en" xml:space="preserve">
     <value>Exploring the Future of Renewable Energy</value>
   </data>
@@ -659,5 +617,42 @@
 
 &lt;p&gt;&lt;strong&gt;&lt;span style="font-size:14px"&gt;&lt;span style="font-family:Courier New,Courier,monospace"&gt;As individuals, we can contribute to this transformation by supporting clean energy initiatives, adopting energy-efficient habits, and staying informed about the latest innovations. Together, we can drive the world toward a greener future.&lt;/span&gt;&lt;/span&gt;&lt;/strong&gt;&lt;img src="/blog/gif/f9387b0777d6c83d05bfbbdbe60b96cd.gif" style="height:280px; width:500px" /&gt;&lt;/p&gt;
 </value>
+  </data>
+  <data name="Carousel_1_Title" xml:space="preserve">
+    <value>S1-S1P</value>
+  </data>
+  <data name="Carousel_1_Description" xml:space="preserve">
+    <value>İş ayakkabılarını satın alırken kararsızlık yaşamak doğal olabilir...</value>
+  </data>
+  <data name="Carousel_1_LinkText" xml:space="preserve">
+    <value>Buraya Tıkla</value>
+  </data>
+  <data name="Title_1_toeergy_en" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="Content_1_toeergy_en" xml:space="preserve">
+    <value>&lt;p&gt;a&lt;/p&gt;
+</value>
+  </data>
+  <data name="Product_4_Description_en-US" xml:space="preserve">
+    <value>aaaaaaaaa</value>
+  </data>
+  <data name="Product_4_Upper_en-US" xml:space="preserve">
+    <value>wadawd</value>
+  </data>
+  <data name="Product_4_Lining_en-US" xml:space="preserve">
+    <value>awdawd</value>
+  </data>
+  <data name="Product_4_Protection_en-US" xml:space="preserve">
+    <value>awdawd</value>
+  </data>
+  <data name="Product_4_Midsole_en-US" xml:space="preserve">
+    <value>awdawd</value>
+  </data>
+  <data name="Product_4_Insole_en-US" xml:space="preserve">
+    <value>awdawd</value>
+  </data>
+  <data name="Product_4_Sole_en-US" xml:space="preserve">
+    <value>awdawd</value>
   </data>
 </root>

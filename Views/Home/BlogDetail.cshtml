@@ -6,10 +6,10 @@
 
 <section class="py-5 bg-light text-center" data-aos="fade-down">
     <div class="container">
-        <h1 class="fw-bold display-5 text-success text-uppercase">@Model.Blog.Title</h1>
+        <h1 style="color: #e79c00;" class="fw-bold display-5 text-uppercase">@Model.Blog.Title</h1>
         <p class="text-muted">
             @Model.BlogDetail_PublishedOn @Model.Blog.Date.ToString("MMMM dd, yyyy")
-            @Model.BlogDetail_ByAuthor <span class="fw-bold text-success">@Model.Blog.Author</span>
+            @Model.BlogDetail_ByAuthor <span style="color: #e79c00;" class="fw-bold">@Model.Blog.Author</span>
         </p>
         @if (!string.IsNullOrEmpty(Model.Blog.Image))
         {
@@ -64,11 +64,11 @@
             <!-- Post Navigation -->
             <div class="d-flex justify-content-between mt-5">
                 <a href="@Url.Action("BlogDetails", "Home", new { id = Model.Blog.BlogId - 1, type = "blog" })"
-                   class="btn btn-outline-success btn-sm @(Model.Blog.BlogId <= 1 ? "disabled" : "")">
+                   class="btn btn-outline-e79c00 btn-sm @(Model.Blog.BlogId <= 1 ? "disabled" : "")">
                     &larr; @Model.BlogDetail_PreviousPost
                 </a>
                 <a href="@Url.Action("BlogDetails", "Home", new { id = Model.Blog.BlogId + 1, type = "blog" })"
-                   class="btn btn-outline-success btn-sm">
+                   class="btn btn-outline-e79c00 btn-sm">
                     @Model.BlogDetail_NextPost &rarr;
                 </a>
             </div>
@@ -79,7 +79,7 @@
             <!-- Recent Posts -->
             <div class="card mb-4 shadow-sm" data-aos="fade-left">
                 <div class="card-body">
-                    <h5 class="fw-bold text-success">@Model.BlogDetail_RecentPosts</h5>
+                    <h5 style="color: #e79c00;" class="fw-bold">@Model.BlogDetail_RecentPosts</h5>
                     <ul class="list-unstyled">
                         @if (ViewBag.RecentBlogs != null)
                         {
@@ -88,7 +88,7 @@
                                 <li class="mb-2">
                                     <a href="@Url.Action("BlogDetails", "Home", new { id = b.BlogId, type = "blog" })"
                                        class="text-decoration-none text-muted">
-                                        <i class="fa fa-arrow-right text-success me-2"></i>@b.Title
+                                        <i style="color: #e79c00;" class="fa fa-arrow-right me-2"></i>@b.Title
                                     </a>
                                 </li>
                             }
@@ -104,13 +104,15 @@
                 @if (Model.RelatedCategories.Count() == 1 && Model.RelatedCategories.Any())
                 {
                     <div class="mt-5">
-                        <h5 class="fw-bold text-success">@Model.BlogDetail_RelatedCategories</h5>
+                        <h5 style="color: #e79c00;" class="fw-bold">@Model.BlogDetail_RelatedCategories</h5>
                         <ul class="list-unstyled d-flex flex-wrap gap-2">
                             @foreach (var cat in Model.RelatedCategories)
                             {
                                 <li>
-                                    <a href="@Url.Action("Services", "Home", new { category = cat.Url })"
-                                       class="badge bg-success text-decoration-none">
+                                    <a
+                                    style="background-color: #e79c00;" 
+                                     href="@Url.Action("Services", "Home", new { category = cat.Url })"
+                                       class="badge text-decoration-none">
                                         @cat.Name
                                     </a>
                                 </li>
@@ -121,7 +123,7 @@
                 else
                 {
                     <div class="mt-5">
-                        <h5 class="fw-bold text-success">@Model.BlogDetail_RelatedCategories</h5>
+                        <h5 style="color: #e79c00;" class="fw-bold">@Model.BlogDetail_RelatedCategories</h5>
                         <p class="text-muted">@Model.BlogDetail_EmptyCategory</p>
                     </div>
                 }
@@ -133,18 +135,18 @@
             {
             <div class="card mb-4 shadow-sm" data-aos="fade-left">
                 <div class="card-body p-3 position-relative" id="relatedProductsSection">
-                    <h5 class="fw-bold text-success mb-3">@Model.BlogDetail_RelatedProducts</h5>
+                    <h5 style="color: #e79c00;" class="fw-bold mb-3">@Model.BlogDetail_RelatedProducts</h5>
 
                     <!-- Prev Button (inside the card, on the left) -->
                     <button id="prevBtn"
-                            class="btn btn-outline-success btn-sm position-absolute top-50 start-0 translate-middle-y"
+                            class="btn btn-outline-e79c00 btn-sm position-absolute top-50 start-0 translate-middle-y"
                             style="margin-left: 0.1rem; z-index: 5;">
                         <i class="fa-solid fa-arrow-left-long fa-beat"></i>
                     </button>
 
                     <!-- Next Button (inside the card, on the right) -->
                     <button id="nextBtn"
-                            class="btn btn-outline-success btn-sm position-absolute top-50 end-0 translate-middle-y"
+                            class="btn btn-outline-e79c00 btn-sm position-absolute top-50 end-0 translate-middle-y"
                             style="margin-right: 0.1rem; z-index: 5;">
                         <i class="fa-solid fa-arrow-right-long fa-beat"></i>
                     </button>
@@ -167,7 +169,7 @@
                                             <strong>@Model.BlogDetail_CategoriesTitle:</strong> @prod.Brand
                                         </p>
                                         <a href="@Url.Action("ProductDetail", "Home", new { id = prod.ProductId })"
-                                        class="btn btn-outline-success btn-sm">
+                                        class="btn btn-outline-e79c00 btn-sm">
                                         <i class="fa-solid fa-circle-info fa-beat-fade"></i>
                                             @Model.ViewButton
                                         </a>
@@ -180,7 +182,7 @@
             </div>
             }else{
                     <div class="mt-5">
-                        <h5 class="fw-bold text-success">@Model.BlogDetail_RelatedCategories</h5>
+                        <h5 style="color: #e79c00;" class="fw-bold">@Model.BlogDetail_RelatedCategories</h5>
                         <p class="text-muted">@Model.BlogDetail_EmptyCategory</p>
                     </div>
             }

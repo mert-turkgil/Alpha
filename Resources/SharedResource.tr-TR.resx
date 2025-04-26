@@ -521,8 +521,8 @@
     <value>Anasayfa</value>
   </data>
   <data name="About" xml:space="preserve">
-    <value>Hakkında</value>
-  </data>
+    <value>Hakkımızda</value>
+  <comment>N/A</comment></data>
   <data name="Services" xml:space="preserve">
     <value>Hizmetlerimiz</value>
   </data>
@@ -673,5 +673,42 @@
 
 &lt;p&gt;&lt;img src="/blog/gif/f9387b0777d6c83d05bfbbdbe60b96cd.gif" style="height:280px; width:500px" /&gt;&lt;/p&gt;
 </value>
+  </data>
+  <data name="Carousel_1_Title" xml:space="preserve">
+    <value>S1-S1P</value>
+  </data>
+  <data name="Carousel_1_Description" xml:space="preserve">
+    <value>İş ayakkabılarını satın alırken kararsızlık yaşamak doğal olabilir...</value>
+  </data>
+  <data name="Carousel_1_LinkText" xml:space="preserve">
+    <value>Buraya Tıkla</value>
+  </data>
+  <data name="Title_1_toeergy_tr" xml:space="preserve">
+    <value>Akıllı Evlerin Geleceği: Teknoloji ve Konforun Buluşması</value>
+  </data>
+  <data name="Content_1_toeergy_tr" xml:space="preserve">
+    <value>&lt;p&gt;aaa&lt;/p&gt;
+</value>
+  </data>
+  <data name="Product_4_Description_tr-TR" xml:space="preserve">
+    <value>Maksimum konfor ve koruma için fütüristik malzemelerle tasarlanmış yüksek teknolojili bir güvenlik ayakkabısı.</value>
+  </data>
+  <data name="Product_4_Upper_tr-TR" xml:space="preserve">
+    <value>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Product_4_Lining_tr-TR" xml:space="preserve">
+    <value>aaaaaaaaaaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Product_4_Protection_tr-TR" xml:space="preserve">
+    <value>aaaaaaaaaaaaa</value>
+  </data>
+  <data name="Product_4_Midsole_tr-TR" xml:space="preserve">
+    <value>aaaaaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Product_4_Insole_tr-TR" xml:space="preserve">
+    <value>waaaaaaaaaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Product_4_Sole_tr-TR" xml:space="preserve">
+    <value>aaaaaaaaaaaaaaaaaaaaaaa</value>
   </data>
 </root>

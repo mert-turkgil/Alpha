@@ -166,9 +166,7 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
-}
-else
-{
+}else{
     // Seed roles and users in development mode
     using (var scope = app.Services.CreateScope())
     {

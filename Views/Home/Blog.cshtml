@@ -30,12 +30,12 @@
             font-size: 1.25rem;
             font-weight: bold;
             margin: 10px 0;
-            color: #198754;
+            color: #e79c00;
             transition: color 0.3s ease;
         }
 
         .blog-title:hover {
-            color: #145c32;
+            color: #e79c00;
         }
 
         .blog-meta {
@@ -49,8 +49,8 @@
         }
 
         .pagination .page-item.active .page-link {
-            background-color: #198754;
-            border-color: #198754;
+            background-color: #e79c00;
+            border-color: #e79c00;
         }
     </style>
 }
@@ -58,7 +58,7 @@
 <!-- Blog Header Section -->
 <section class="py-5 bg-light text-center" data-aos="fade-down">
     <div class="container">
-        <h1 class="display-4 text-success fw-bold text-uppercase">@Model.BlogList_Title</h1>
+        <h1 style="color: #e79c00;" class="display-4 fw-bold text-uppercase">@Model.BlogList_Title</h1>
         <p class="lead text-muted"> @Model.BlogList_Description</p>
     </div>
 </section>
@@ -68,7 +68,7 @@
     <div class="row">
         <!-- Filter Section -->
         <div class="col-lg-3 col-md-4 mb-4" data-aos="fade-right">
-            <h4 class="text-success fw-bold mb-3">@Model.BlogList_SearchLabel</h4>
+            <h4 style="color: #e79c00;" class="fw-bold mb-3">@Model.BlogList_SearchLabel</h4>
             <form method="get" action="@Url.Action("Blog", "Home")">
                 <!-- Category Filter -->
                 <div class="mb-3">
@@ -141,7 +141,7 @@
                                                 @Html.Raw(blog.Content)
                                             }
                                     </div>
-                                    <a href="@Url.Action("BlogDetails", "Home", new { id = blog.BlogId, type = "blog" })" class="btn btn-outline-success btn-sm">
+                                    <a href="@Url.Action("BlogDetails", "Home", new { id = blog.BlogId, type = "blog" })" class="btn btn-outline-e79c00 btn-sm">
                                         @Model.BlogList_ReadMore
                                     </a>
                                 </div>
