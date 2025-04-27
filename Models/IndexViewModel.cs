@@ -12,10 +12,19 @@ namespace Alpha.Models
 
         public string HeroDescription { get; set; }
         public string HeroLink { get; set; }
-        public string HeaderQuote { get; set; }
-        public string BodyQuote1 { get; set; }
-        public string BodyQuote2 { get; set; }
-        public string BodyQuote3 { get; set; }
+        public string CountryQuote { get; set; }
+        public string contry1 { get; set; }
+        public string contry2 { get; set; }
+        public string contry3 { get; set; }
+        public string contry4 { get; set; }
+        public string contry5 { get; set; }
+        public string contry6 { get; set; }
+        public string contry7 { get; set; }
+        public string contry8 { get; set; }
+        public string contry9 { get; set; }
+        public string contry10 { get; set; }
+        public string contry11 { get; set; }
+        public string contry12 { get; set; }
         public string Talker1 { get; set; }
         public string Talker2 { get; set; }
         public string Talker3 { get; set; }

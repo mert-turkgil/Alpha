@@ -601,45 +601,45 @@ private void UpdateTranslations(IManageResourceService manageResourceService, in
         return View(e);
     }
 
-private void AddProductTranslations(int productId, ProductCreateModel model)
-{
-    // Supported Languages and Fields
-    var cultures = new[] { "fr-FR", "en-US", "de-DE", "tr-TR" };
-    var fields = new Dictionary<string, string>
+    private void AddProductTranslations(int productId, ProductCreateModel model)
     {
-        { "Description", model.Description },
-        { "Upper", model.Upper },
-        { "Lining", model.Lining },
-        { "Protection", model.Protection },
-        { "Midsole", model.Midsole },
-        { "Insole", model.Insole },
-        { "Sole", model.Sole }
-    };
-
-    // Process each culture and field
-    foreach (var culture in cultures)
-    {
-        foreach (var field in fields)
+        // Supported Languages and Fields
+        var cultures = new[] { "fr-FR", "en-US", "de-DE", "tr-TR" };
+        var fields = new Dictionary<string, string>
         {
-            var resourceKey = $"Product_{productId}_{field.Key}_{culture}";
+            { "Description", model.Description },
+            { "Upper", model.Upper },
+            { "Lining", model.Lining },
+            { "Protection", model.Protection },
+            { "Midsole", model.Midsole },
+            { "Insole", model.Insole },
+            { "Sole", model.Sole }
+        };
 
-            // Dynamically get the translation property value
-            var value = GetPropertyValue(model, $"{field.Key}{culture.Split('-')[1]}");
-
-            if (!string.IsNullOrWhiteSpace(value))
+        // Process each culture and field
+        foreach (var culture in cultures)
+        {
+            foreach (var field in fields)
             {
-                try
+                var resourceKey = $"Product_{productId}_{field.Key}_{culture}";
+
+                // Dynamically get the translation property value
+                var value = GetPropertyValue(model, $"{field.Key}{culture.Split('-')[1]}");
+
+                if (!string.IsNullOrWhiteSpace(value))
                 {
-                    _manageResourceService.AddOrUpdateResource(resourceKey, value, culture);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to save translation for {resourceKey}: {ex.Message}");
+                    try
+                    {
+                        _manageResourceService.AddOrUpdateResource(resourceKey, value, culture);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to save translation for {resourceKey}: {ex.Message}");
+                    }
                 }
             }
         }
     }
-}
 
     // Helper Method for Reflection
     private string GetPropertyValue(object obj, string propName)
@@ -996,51 +996,31 @@ private void SafeDeleteResource(string key, string culture)
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditTranslation(string name, string value, string comment, string lang)
+        public IActionResult EditTranslation(string name, string value,
+                                            string comment, string lang)
         {
             if (string.IsNullOrEmpty(name))
-                return Json(new { success = false, message = "Translation key is required." });
+                return RedirectToAction(nameof(Localization), new { lang, e = "KeyMissing" });
 
             var resxPath = GetResxPath(lang);
-
             if (!System.IO.File.Exists(resxPath))
-                return Json(new { success = false, message = "Localization file not found." });
+                return RedirectToAction(nameof(Localization), new { lang, e = "FileMissing" });
 
-            var resxFile = XDocument.Load(resxPath);
+            var resx = XDocument.Load(resxPath);
+            var data = resx.Root?
+                    .Elements("data")
+                    .FirstOrDefault(x => x.Attribute("name")?.Value == name);
 
-            var dataElement = resxFile.Root?
-                .Elements("data")
-                .FirstOrDefault(x => x.Attribute("name")?.Value == name);
+            if (data is null)
+                return RedirectToAction(nameof(Localization), new { lang, e = "KeyNotFound" });
 
-            if (dataElement != null)
-            {
-                var valueElement = dataElement.Element("value");
-                if (valueElement != null)
-                {
-                    valueElement.Value = value ?? string.Empty;
-                }
-                else
-                {
-                    dataElement.Add(new XElement("value", value ?? string.Empty));
-                }
-
-                var commentElement = dataElement.Element("comment");
-                if (commentElement != null)
-                {
-                    commentElement.Value = comment ?? string.Empty;
-                }
-                else
-                {
-                    dataElement.Add(new XElement("comment", comment ?? string.Empty));
-                }
-
-                resxFile.Save(resxPath);
-                return Json(new { success = true, message = "Translation updated successfully." });
-            }
-
-            return Json(new { success = false, message = "Translation key not found." });
+            data.SetElementValue("value",  value  ?? string.Empty);
+            data.SetElementValue("comment", comment ?? string.Empty);
+            resx.Save(resxPath);
+            _dynamicResourceService.ReloadResources();
+            TempData["Success"] = "Translation updated ✔";     // razor’da gösterin
+            return RedirectToAction(nameof(Localization), new { lang });
         }
-  
 
         private string GetResxPath(string lang)
         {

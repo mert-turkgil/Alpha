@@ -436,35 +436,44 @@
   <data name="About_PersonnelShoesDescription" xml:space="preserve">
     <value>Comfortable, stylish footwear for professional environments.</value>
   </data>
-  <data name="Company1" xml:space="preserve">
-    <value>OpenAi</value>
+  <data name="country1" xml:space="preserve">
+    <value>Germany</value>
   </data>
-  <data name="Company2" xml:space="preserve">
-    <value>Tesla</value>
+    <data name="country2" xml:space="preserve">
+    <value>Poland</value>
   </data>
-  <data name="Company3" xml:space="preserve">
-    <value>Apple</value>
+    <data name="country3" xml:space="preserve">
+    <value>Romania</value>
   </data>
-  <data name="BodyQuote1" xml:space="preserve">
-    <value>“Alpha safety shoes are lightweight and incredibly durable. Our team loves them!”</value>
+    <data name="country4" xml:space="preserve">
+    <value>Bulgaria</value>
   </data>
-  <data name="BodyQuote2" xml:space="preserve">
-    <value>“A perfect balance between safety and comfort. Highly recommended!”</value>
+    <data name="country5" xml:space="preserve">
+    <value>Azerbaijan</value>
   </data>
-  <data name="BodyQuote3" xml:space="preserve">
-    <value>“Alpha safety shoes are lightweight and incredibly durable. Our team loves them!”</value>
+    <data name="country6" xml:space="preserve">
+    <value>Uzbekistan</value>
   </data>
-  <data name="Talker1" xml:space="preserve">
-    <value>Mert Türkgil</value>
+    <data name="country7" xml:space="preserve">
+    <value>Croatia</value>
   </data>
-  <data name="Talker2" xml:space="preserve">
-    <value>Mahmut Aksöz</value>
+    <data name="country8" xml:space="preserve">
+    <value>Greece</value>
   </data>
-  <data name="Talker3" xml:space="preserve">
-    <value>Deneme deneme</value>
+    <data name="country9" xml:space="preserve">
+    <value>Algeria</value>
   </data>
-  <data name="HeaderQuote" xml:space="preserve">
-    <value>What Our Clients Say</value>
+    <data name="country10" xml:space="preserve">
+    <value>Ivory Coast</value>
+  </data>
+    <data name="country11" xml:space="preserve">
+    <value>Mozambique</value>
+  </data>
+    <data name="country12" xml:space="preserve">
+    <value>Turkey</value>
+  </data>
+  <data name="CountryQuote" xml:space="preserve">
+    <value>Countries that buy our products</value>
   </data>
   <data name="QuickLink" xml:space="preserve">
     <value>QuickLinks</value>

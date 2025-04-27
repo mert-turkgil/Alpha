@@ -436,35 +436,44 @@
   <data name="About_PersonnelShoesDescription" xml:space="preserve">
     <value>Profesyonel ortamlara uygun, rahat ve şık ayakkabılar.</value>
   </data>
-  <data name="Company1" xml:space="preserve">
-    <value>OpenAi</value>
+    <data name="country1" xml:space="preserve">
+    <value>Almanya</value>
   </data>
-  <data name="Company2" xml:space="preserve">
-    <value>Tesla</value>
+    <data name="country2" xml:space="preserve">
+    <value>Polanya</value>
   </data>
-  <data name="Company3" xml:space="preserve">
-    <value>Apple</value>
+    <data name="country3" xml:space="preserve">
+    <value>Romanya</value>
   </data>
-  <data name="BodyQuote1" xml:space="preserve">
-    <value>“Alpha İş Güvenliği Ayakkabıları hafif ve inanılmaz derecede dayanıklı. Ekibimiz onları çok seviyor!”</value>
+    <data name="country4" xml:space="preserve">
+    <value>Bulgaristan</value>
   </data>
-  <data name="BodyQuote2" xml:space="preserve">
-    <value>“Güvenlik ve konfor arasında mükemmel bir denge. Şiddetle tavsiye edilir!”</value>
+    <data name="country5" xml:space="preserve">
+    <value>Azerbaycan</value>
   </data>
-  <data name="BodyQuote3" xml:space="preserve">
-    <value>“Birinci sınıf kalite ve hizmet. Alpha Shoes her seferinde beklentileri aşıyor.”</value>
+    <data name="country6" xml:space="preserve">
+    <value>Özbekistan</value>
   </data>
-  <data name="Talker1" xml:space="preserve">
-    <value>Mert Türkgil</value>
+    <data name="country7" xml:space="preserve">
+    <value>Hırvatistan</value>
   </data>
-  <data name="Talker2" xml:space="preserve">
-    <value>Mahmut Aksöz</value>
+    <data name="country8" xml:space="preserve">
+    <value>Yunanistan</value>
   </data>
-  <data name="Talker3" xml:space="preserve">
-    <value>Deneme deneme</value>
+    <data name="country9" xml:space="preserve">
+    <value>Cezayir</value>
   </data>
-  <data name="HeaderQuote" xml:space="preserve">
-    <value>Müşterilerimiz Ne Söylüyor</value>
+    <data name="country10" xml:space="preserve">
+    <value>Fildişi Sahili</value>
+  </data>
+    <data name="country11" xml:space="preserve">
+    <value>Mozambik</value>
+  </data>
+    <data name="country12" xml:space="preserve">
+    <value>Türkiye</value>
+  </data>
+  <data name="CountryQuote" xml:space="preserve">
+    <value>Ürünlerimizi alan ülkeler</value>
   </data>
   <data name="QuickLink" xml:space="preserve">
     <value>Hızlı Bağlantılar</value>
@@ -524,8 +533,8 @@
     <value>Hakkımızda</value>
   <comment>N/A</comment></data>
   <data name="Services" xml:space="preserve">
-    <value>Hizmetlerimiz</value>
-  </data>
+    <value>Ürünlerimiz</value>
+  <comment>N/A</comment></data>
   <data name="Blog" xml:space="preserve">
     <value>Blog</value>
   </data>

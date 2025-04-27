@@ -50,24 +50,30 @@
             <h4 class="fw-bold mb-3">@Model.Contact_SendUsMessage</h4>
                 <form asp-action="Contact" asp-controller="Home" method="post">
                     @Html.AntiForgeryToken()
+
                     <div class="mb-3">
-                        <label for="name" class="form-label">@Model.Contact_YourName</label>
-                        <input type="text" class="form-control" id="name" name="Name" placeholder="@Model.Contact_YourName" required>
+                        <label asp-for="Name" class="form-label">@Model.Contact_YourName</label>
+                        <input asp-for="Name" class="form-control" required />
                     </div>
+
                     <div class="mb-3">
-                        <label for="email" class="form-label">@Model.Contact_YourEmail</label>
-                        <input type="email" class="form-control" id="email" name="Email" placeholder="@Model.Contact_YourEmail" required>
+                        <label asp-for="Email" class="form-label">@Model.Contact_YourEmail</label>
+                        <input asp-for="Email" type="email" class="form-control" required />
                     </div>
+
                     <div class="mb-3">
-                        <label for="subject" class="form-label">@Model.Contact_Subject</label>
-                        <input type="text" class="form-control" id="subject" name="Subject" placeholder="@Model.Contact_Subject" required>
+                        <label asp-for="Subject" class="form-label">@Model.Contact_Subject</label>
+                        <input asp-for="Subject" class="form-control" required />
                     </div>
+
                     <div class="mb-3">
-                        <label for="message" class="form-label">@Model.Contact_Message</label>
-                        <textarea class="form-control" id="message" name="Message" rows="5" placeholder="@Model.Contact_Message" required></textarea>
+                        <label asp-for="Message" class="form-label">@Model.Contact_Message</label>
+                        <textarea asp-for="Message" class="form-control" rows="4" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-success">@Model.Contact_SendMessageButton</button>
+
+                    <button type="submit" class="btn btn-primary">@Model.Contact_SendMessageButton</button>
                 </form>
+
 
 
         </div>
@@ -76,7 +82,7 @@
         <div class="col-md-5 animate__animated animate__zoomIn">
             <h4 class="fw-bold mb-3">@Model.Contact_OurLocation</h4>
             <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1845.9883856369831!2d29.177626559190738!3d40.889669490332906!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cac39baeb70b37%3A0xd4d8ed6cdd18d46f!2zQmHFn2Fr!5e0!3m2!1str!2str!4v1734220831284!5m2!1str!2str"
+                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d188.47974544133035!2d29.2071279563417!3d40.900923193458425!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1str!2str!4v1745714752361!5m2!1str!2str"
                 width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         </div>
     </div>

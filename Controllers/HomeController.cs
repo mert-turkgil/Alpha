@@ -338,94 +338,90 @@ public class HomeController : Controller
 
 #endregion
 
-    [HttpGet]
-    public IActionResult Contact()
+#region Contact
+
+[HttpGet]
+public IActionResult Contact()
+{
+    var model = new ContactViewModel
     {
-        // Retrieve localized strings from your resource service (LanguageService, IStringLocalizer, etc.)
-        var contactTitle             = _localization.GetKey("Contact_Title")?.Value ?? "Contact Us";
-        var contactHeroDescription   = _localization.GetKey("Contact_HeroDescription")?.Value 
-                                    ?? "We’re here to assist you. Reach out to us for any questions, feedback, or support.";
+        Contact_Title               = _localization.GetKey("Contact_Title")?.Value ?? "Contact Us",
+        Contact_HeroDescription     = _localization.GetKey("Contact_HeroDescription")?.Value ?? "We're here to assist you.",
+        Contact_OurAddress          = _localization.GetKey("Contact_OurAddress")?.Value ?? "Our Address",
+        Contact_PhoneNumber         = _localization.GetKey("Contact_PhoneNumber")?.Value ?? "Phone Number",
+        Contact_EmailUs             = _localization.GetKey("Contact_EmailUs")?.Value ?? "Email Us",
+        Contact_SendUsMessage       = _localization.GetKey("Contact_SendUsMessage")?.Value ?? "Send Us a Message",
+        Contact_YourName            = _localization.GetKey("Contact_YourName")?.Value ?? "Your Name",
+        Contact_YourEmail           = _localization.GetKey("Contact_YourEmail")?.Value ?? "Your Email",
+        Contact_Subject             = _localization.GetKey("Contact_Subject")?.Value ?? "Subject",
+        Contact_Message             = _localization.GetKey("Contact_Message")?.Value ?? "Message",
+        Contact_SendMessageButton   = _localization.GetKey("Contact_SendMessageButton")?.Value ?? "Send",
+        Contact_OurLocation         = _localization.GetKey("Contact_OurLocation")?.Value ?? "Our Location",
+        Contact_FollowUsSocialMedia = _localization.GetKey("Contact_FollowUsSocialMedia")?.Value ?? "Follow Us",
+        Contact_OurAddressValue     = _localization.GetKey("Contact_OurAddressValue")?.Value ?? "123 Alpha Street",
+        Contact_PhoneNumberValue    = _localization.GetKey("Contact_PhoneNumberValue")?.Value ?? "+1 (555) 123-4567",
+        Contact_EmailAddressValue   = _localization.GetKey("Contact_EmailAddressValue")?.Value ?? "info@alphasafetyshoes.com"
+    };
 
-        var contactOurAddress        = _localization.GetKey("Contact_OurAddress")?.Value ?? "Our Address";
-        var contactPhoneNumber       = _localization.GetKey("Contact_PhoneNumber")?.Value ?? "Phone Number";
-        var contactEmailUs           = _localization.GetKey("Contact_EmailUs")?.Value ?? "Email Us";
+    return View(model);
+}
 
-        var contactSendUsMessage     = _localization.GetKey("Contact_SendUsMessage")?.Value ?? "Send Us a Message";
-        var contactYourName          = _localization.GetKey("Contact_YourName")?.Value ?? "Your Name";
-        var contactYourEmail         = _localization.GetKey("Contact_YourEmail")?.Value ?? "Your Email";
-        var contactSubject           = _localization.GetKey("Contact_Subject")?.Value ?? "Subject";
-        var contactMessage           = _localization.GetKey("Contact_Message")?.Value ?? "Message";
-        var contactSendMessageButton = _localization.GetKey("Contact_SendMessageButton")?.Value ?? "Send Message";
+[HttpPost]
+[ActionName("Contact")] // 💡 Bu çok önemli: POST methodu çakışmasın diye!
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> ContactPost(ContactViewModel model)
+{
+    if (!ModelState.IsValid)
+        return View(model);
 
-        var contactOurLocation       = _localization.GetKey("Contact_OurLocation")?.Value ?? "Our Location";
-        var contactFollowUsSocial    = _localization.GetKey("Contact_FollowUsSocialMedia")?.Value 
-                                    ?? "Follow Us on Social Media";
-        var contactOurAddressValue  = _localization.GetKey("Contact_OurAddressValue")?.Value ?? "123 Industrial Park, Alpha City, Country";
-        var contactPhoneNumberValue = _localization.GetKey("Contact_PhoneNumberValue")?.Value ?? "+1 (555) 123-4567";
-        var contactEmailAddressValue= _localization.GetKey("Contact_EmailAddressValue")?.Value ?? "info@alphasafetyshoes.com";
+    try
+    {
+        string adminEmail = "owner-email@example.com";
+        var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
-        // Build the ViewModel
-        var model = new ContactViewModel
+        string emailRoot = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates");
+        string adminTemplatePath = Path.Combine(emailRoot, "AdminNotification.html");
+
+        string userTemplatePath = culture switch
         {
-            Contact_Title               = contactTitle,
-            Contact_HeroDescription     = contactHeroDescription,
-            Contact_OurAddress          = contactOurAddress,
-            Contact_PhoneNumber         = contactPhoneNumber,
-            Contact_EmailUs             = contactEmailUs,
-            Contact_SendUsMessage       = contactSendUsMessage,
-            Contact_YourName            = contactYourName,
-            Contact_YourEmail           = contactYourEmail,
-            Contact_Subject             = contactSubject,
-            Contact_Message             = contactMessage,
-            Contact_SendMessageButton   = contactSendMessageButton,
-            Contact_OurLocation         = contactOurLocation,
-            Contact_OurAddressValue     = contactOurAddressValue,
-            Contact_PhoneNumberValue    = contactPhoneNumberValue,
-            Contact_EmailAddressValue   = contactEmailAddressValue,
-            Contact_FollowUsSocialMedia = contactFollowUsSocial
+            "en" => Path.Combine(emailRoot, "UserNotification_en.html"),
+            "de" => Path.Combine(emailRoot, "UserNotification_de.html"),
+            "fr" => Path.Combine(emailRoot, "UserNotification_fr.html"),
+            _    => Path.Combine(emailRoot, "UserNotification_tr.html")
         };
 
-        return View(model);
-    }
+        string adminTemplate = await System.IO.File.ReadAllTextAsync(adminTemplatePath);
+        string userTemplate = await System.IO.File.ReadAllTextAsync(userTemplatePath);
 
+        string adminBody = adminTemplate
+            .Replace("{UserName}", model.Name)
+            .Replace("{UserEmail}", model.Email)
+            .Replace("{UserMessage}", model.Message);
 
-    [HttpPost]
-    [ValidateAntiForgeryToken] 
-    public async Task<IActionResult> Contact(ContactFormViewModel model)
-    {
-        if (ModelState.IsValid)
+        string adminSubject = "Yeni İletişim Formu Mesajı";
+        string userSubject = culture switch
         {
-            try
-            {
-                // User's Culture for Localization
-                var userCulture = CultureInfo.CurrentCulture.Name; // e.g., en-US, tr-TR
+            "en" => "Thank You for Your Message",
+            "de" => "Vielen Dank für Ihre Nachricht",
+            "fr" => "Merci pour votre message",
+            _    => "Mesajınız İçin Teşekkürler"
+        };
 
-                // Send email to the user with localized content
-         
+        await _emailSender.SendEmailAsync(adminEmail, adminSubject, adminBody);
+        await _emailSender.SendEmailAsync(model.Email, userSubject, userTemplate);
 
-                // Send email to admin with static template (English as default)
-                string adminBody = $@"
-                    <h3>New Contact Form Submission</h3>
-                    <p><strong>Name:</strong> {model.Name}</p>
-                    <p><strong>Email:</strong> {model.Email}</p>
-                    <p><strong>Subject:</strong> {model.Subject}</p>
-                    <p><strong>Message:</strong> {model.Message}</p>";
-
-                await _emailSender.SendEmailAsync("owner-email@example.com", "New Contact Form Submission", adminBody);
-
-                TempData["SuccessMessage"] = _localization.GetKey("ContactSuccessMessage").Value;
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = _localization.GetKey("ContactErrorMessage").Value;
-                _logger.LogError(ex, "Error sending email.");
-            }
-        }
-
-        return View(model); // Re-display form if validation fails
+        TempData["SuccessMessage"] = _localization.GetKey("ContactSuccessMessage").Value;
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Contact form error");
+        TempData["ErrorMessage"] = _localization.GetKey("ContactErrorMessage").Value;
     }
 
+    return View(model);
+}
 
+#endregion
 
 #region  Services
     public async Task<IActionResult> Services(string category, string brand, string search)
@@ -622,13 +618,19 @@ public async Task<IActionResult> ProductDetail(int id)
         var heroTitle = _localization.GetKey("HeroTitle").Value;
         var heroDescription = _localization.GetKey("HeroDescription").Value;
         var heroLink = _localization.GetKey("HeroLink").Value;
-        var HeaderQuote = _localization.GetKey("HeaderQuote").Value;
-        var BodyQuote1 = _localization.GetKey("BodyQuote1").Value;
-        var BodyQuote2 = _localization.GetKey("BodyQuote2").Value;
-        var BodyQuote3 = _localization.GetKey("BodyQuote3").Value;   
-        var Company1 = _localization.GetKey("Company1").Value;
-        var Company2 = _localization.GetKey("Company2").Value;
-        var Company3 = _localization.GetKey("Company3").Value;
+        var CountryQuote = _localization.GetKey("CountryQuote").Value;
+        var country1 = _localization.GetKey("country1").Value;
+        var country2 = _localization.GetKey("country2").Value;
+        var country3 = _localization.GetKey("country3").Value;
+        var country4 = _localization.GetKey("country4").Value;  
+        var country5 = _localization.GetKey("country5").Value;  
+        var country6 = _localization.GetKey("country6").Value;  
+        var country7 = _localization.GetKey("country7").Value;  
+        var country8 = _localization.GetKey("country8").Value;          
+        var country9 = _localization.GetKey("country9").Value;  
+        var country10 = _localization.GetKey("country10").Value;  
+        var country11 = _localization.GetKey("country11").Value;  
+        var country12 = _localization.GetKey("country12").Value;    
         var Talker1 = _localization.GetKey("Talker1").Value;  
         var Talker2 = _localization.GetKey("Talker2").Value; 
         var Talker3 = _localization.GetKey("Talker3").Value;         
@@ -639,16 +641,19 @@ public async Task<IActionResult> ProductDetail(int id)
             HeroTitle = heroTitle,
             HeroDescription = heroDescription,
             HeroLink = heroLink,
-            HeaderQuote = HeaderQuote,
-            BodyQuote1 = BodyQuote1,
-            BodyQuote2 = BodyQuote2,
-            BodyQuote3 = BodyQuote3,
-            Company1 = Company1, 
-            Company2 = Company2,  
-            Company3 = Company3,
-            Talker1 = Talker1,
-            Talker2 = Talker2,
-            Talker3 = Talker3                         
+            CountryQuote = CountryQuote,
+            contry1 = country1,
+            contry2 = country2,
+            contry3 = country3,
+            contry4 = country4,
+            contry5 = country5,
+            contry6 = country6,
+            contry7 = country7,
+            contry8 = country8,
+            contry9 = country9,
+            contry10 = country10,
+            contry11 = country11,
+            contry12 = country12                      
         };
 
         return View(viewModel);

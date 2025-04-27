@@ -5,6 +5,7 @@
 }
 @section Css{
     <link rel="stylesheet" href="~/css/Category.css" />
+    <link rel="stylesheet" href="~/lib/imageviewer/1.1.0/viewer.min.css" />
 }
 <!-- Hero Section -->
 <section class="py-5 bg-light text-center">
@@ -35,7 +36,7 @@
                     {
                         <!-- Main Image -->
                         var mainImgUrl = Model.ProductImages.First().Image?.ImageUrl ?? "default-image.jpg";
-                        <div class="text-center mb-3">
+                        <div id="productImageGallery" class="text-center mb-3">
                             <img src="~/img/@mainImgUrl"
                                  alt="@Model.Name"
                                  class="img-fluid rounded shadow-sm"
@@ -46,13 +47,13 @@
                         <!-- Thumbnails -->
                         @if (Model.ProductImages.Count > 1)
                         {
-                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                            <div id="productImageGallery" class="d-flex flex-wrap justify-content-center gap-2">
                                 @foreach (var img in Model.ProductImages)
                                 {
                                     <a href="~/img/@img.Image.ImageUrl" data-fslightbox="gallery">
                                         <img src="~/img/@img.Image.ImageUrl"
                                              alt="@Model.Name"
-                                             class="img-thumbnail"
+                                             class="img-fluid"
                                              style="width: 100px; height: 100px; object-fit: cover;"
                                              onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=Image+Unavailable';" />
                                     </a>
@@ -213,8 +214,23 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>
+    <script src="~/lib/imageviewer/1.1.0/viewer.min.js"></script>
     <script>
-        fsLightboxInstances["gallery"].props.loadOnlyCurrentSource = true;
+    $(document).ready(function() {
+        // "productImageGallery" kapsayıcısındaki resimler için imageviewer'ı etkinleştir
+        $('#productImageGallery').viewer({
+            // Tüm özellikleri aktif ediyoruz
+            toolbar: true,       // Alt kısımda yakınlaştırma, döndürme, bir-sona sığdır gibi araçları göster
+            navbar: true,        // Çoklu resim varsa küçük önizleme şeridini (navbar) göster
+            title: true,         // Üstte başlık (örneğin resim numarası veya adı) göster
+            fullscreen: true,    // Tam ekran moduna geçiş butonunu aktif et
+            rotatable: true,     // Resmi döndürme özelliğini aktif et
+            scalable: true,      // Resmi yatay/dikey çevirme (flip) özelliğini aktif et
+            zoomable: true,      // Yakınlaştırma/uzaklaştırma özelliğini aktif et
+            movable: true,       // Büyütülen resmin sürüklenerek taşınmasını aktif et
+            keyboard: true,      // Klavye ok tuşları ile navigasyon ve +/- ile zoom yap
+            loop: true           // Son resimde ileri tuşuna basılırsa ilk resme döngü yap (galeriyi döngüsel yap)
+        });
+    });
     </script>
 }

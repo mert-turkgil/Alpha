@@ -105,9 +105,28 @@
             <h4 style="color: #e79c00;" class="fw-bold">@Model.Services_CatalogFilterTitle</h4>
             <!-- PDF Catalog -->
             <div class="mb-4">
-                <a href="~/catalog/Alpha-Catalog.pdf" target="_blank" class="btn btn-outline-e79c00 w-100">
-                    <i class="fa fa-file-pdf me-2"></i> @Model.Services_ViewCatalogButton
+            <!-- Popover'u bu span üzerinde tutuyoruz -->
+            <span
+                class="d-inline-block w-100"
+                data-bs-toggle="popover"
+                data-bs-trigger="hover focus"
+                data-bs-placement="top"
+                data-bs-html="true"
+                data-bs-content="
+                <div class='d-flex align-items-center'>
+                    <div class='spinner-border spinner-border-sm me-2' role='status'></div>
+                    <span>Loading…</span>
+                </div>
+                ">
+                <!-- Disabled buton -->
+                <a href="#"
+                class="btn btn-outline-e79c00 w-100 disabled"
+                tabindex="0"
+                role="button"
+                aria-disabled="true">
+                <i class="fa fa-file-pdf me-2"></i> @Model.Services_ViewCatalogButton
                 </a>
+            </span>
             </div>
 
             <!-- Product Filters -->
@@ -193,12 +212,25 @@
 
 <!-- Include AOS Script -->
 @section Scripts {
-    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 1000, // Animation duration
-            once: true,     // Run animation once
-            easing: 'ease-in-out'
-        });
-    </script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: 'ease-in-out'
+    });
+  </script>
+
+  <!-- jQuery zaten varsa, Popper + Bootstrap bundle'ı alt alta değil tek dosya olarak çağırın -->
+  <script 
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" 
+    crossorigin="anonymous"></script>
+
+  <script>
+    $(function () {
+      // Popover’ları initialize et
+      $('[data-bs-toggle="popover"]').popover();
+    });
+  </script>
 }

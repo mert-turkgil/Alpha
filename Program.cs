@@ -12,6 +12,7 @@ using Data.Abstract;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Infrastructure;
 using Alpha.Extensions;
+using Alpha.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 #region değişken
@@ -19,18 +20,25 @@ var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
 // Configure EmailSender settings
-var emailSettings = config.GetSection("EmailSender");
-var port = emailSettings.GetValue<int>("Port");
-var host = emailSettings.GetValue<string>("SMTPMail");
-var enablessl = true; // Gmail typically requires SSL
-var username = emailSettings.GetValue<string>("Username");
-var password = emailSettings.GetValue<string>("Password");
+var emailSection = config.GetSection("EmailSender");
+var host     = emailSection.GetValue<string>("SMTPMail") 
+               ?? throw new InvalidOperationException("SMTP host missing");
+var port     = emailSection.GetValue<int>("Port");
+var username = emailSection.GetValue<string>("Username") 
+               ?? throw new InvalidOperationException("SMTP username missing");
+var password = emailSection.GetValue<string>("Password") 
+               ?? throw new InvalidOperationException("SMTP password missing");
+var enablessl = emailSection.GetValue<bool>("enablessl");
 #endregion
 // Add connection strings
-var connectionString = builder.Configuration.GetConnectionString("MsSqlConnection") 
-    ?? throw new InvalidOperationException("Connection string 'MsSqlConnection' not found.");
-builder.Services.AddDbContext<ShopContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
+var shopConnection = builder.Configuration.GetConnectionString("ShopContext")
+    ?? throw new InvalidOperationException("Connection string 'ShopContext' not found.");
+
+var identityConnection = builder.Configuration.GetConnectionString("ApplicationContext")
+    ?? throw new InvalidOperationException("Connection string 'ApplicationContext' not found.");
+
+builder.Services.AddDbContext<ShopContext>(options => options.UseSqlServer(shopConnection));
+builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(identityConnection));
 #region giriş
 // Identity configuration
 builder.Services.AddIdentity<User, IdentityRole>(options => {
@@ -76,6 +84,13 @@ builder.Services.ConfigureApplicationCookie(options => {
     };
 });
 
+#endregion
+#region güvenlik
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN";
+    options.Cookie.Name = ".Alpha.AntiForgery";
+});
 #endregion
 #region dil
 // Localization
@@ -162,57 +177,44 @@ builder.Services.AddControllersWithViews()
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}else{
-    // Seed roles and users in development mode
-    using (var scope = app.Services.CreateScope())
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+    var rootUserSection = configuration.GetSection("Data:Users").GetChildren()
+        .FirstOrDefault(u => string.Equals(u.GetValue<string>("username"), "root", StringComparison.OrdinalIgnoreCase));
+
+    if (rootUserSection != null)
     {
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-        var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+        var rootEmail = rootUserSection.GetValue<string>("email");
 
-        var rootUserSection = configuration.GetSection("Data:Users").GetChildren()
-            .FirstOrDefault(user => user.GetValue<string>("username") == "root");
-
-        if (rootUserSection != null)
+        if (string.IsNullOrWhiteSpace(rootEmail))
         {
-            var rootUsername = rootUserSection.GetValue<string>("username");
-            var rootEmail = rootUserSection.GetValue<string>("email");
-            if (string.IsNullOrEmpty(rootEmail))
-            throw new ArgumentNullException(nameof(rootEmail), "Root email cannot be null or empty.");
+            Console.WriteLine("⚠️ Root email is not provided in configuration. Skipping seeding.");
+            return;
+        }
 
-            var rootUser = userManager.FindByEmailAsync(rootEmail).Result;
-
-            if (rootUser == null)
-            {
-                Console.WriteLine("Root user does not exist. Seeding...");
-                SeedIdentity.Seed(userManager, roleManager, configuration).Wait();
-            }
-            else
-            {
-                Console.WriteLine("Root user already exists. Skipping seed.");
-            }
-
-            // Check if root user already exists
-            if (rootUser == null)
-            {
-                Console.WriteLine("Root user does not exist. Seeding roles and users...");
-                SeedIdentity.Seed(userManager, roleManager, configuration).Wait();
-            }
-            else
-            {
-                Console.WriteLine("Root user already exists. Skipping seed process.");
-            }
+        var rootUser = await userManager.FindByEmailAsync(rootEmail);
+        if (rootUser != null)
+        {
+            Console.WriteLine($"✅ Root user '{rootEmail}' already exists. Skipping seeding.");
         }
         else
         {
-            Console.WriteLine("Root user configuration not found.");
+            Console.WriteLine($"🔨 Root user '{rootEmail}' does not exist. Starting seeding...");
+            await SeedIdentity.Seed(userManager, roleManager, configuration);
+            Console.WriteLine("✅ Seeding completed.");
         }
     }
+    else
+    {
+        Console.WriteLine("⚠️ No root user definition found in appsettings.json (Data:Users).");
+    }
 }
+
+
 
 
 app.UseHttpsRedirection();

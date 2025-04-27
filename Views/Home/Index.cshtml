@@ -4,16 +4,167 @@
 }
 
 @section Css {
+    <link rel="stylesheet" href="~/lib/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
     <link rel="stylesheet" href="~/css/Carousel.css" />
     <link rel="stylesheet" href="~/css/Category.css" />
     <link rel="stylesheet" href="~/css/Product.css" />
     <link rel="stylesheet" href="~/css/custom-masonry.css" />
+    <style>
+
+/* ---------------------------
+   Section Title
+---------------------------- */
+.section-title {
+  color: #f90; /* Match your brand orange */
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* ---------------------------
+   Country Caption
+---------------------------- */
+.country-name {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #333;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.swiper-slide:hover .country-name {
+  transform: scale(1.05);
+  color: #f90;
+}
+
+/* Responsive font size */
+@@media (max-width: 576px) {
+  .country-name {
+    font-size: 0.9rem;
+  }
+}
+@@media (min-width: 1200px) {
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 60px;
+    height: 60px;
+  }
+
+  .swiper-button-prev ,
+  .swiper-button-next  {
+    color: #e79c00;
+    font-size: 28px;
+  }
+}
+
+
+/* ---------------------------
+   Flag Styling
+---------------------------- */
+.swiper-slide img {
+    
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.4s ease-in-out;
+  opacity: 0; /* for fade-in */
+}
+
+/* Fade-in on visibility */
+.swiper-slide-visible img {
+  opacity: 1;
+}
+
+/* Slight zoom effect on hover */
+.swiper-slide:hover img {
+  transform: scale(1.03);
+}
+
+/* Highlight active flag */
+.swiper-slide-active img {
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* ---------------------------
+   Swiper Pagination Bullets
+---------------------------- */
+.swiper-pagination-bullet {
+  background: #ccc;
+  opacity: 1;
+  width: 10px;
+  height: 10px;
+  margin: 0 4px;
+  transition: background 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  background: #f90;
+}
+
+/* ---------------------------
+   Navigation Arrows
+---------------------------- */
+/* === Swiper Navigation Buttons === */
+.swiper-button-prev,
+.swiper-button-next {
+  width: 48px;
+  height: 48px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+/* Position tweaks to prevent touching edges */
+.swiper-button-prev {
+  left: 10px;
+}
+.swiper-button-next {
+  right: 10px;
+}
+
+/* Hover effect */
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background-color: #333;
+  transform: scale(1.1);
+}
+
+/* Ionicons inside the buttons */
+.swiper-button-prev,
+.swiper-button-next {
+  font-size: 24px;
+  color: #e79c00;
+  transition: color 0.3s ease;
+}
+
+/* Icon color on hover */
+.swiper-button-prev:hover ion-icon,
+.swiper-button-next:hover ion-icon {
+  color: white;
+}
+
+/* ---------------------------
+   Optional: Grayscale effect until hover (modern trend)
+---------------------------- */
+
+.swiper-slide img {
+  filter: grayscale(20%);
+}
+.swiper-slide:hover img {
+  filter: grayscale(0%);
+}
+
+
+    </style>
 }
 
 
 
 @section Scripts {
+    <script src="~/lib/swiper/swiper-bundle.min.js"></script>
     <script src="~/js/Product.js"></script>
     <!-- Ionicons for arrow icons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
@@ -109,6 +260,44 @@
         startAutoPlay();
     })();
     </script>
+<script>
+  // Initialize Swiper when DOM is ready
+  document.addEventListener('DOMContentLoaded', function () {
+    var swiper = new Swiper('.swiper', {
+      loop: true,
+      effect: 'coverflow',
+      grabCursor: true,
+      centeredSlides: false,            // not centering slides (to show multiple fully)
+      spaceBetween: 15,                // gap between slides in px
+      slidesPerView: 1,                // default slides per view
+      coverflowEffect: {
+        rotate: 30,    // rotation angle for side slides
+        depth: 100,    // depth distance for 3D effect
+        stretch: 0,    // stretch space between slides (0 for none)
+        modifier: 1,   // effect multiplier (1 is default)
+        slideShadows: false  // disable shadows for a cleaner look
+      },
+      autoplay: {
+        delay: 2500,
+        disableOnInteraction: false,   // keep autoplay running after user interactions
+        pauseOnMouseEnter: true        // pause autoplay on hover
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true                // make pagination dots clickable
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      },
+      breakpoints: {
+        576: { slidesPerView: 2 },     // >=576px: show 2 slides
+        768: { slidesPerView: 3 },     // >=768px: show 3 slides
+        992: { slidesPerView: 4 }      // >=992px: show 4 slides
+      }
+    });
+  });
+</script>
 }
 
 
@@ -146,29 +335,79 @@
         @await Component.InvokeAsync("Blog")
 </section>
 
-<!-- Testimonials Section -->
-<section class="py-5 bg-light">
-    <div class="container text-center" data-aos="fade-up">
-        <h2 style="color: #e79c00;" class="fw-bold mb-4" data-aos="fade-down">@Model.HeaderQuote</h2>
-        <div class="row g-4">
-            <div class="col-md-4" data-aos="fade-right">
-                <blockquote class="blockquote">
-                    <p>@Model.BodyQuote1</p>
-                    <footer class="blockquote-footer">@Model.Talker1, <cite title="Company A">@Model.Company1</cite></footer>
-                </blockquote>
-            </div>
-            <div class="col-md-4" data-aos="fade-up">
-                <blockquote class="blockquote">
-                    <p>@Model.BodyQuote2</p>
-                    <footer class="blockquote-footer">@Model.Talker2, <cite title="Company B">@Model.Company2</cite></footer>
-                </blockquote>
-            </div>
-            <div class="col-md-4" data-aos="fade-left">
-                <blockquote class="blockquote">
-                    <p>@Model.BodyQuote3</p>
-                    <footer class="blockquote-footer">@Model.Talker3, <cite title="Company C">@Model.Company3</cite></footer>
-                </blockquote>
-            </div>
+<section class="bg-light py-5">
+  <div class="container">
+    <!-- Section Title -->
+    <h2 class="section-title text-center mb-4">@Model.CountryQuote</h2>
+    <!-- Swiper Slider -->
+    <div class="swiper">
+      <div class="swiper-wrapper">
+        <!-- Slide 1 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/germany.png" alt="Flag of Germany" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry1</p>
         </div>
+        <!-- Slide 2 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/poland.png" alt="Flag of Poland" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry2</p>
+        </div>
+        <!-- Slide 3 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/romania.png" alt="Flag of Romania" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry3</p>
+        </div>
+        <!-- Slide 4 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/bulgaria.png" alt="Flag of Bulgaria" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry4</p>
+        </div>
+        <!-- Slide 5 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/azerbaijan.png" alt="Flag of Azerbaijan" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry5</p>
+        </div>
+        <!-- Slide 6 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/uzbekistan.png" alt="Flag of Uzbekistan" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry6</p>
+        </div>
+        <!-- Slide 7 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/croatia.png" alt="Flag of Croatia" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry7</p>
+        </div>
+        <!-- Slide 8 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/greece.png" alt="Flag of Greece" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry8</p>
+        </div>
+        <!-- Slide 9 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/algeria.png" alt="Flag of Algeria" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry9</p>
+        </div>
+        <!-- Slide 10 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/ivorycoast.png" alt="Flag of Ivory Coast" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry10</p>
+        </div>
+        <!-- Slide 11 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/mozambique.png" alt="Flag of Mozambique" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry11</p>
+        </div>
+        <!-- Slide 12 -->
+        <div class="swiper-slide text-center">
+          <img src="/img/flags/turkey.png" alt="Flag of Mozambique" class="img-fluid" loading="lazy">
+          <p class="mt-2 country-name">@Model.contry12</p>
+        </div>
+      </div>
+      <!-- Pagination Dots -->
+      <div class="swiper-pagination"></div>
+      <!-- Navigation Arrows -->
+      <span class="swiper-button-prev"></span>
+      <span class="swiper-button-next"></span>
     </div>
+  </div>
 </section>
