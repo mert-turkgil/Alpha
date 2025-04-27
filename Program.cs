@@ -15,6 +15,10 @@ using Alpha.Extensions;
 using Alpha.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddUserSecrets<Program>(optional: true)     
+    .AddEnvironmentVariables();                   
 #region değişken
 // Load configuration
 var config = builder.Configuration;
@@ -28,7 +32,7 @@ var username = emailSection.GetValue<string>("Username")
                ?? throw new InvalidOperationException("SMTP username missing");
 var password = emailSection.GetValue<string>("Password") 
                ?? throw new InvalidOperationException("SMTP password missing");
-var enablessl = emailSection.GetValue<bool>("enablessl");
+var enablessl = emailSection.GetValue<bool?>("EnableSsl") ?? true;
 #endregion
 // Add connection strings
 var shopConnection = builder.Configuration.GetConnectionString("ShopContext")
