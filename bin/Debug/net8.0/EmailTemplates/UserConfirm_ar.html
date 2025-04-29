@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>يرجى تأكيد بريدك الإلكتروني</title>
+  <style type="text/css">
+    body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f7f7f7; }
+    .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; }
+    .header { text-align: center; padding: 10px 0; }
+    .logo { max-width: 150px; }
+    .content { padding: 20px; }
+    .content h2 { color: #FF9494; }
+    .confirm-btn { background-color: #FF9494; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+    .footer { text-align: center; padding: 10px 0; font-size: 12px; color: #888888; }
+    @media only screen and (max-width: 600px) {
+      .container { width: 100% !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="http://alphaayakkabi.com/img/biglogo.png"
+           alt="شعار Alpha Ayakkabı"
+           class="logo">
+    </div>
+    <div class="content">
+      <h2>يرجى تأكيد بريدك الإلكتروني</h2>
+      <p>انقر على الزر أدناه لتأكيد عنوان بريدك الإلكتروني وتفعيل حسابك.</p>
+      <p>
+        <a href="{{ConfirmationLink}}" class="confirm-btn">
+          تأكيد البريد الإلكتروني
+        </a>
+      </p>
+      <p>
+        إذا لم يعمل الزر، يرجى نسخ هذا الرابط ولصقه في متصفحك:<br>
+        {{ConfirmationLink}}
+      </p>
+    </div>
+    <div class="footer">
+      <p>&copy; 2025 Alpha Ayakkabı. جميع الحقوق محفوظة.</p>
+    </div>
+  </div>
+</body>
+</html>

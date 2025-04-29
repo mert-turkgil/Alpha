@@ -1,70 +1,117 @@
 @model List<Alpha.Models.BlogIndexModel>
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Blogs";
+}
+
+@section Css {
+    <style>
+        /* Blog Card Styles */
+        .blog-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 350px;
+        }
+
+        .blog-card img.card-img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .blog-card .overlay-content {
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            padding: 1rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: opacity 0.3s ease;
+        }
+
+        .blog-card .overlay-content h5,
+        .blog-card .overlay-content p {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        .blog-card:hover img.card-img {
+            transform: scale(1.1);
+        }
+
+        .blog-card:hover .overlay-content {
+            opacity: 1;
+        }
+
+        .card-text {
+            font-size: 0.9rem;
+            max-height: 4.5em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Responsive height adjustments */
+        @@media (max-width: 768px) {
+            .blog-card {
+                height: 300px;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .blog-card {
+                height: 250px;
+            }
+        }
+    </style>
+}
 
 <h4 style="color: #e79c00;" class="text-uppercase mb-0 ms-3">@ViewBag.Message</h4>
 <h3 class="text-dark text-uppercase mb-4 ms-3">@ViewBag.Head</h3>
 
-
-<!-- Blog Grid -->
-<section class="container-xxl my-3 masonry-section">
-    <div class="row row-cols-1 row-cols-md-3 g-4" id="blogGrid">
-
-        @for (int i = 0; i < Model.Count; i++)
+<section class="container-xxl my-3">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        @foreach (var blogModel in Model)
         {
-            var blog = Model[i];
+            var culture = CultureInfo.CurrentCulture.Name;
 
-            // Get Culture
-            string culture = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower();
+            foreach (var blogData in blogModel.Blogs ?? new List<Alpha.Entity.Blog>())
+            {
+                string localizedTitle = blogModel.GetTitleByCulture(culture) ?? blogData.Title;
+                string localizedContent = blogModel.GetContentByCulture(culture) ?? string.Empty;
+                string snippet = Html.Raw(localizedContent).ToString() ?? string.Empty;
+                snippet = System.Text.RegularExpressions.Regex.Replace(snippet, "<.*?>", string.Empty);
 
-            // Blog Data
-            var blogData = blog.Blogs?.FirstOrDefault();
 
-            // Handle localized title and content
-            string localizedTitle = blog.GetTitleByCulture(culture) ?? "Untitled";
-            string localizedContent = blog.GetContentByCulture(culture, blogData?.Image) ?? "No content available.";
 
-            // Handle Image URL
-            string imageUrl = !string.IsNullOrEmpty(blogData?.Image)
-                ? Url.Content($"~/img/{blogData.Image}") // Dynamic Path
-                : Url.Content("~/img/default-image.jpg"); // Fallback Image
+                snippet = snippet.Length > 120 ? snippet.Substring(0, 120) + "..." : snippet;
 
-            // Handle Blog URL
-            string blogUrl = Url.Action("BlogDetails", "Home", new { id = blogData?.BlogId ?? 0, type = "blog" }) ?? "#";
-
-            <!-- Blog Card -->
-            <div class="@(Model.Count == 1 ? "col-12" : "col-md-4")  @(Model.Count == 1 ? "single-card" : "") blog-item @(i >= 3 ? "d-none" : "")" data-index="@i">
-                <!-- Make the card clickable -->
-                <a href="@blogUrl" class="text-decoration-none text-dark">
-                    <div class="card h-100 shadow-sm border-0 card-hover">
-                        <!-- Image -->
-                        <img src="@imageUrl"
-                             class="card-img-top" 
-                             alt="@localizedTitle"
-                             loading="lazy" 
-                             onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400?text=Image+Unavailable';">
-
-                        <!-- Card Body -->
-                        <div class="card-body">
-                            <h5 class="card-title">@localizedTitle</h5>
-                            <p class="card-text">@Html.Raw(Alpha.Services.HtmlUtility.GetExcerpt(localizedContent, Model.Count == 1 ? 500 : 150))</p>
-                        </div>
-
-                        <!-- Footer -->
-                        <div class="card-footer">
-                            <small class="text-muted">
-                                Published on @blogData?.Date.ToShortDateString() by <strong>@blogData?.Author</strong>
-                            </small>
-                        </div>
+                string imageUrl = !string.IsNullOrEmpty(blogData.Image)
+                    ? Url.Content($"~/img/{blogData.Image}")
+                    : Url.Content("~/img/default-image.jpg");
+        <div class="col">
+            <a asp-controller="Home" asp-action="BlogDetails" asp-route-id="@blogData.BlogId" asp-route-type="blog" class="text-decoration-none">
+                <div class="card blog-card shadow-sm border-0">
+                    <img src="@imageUrl" alt="@localizedTitle" class="card-img" loading="lazy" />
+                    <div class="card-img-overlay overlay-content">
+                        <h5 class="card-title">@localizedTitle</h5>
+                        <p class="card-text">@snippet</p>
                     </div>
-                </a>
-            </div>
+                </div>
+            </a>
+        </div>
+            }
         }
     </div>
 </section>
 
-<!-- Load More Button -->
-@if (Model.Count >= 4) // Show only if there are 4 or more blogs
-{
-    <div class="text-center mt-4">
-        <button id="loadMoreBtn" class="btn btn-success">Load More</button>
-    </div>
-}

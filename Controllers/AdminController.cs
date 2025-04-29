@@ -149,6 +149,7 @@ public class AdminController : Controller
                 { "tr-TR", (model.TranslationsTR.Title, model.TranslationsTR.Description, model.TranslationsTR.LinkText) },
                 { "de-DE", (model.TranslationsDE.Title, model.TranslationsDE.Description, model.TranslationsDE.LinkText) },
                 { "fr-FR", (model.TranslationsFR.Title, model.TranslationsFR.Description, model.TranslationsFR.LinkText) },
+                { "ar-SA", (model.TranslationsAR.Title,  model.TranslationsAR.Description,  model.TranslationsAR.LinkText) },
             };
 
             foreach (var translation in translations)
@@ -246,6 +247,11 @@ public class AdminController : Controller
             CarouselTitleFR = GetTranslation($"Carousel_{carousel.CarouselId}_Title", "fr-FR", carousel.CarouselTitle),
             CarouselDescriptionFR = GetTranslation($"Carousel_{carousel.CarouselId}_Description", "fr-FR", carousel.CarouselDescription),
             CarouselLinkTextFR = GetTranslation($"Carousel_{carousel.CarouselId}_LinkText", "fr-FR", carousel.CarouselLinkText),
+            // in CarouselEdit GET, after FR:
+            CarouselTitleAR        = GetTranslation($"Carousel_{id}_Title",       "ar-SA", carousel.CarouselTitle),
+            CarouselDescriptionAR  = GetTranslation($"Carousel_{id}_Description", "ar-SA", carousel.CarouselDescription),
+            CarouselLinkTextAR     = GetTranslation($"Carousel_{id}_LinkText",    "ar-SA", carousel.CarouselLinkText),
+
         };
 
         Console.WriteLine("[INFO] Loaded carousel and translations successfully.");
@@ -390,6 +396,12 @@ private void UpdateTranslations(IManageResourceService manageResourceService, in
     manageResourceService.AddOrUpdateResource($"{baseKey}_Description", model.CarouselDescriptionFR, "fr-FR");
     manageResourceService.AddOrUpdateResource($"{baseKey}_LinkText", model.CarouselLinkTextFR, "fr-FR");
 
+    // in UpdateTranslations(...)
+    manageResourceService.AddOrUpdateResource($"{baseKey}_Title",       model.CarouselTitleAR,       "ar-SA");
+    manageResourceService.AddOrUpdateResource($"{baseKey}_Description", model.CarouselDescriptionAR, "ar-SA");
+    manageResourceService.AddOrUpdateResource($"{baseKey}_LinkText",    model.CarouselLinkTextAR,    "ar-SA");
+
+
     Console.WriteLine($"[INFO] Updated translations for Carousel_{id}.");
 }
 
@@ -422,7 +434,7 @@ private void UpdateTranslations(IManageResourceService manageResourceService, in
                 var baseKey = $"Carousel_{carousel.CarouselId}";
 
                 // Languages
-                string[] cultures = { "en-US", "tr-TR", "de-DE", "fr-FR" };
+                string[] cultures = { "en-US", "tr-TR", "de-DE", "fr-FR","ar-SA" };
                 string[] keys = { "Title", "Description", "LinkText" };
 
                 foreach (var culture in cultures)
@@ -531,7 +543,7 @@ private void UpdateTranslations(IManageResourceService manageResourceService, in
                     Value = c.CategoryId.ToString(),
                     Text = c.Name
                 }).ToList();
-        var availableLanguages = await Task.FromResult(new List<string> { "en-US", "de-DE", "fr-FR", "tr-TR" });
+        var availableLanguages = await Task.FromResult(new List<string> { "en-US", "de-DE", "fr-FR", "tr-TR", "ar-SA" });
         ViewBag.AvailableLanguages = availableLanguages;
         return View(new ProductCreateModel());
     }
@@ -540,106 +552,92 @@ private void UpdateTranslations(IManageResourceService manageResourceService, in
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ProductCreate(ProductCreateModel e)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            // Step 1: Save the Product
-            var product = new Product
-            {
-                Name = e.Name,
-                BodyNo = e.BodyNo,
-                Url = e.Url,
-                Upper = e.Upper,
-                Lining = e.Lining,
-                Protection = e.Protection,
-                Brand = e.Brand,
-                Standard = e.Standard,
-                Midsole = e.Midsole,
-                Insole = e.Insole,
-                Certificate = e.Certificate,
-                Size = e.Size,
-                Model = e.Model,
-                Sole = e.Sole,
-                Description = e.Description,
-                DateAdded = DateTime.UtcNow,
-                CategoryId = e.CategoryId
-            };
-
-            // Save product and ensure ProductId is available
-            await _productRepository.CreateAsync(product);
-
-            if (product.ProductId == 0) // Ensure the ProductId was generated
-            {
-                TempData["AlertMessage"] = new AlertMessage
-                {
-                    Title = "Error",
-                    Message = "Failed to create product. Product ID was not generated.",
-                    AlertType = "danger",
-                    icon = "fas fa-bug",
-                    icon2 = "fas fa-times"
-                };
-                return View(e);
-            }
-            else
-            {
-                // Add translations
-                AddProductTranslations(product.ProductId, e);
-            }
-
-            TempData["SuccessMessage"] = "Product and translations created successfully!";
-            return RedirectToAction("Products");
+            ViewBag.Categories = (await _categoryRepository.GetAllAsync())
+                .Select(c => new SelectListItem {
+                Value = c.CategoryId.ToString(),
+                Text  = c.Name
+                }).ToList();
+            ViewBag.AvailableLanguages = new List<string> { "en-US", "de-DE", "fr-FR", "tr-TR", "ar-SA" };
+            return View(e);
         }
 
-        ViewBag.Categories = (await _categoryRepository.GetAllAsync())
-            .Select(c => new SelectListItem
-            {
-                Value = c.CategoryId.ToString(),
-                Text = c.Name
-            }).ToList();
-
-        ViewBag.AvailableLanguages = new List<string> { "en-US", "de-DE", "fr-FR", "tr-TR" };
-
-        return View(e);
-    }
-
-    private void AddProductTranslations(int productId, ProductCreateModel model)
-    {
-        // Supported Languages and Fields
-        var cultures = new[] { "fr-FR", "en-US", "de-DE", "tr-TR" };
-        var fields = new Dictionary<string, string>
-        {
-            { "Description", model.Description },
-            { "Upper", model.Upper },
-            { "Lining", model.Lining },
-            { "Protection", model.Protection },
-            { "Midsole", model.Midsole },
-            { "Insole", model.Insole },
-            { "Sole", model.Sole }
+        // 1) build your entity
+        var product = new Product {
+            Name        = e.Name,
+            BodyNo      = e.BodyNo,
+            Url         = e.Url,
+            Upper       = e.Upper,
+            Lining      = e.Lining,
+            Protection  = e.Protection,
+            Brand       = e.Brand,
+            Standard    = e.Standard,
+            Midsole     = e.Midsole,
+            Insole      = e.Insole,
+            Certificate = e.Certificate,
+            Size        = e.Size,
+            Model       = e.Model,
+            Sole        = e.Sole,
+            Description = e.Description,
+            DateAdded   = DateTime.UtcNow,
+            CategoryId  = e.CategoryId
         };
 
-        // Process each culture and field
-        foreach (var culture in cultures)
+        // 2) save *and* get back the populated ID
+        product = await _productRepository.CreateAsync(product);
+
+        if (product.ProductId <= 0)
         {
-            foreach (var field in fields)
+            TempData["AlertMessage"] = new AlertMessage {
+                Title     = "Error",
+                Message   = "Failed to create product. Product ID was not generated.",
+                AlertType = "danger",
+                icon      = "fas fa-bug",
+                icon2     = "fas fa-times"
+            };
+            return View(e);
+        }
+
+        // 3) now that ProductId is rock-solid, write all translations
+        AddProductTranslations(product.ProductId, e);
+
+        TempData["SuccessMessage"] = "Product and translations created successfully!";
+        return RedirectToAction("Products");
+    }
+
+private void AddProductTranslations(int productId, ProductCreateModel model)
+{
+    // Map each culture code to its model-property suffix
+    var cultures = new Dictionary<string, string>
+    {
+        { "fr-FR", "FR" },
+        { "en-US", "US" },
+        { "de-DE", "DE" },
+        { "tr-TR", "TR" },
+        { "ar-SA", "AR" }   // ensure Arabic uses “AR”, not “SA”
+    };
+
+    // The set of fields we translate
+    var fields = new[] { "Description", "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
+
+    foreach (var (culture, suffix) in cultures)
+    {
+        foreach (var field in fields)
+        {
+            // e.g. model.DescriptionUS, model.UpperAR, etc.
+            var propName = field + suffix;
+            var prop     = model.GetType().GetProperty(propName);
+            var value    = prop?.GetValue(model) as string;
+
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                var resourceKey = $"Product_{productId}_{field.Key}_{culture}";
-
-                // Dynamically get the translation property value
-                var value = GetPropertyValue(model, $"{field.Key}{culture.Split('-')[1]}");
-
-                if (!string.IsNullOrWhiteSpace(value))
-                {
-                    try
-                    {
-                        _manageResourceService.AddOrUpdateResource(resourceKey, value, culture);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to save translation for {resourceKey}: {ex.Message}");
-                    }
-                }
+                var resourceKey = $"Product_{productId}_{field}_{culture}";
+                _manageResourceService.AddOrUpdateResource(resourceKey, value, culture);
             }
         }
     }
+}
 
     // Helper Method for Reflection
     private string GetPropertyValue(object obj, string propName)
@@ -706,6 +704,14 @@ public async Task<IActionResult> ProductEdit(int id)
         MidsoleTR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Midsole_tr-TR", "tr-TR"),
         InsoleTR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Insole_tr-TR", "tr-TR"),
         SoleTR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Sole_tr-TR", "tr-TR"),
+
+        DescriptionAR = _manageResourceService.ReadResourceValue($"Product_{id}_Description_ar-SA", "ar-SA"),
+        UpperAR       = _manageResourceService.ReadResourceValue($"Product_{id}_Upper_ar-SA",       "ar-SA"),
+        LiningAR      = _manageResourceService.ReadResourceValue($"Product_{id}_Lining_ar-SA",      "ar-SA"),
+        ProtectionAR  = _manageResourceService.ReadResourceValue($"Product_{id}_Protection_ar-SA",  "ar-SA"),
+        MidsoleAR     = _manageResourceService.ReadResourceValue($"Product_{id}_Midsole_ar-SA",     "ar-SA"),
+        InsoleAR      = _manageResourceService.ReadResourceValue($"Product_{id}_Insole_ar-SA",      "ar-SA"),
+        SoleAR        = _manageResourceService.ReadResourceValue($"Product_{id}_Sole_ar-SA",        "ar-SA"),
 
         // Step 4: Populate Selected Categories, Images, and Blogs
         CategoryIds = product.ProductCategories?.Select(pc => pc.CategoryId).ToList() ?? new List<int>(),
@@ -834,35 +840,30 @@ public async Task<IActionResult> ProductEdit(ProductEditModel e)
     /// </summary>
 private void UpdateProductTranslations(ProductEditModel model, int productId)
 {
-    var cultures = new[] { "fr-FR", "en-US", "de-DE", "tr-TR" };
-    var fields = new Dictionary<string, string>
+    // Same culture → suffix mapping as above
+    var cultures = new Dictionary<string, string>
     {
-        { "Description", model.Description },
-        { "Upper", model.Upper },
-        { "Lining", model.Lining },
-        { "Protection", model.Protection },
-        { "Midsole", model.Midsole },
-        { "Insole", model.Insole },
-        { "Sole", model.Sole }
+        { "fr-FR", "FR" },
+        { "en-US", "US" },
+        { "de-DE", "DE" },
+        { "tr-TR", "TR" },
+        { "ar-SA", "AR" }
     };
 
-    foreach (var culture in cultures)
+    var fields = new[] { "Description", "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
+
+    foreach (var (culture, suffix) in cultures)
     {
         foreach (var field in fields)
         {
-            var resourceKey = $"Product_{productId}_{field.Key}_{culture}";
-            var value = GetPropertyValue(model, $"{field.Key}{culture.Split('-')[1]}");
+            var propName = field + suffix;
+            var prop     = model.GetType().GetProperty(propName);
+            var value    = prop?.GetValue(model) as string;
 
             if (!string.IsNullOrWhiteSpace(value))
             {
-                try
-                {
-                    _manageResourceService.AddOrUpdateResource(resourceKey, value, culture);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to update translation for {resourceKey}: {ex.Message}");
-                }
+                var resourceKey = $"Product_{productId}_{field}_{culture}";
+                _manageResourceService.AddOrUpdateResource(resourceKey, value, culture);
             }
         }
     }
@@ -917,7 +918,7 @@ public async Task<IActionResult> ProductDelete(int id)
         /// <param name="productId">The ID of the product whose translations will be deleted.</param>
 private void DeleteProductTranslations(int productId)
 {
-    var cultures = new[] { "fr-FR", "en-US", "de-DE", "tr-TR" };
+    var cultures = new[] { "fr-FR", "en-US", "de-DE", "tr-TR","ar-SA" };
     var fields = new[] { "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
 
     foreach (var culture in cultures)
@@ -990,7 +991,7 @@ private void SafeDeleteResource(string key, string culture)
             var translations = LoadTranslations(resxPath);
 
             ViewBag.CurrentLanguage = lang;
-            ViewBag.AvailableLanguages = new List<string> { "de-DE", "en-US", "fr-FR", "tr-TR" };
+            ViewBag.AvailableLanguages = new List<string> { "de-DE", "en-US", "fr-FR", "tr-TR", "ar-SA" };
             return View(translations);
         }
 
@@ -1883,9 +1884,9 @@ private string MoveImagesAndFixPaths(string content, int blogId)
 private void SaveContentToResx(BlogCreateModel model , int id)
 {
     // Supported languages and their codes
-    string[] cultures = { "en-US", "tr-TR", "de-DE", "fr-FR" };
-    string[] titles = { model.TitleUS, model.TitleTR, model.TitleDE, model.TitleFR };
-    string[] contents = { model.ContentUS, model.ContentTR, model.ContentDE, model.ContentFR };
+    string[] cultures = { "en-US", "tr-TR", "de-DE", "fr-FR","ar-SA" };
+    string[] titles = { model.TitleUS, model.TitleTR, model.TitleDE, model.TitleFR,model.TitleAR };
+    string[] contents = { model.ContentUS, model.ContentTR, model.ContentDE, model.ContentFR ,model.ContentAR };
 
     // Process each translation
     for (int i = 0; i < cultures.Length; i++)
@@ -1908,11 +1909,18 @@ private void SaveContentToResx(BlogCreateModel model , int id)
 private void SaveContentToResxEdit(BlogResultModel model, string updatedContent, int id)
 {
     // Supported languages and their codes
-    string[] cultures = { "en-US", "tr-TR", "de-DE", "fr-FR" };
-    string[] langCodes = { "en", "tr", "de", "fr" };
-    string[] titles = { model.TitleUS, model.TitleTR, model.TitleDE, model.TitleFR };
-    string[] contents = { model.ContentUS, model.ContentTR, model.ContentDE, model.ContentFR };
+    string[] cultures = { "en-US", "tr-TR", "de-DE", "fr-FR", "ar-SA" };
+    string[] langCodes = { "en", "tr", "de", "fr", "ar" };
+    string[] titles = { model.TitleUS, model.TitleTR, model.TitleDE, model.TitleFR, model.TitleAR };
+    string[] contents = { model.ContentUS, model.ContentTR, model.ContentDE, model.ContentFR, model.ContentAR };
 
+    if (cultures.Length != titles.Length || titles.Length != contents.Length)
+    {
+        Console.WriteLine("[ERROR] Mismatched array lengths for cultures, titles, and contents.");
+        return;
+    }
+
+    // Process each translation
     for (int i = 0; i < cultures.Length; i++)
     {
         string culture = cultures[i];
@@ -1941,7 +1949,8 @@ private List<string> ExtractImagesFromTranslations(int blogId, string url)
         { "en-US", "en" },
         { "tr-TR", "tr" },
         { "de-DE", "de" },
-        { "fr-FR", "fr" }
+        { "fr-FR", "fr" },
+        { "ar-SA", "ar" }
     };
 
     foreach (var culture in cultures)
@@ -2033,7 +2042,8 @@ private void DeleteImages(Blog blog)
         { "en-US", "en" },
         { "tr-TR", "tr" },
         { "de-DE", "de" },
-        { "fr-FR", "fr" }
+        { "fr-FR", "fr" },
+        { "ar-SA", "ar" }
     };
 
     // Track deleted images to avoid multiple deletions
@@ -2121,7 +2131,8 @@ private void DeleteTranslations(int id, string url)
         { "en-US", "en" },
         { "tr-TR", "tr" },
         { "de-DE", "de" },
-        { "fr-FR", "fr" }
+        { "fr-FR", "fr" },
+        { "ar-SA", "ar" }
     };
 
     // Loop through each culture and delete its translations
@@ -2239,7 +2250,7 @@ public async Task<IActionResult> BlogCreate(BlogCreateModel model)
     string updatedContentTR = ProcessContentImages(model.ContentTR, fileMappings);
     string updatedContentDE = ProcessContentImages(model.ContentDE, fileMappings);
     string updatedContentFR = ProcessContentImages(model.ContentFR, fileMappings);
-
+    string updatedContentAR = ProcessContentImages(model.ContentAR, fileMappings);
     // Handle Cover Image
     string coverFileName = null!;
     if (model.ImageFile != null && model.ImageFile.Length > 0)
@@ -2301,6 +2312,8 @@ public async Task<IActionResult> BlogCreate(BlogCreateModel model)
         ContentDE = updatedContentDE,
         TitleFR = model.TitleFR,
         ContentFR = updatedContentFR,
+        TitleAR = model.TitleAR,
+        ContentAR = updatedContentAR,
         Url = model.Url
     }, result.BlogId );
 
@@ -2487,8 +2500,15 @@ public async Task<IActionResult> BlogEdit(int id)
         ),
         TitleFR = _manageResourceService.ReadResourceValue($"Title_{id}_{blog.Url}_fr", "fr-FR") ?? string.Empty,
         ContentFR = ProcessContentImagesForEdit(
-            _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_fr", "fr-FR")
+            _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_ar", "ar-SA")
         ),
+        TitleAR = _manageResourceService
+                    .ReadResourceValue($"Title_{id}_{blog.Url}_ar", "ar-SA")
+                ?? string.Empty,
+        ContentAR = ProcessContentImagesForEdit(
+                    _manageResourceService
+                        .ReadResourceValue($"Content_{id}_{blog.Url}_ar", "ar-SA")
+        )
     };
      Console.WriteLine($"[DEBUG] BlogEdit page loaded for Blog ID: {id} with SelectedCategoryIds: {string.Join(", ", selectedCategoryIds)} and SelectedProductIds: {string.Join(", ", selectedProductIds)}");
     Console.WriteLine($"[DEBUG] BlogEdit page loaded for Blog ID: {id} with SelectedCategoryIds: {string.Join(", ", selectedCategoryIds)}");
@@ -2570,7 +2590,8 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
         _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_de", "de-DE")));
     oldImages.AddRange(ExtractImagePathsFromContent(
         _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_fr", "fr-FR")));
-    
+    oldImages.AddRange(ExtractImagePathsFromContent(
+        _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_ar", "ar-SA")));
 
     // Generate mappings for temp images
     Dictionary<string, string> fileMappings = new();
@@ -2594,6 +2615,7 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
     string updatedContentTR = ProcessContentImages(model.ContentTR, fileMappings);
     string updatedContentDE = ProcessContentImages(model.ContentDE, fileMappings);
     string updatedContentFR = ProcessContentImages(model.ContentFR, fileMappings);
+    string updatedContentAR = ProcessContentImages(model.ContentAR, fileMappings);
 
     // Update blog details
     blog.Title = model.Title;
@@ -2636,7 +2658,9 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
         TitleDE = model.TitleDE,
         ContentDE = updatedContentDE,
         TitleFR = model.TitleFR,
-        ContentFR = updatedContentFR
+        ContentFR = updatedContentFR,
+        TitleAR = model.TitleAR,
+        ContentAR = updatedContentAR
     };
 
     SaveContentToResxEdit(resultModel, updatedContent, updatedBlog.BlogId);
@@ -2647,7 +2671,7 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
     usedImages.AddRange(ExtractImagePathsFromContent(updatedContentTR));
     usedImages.AddRange(ExtractImagePathsFromContent(updatedContentDE));
     usedImages.AddRange(ExtractImagePathsFromContent(updatedContentFR));
-
+    usedImages.AddRange(ExtractImagePathsFromContent(updatedContentAR));
     List<string> unusedImages = oldImages.Except(usedImages).ToList();
     DeleteUnusedImages(unusedImages);
 

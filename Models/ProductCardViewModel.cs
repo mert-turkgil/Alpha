@@ -33,6 +33,14 @@ namespace Alpha.Models
         public List<ProductBlog> ProductBlogs { get; set; } = new List<ProductBlog>();
 
         // Multi-language Translations (if needed)
+        public string UpperAR { get; set; }
+        public string LiningAR { get; set; }
+        public string ProtectionAR { get; set; }
+        public string MidsoleAR { get; set; }
+        public string InsoleAR { get; set; }
+        public string SoleAR { get; set; }
+
+
         public string UpperFR { get; set; }
         public string LiningFR { get; set; }
         public string ProtectionFR { get; set; }

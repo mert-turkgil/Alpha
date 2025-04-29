@@ -60,5 +60,9 @@ namespace Alpha.Models
         public string TitleFR { get; set; }
         [Required(ErrorMessage = "French content is required.")]
         public string ContentFR { get; set; }
+        [Required(ErrorMessage = "Arabic title is required.")]
+        public string TitleAR { get; set; }
+        [Required(ErrorMessage = "Arabic content is required.")]
+        public string ContentAR { get; set; }
     }
 }

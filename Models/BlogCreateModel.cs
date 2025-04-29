@@ -62,6 +62,12 @@ namespace Alpha.Models
         [Required(ErrorMessage = "French content is required.")]
         public string ContentFR { get; set; }
 
+        
+        [Required(ErrorMessage = "Arabic title is required.")]
+        public string TitleAR { get; set; }
+        [Required(ErrorMessage = "Arabic content is required.")]
+        public string ContentAR { get; set; }
+
         // Helper Methods for Translations
         public string GetTitleByCulture(string culture)
         {
@@ -71,6 +77,7 @@ namespace Alpha.Models
                 "tr-TR" => TitleTR,
                 "de-DE" => TitleDE,
                 "fr-FR" => TitleFR,
+                "ar-SA" => TitleAR,
                 _ => Title
             };
         }
@@ -83,6 +90,7 @@ namespace Alpha.Models
                 "tr-TR" => ContentTR,
                 "de-DE" => ContentDE,
                 "fr-FR" => ContentFR,
+                "ar-SA" => ContentAR,
                 _ => Content // Fallback to main content
             };
 
@@ -92,7 +100,7 @@ namespace Alpha.Models
             }
 
             return content;
-}
+        }
 
     }
 }

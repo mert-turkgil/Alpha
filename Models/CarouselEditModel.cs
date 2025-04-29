@@ -60,5 +60,10 @@ namespace Alpha.Models
         public string CarouselTitleFR { get; set; }
         public string CarouselDescriptionFR { get; set; }
         public string CarouselLinkTextFR { get; set; }
+
+        
+        public string CarouselTitleAR { get; set; }
+        public string CarouselDescriptionAR { get; set; }
+        public string CarouselLinkTextAR { get; set; }
     }
 }

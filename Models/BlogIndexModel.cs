@@ -16,6 +16,7 @@ namespace Alpha.Models
         public string TitleTR { get; set; }
         public string TitleDE { get; set; }
         public string TitleFR { get; set; }
+        public string TitleAR { get; set; }
 
         // Translations for Content
         public string Content { get; set; }
@@ -23,6 +24,7 @@ namespace Alpha.Models
         public string ContentTR { get; set; }
         public string ContentDE { get; set; }
         public string ContentFR { get; set; }
+        public string ContentAR { get; set; }
 
         /// <summary>
         /// Get Title based on culture.
@@ -37,6 +39,7 @@ namespace Alpha.Models
                 "tr-TR" => !string.IsNullOrEmpty(TitleTR) ? TitleTR : Title,
                 "de-DE" => !string.IsNullOrEmpty(TitleDE) ? TitleDE : Title,
                 "fr-FR" => !string.IsNullOrEmpty(TitleFR) ? TitleFR : Title,
+                "ar-SA" => !string.IsNullOrEmpty(TitleAR) ? TitleAR : Title,
                 _ => Title // Fallback to default Title
             };
         }
@@ -55,6 +58,7 @@ namespace Alpha.Models
                 "tr-TR" => !string.IsNullOrEmpty(ContentTR) ? ContentTR : Content,
                 "de-DE" => !string.IsNullOrEmpty(ContentDE) ? ContentDE : Content,
                 "fr-FR" => !string.IsNullOrEmpty(ContentFR) ? ContentFR : Content,
+                "ar-SA" => !string.IsNullOrEmpty(ContentAR) ? ContentAR : Content,
                 _ => Content // Fallback to default Content
             };
 

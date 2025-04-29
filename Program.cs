@@ -41,8 +41,8 @@ var shopConnection = builder.Configuration.GetConnectionString("ShopContext")
 var identityConnection = builder.Configuration.GetConnectionString("ApplicationContext")
     ?? throw new InvalidOperationException("Connection string 'ApplicationContext' not found.");
 
-builder.Services.AddDbContext<ShopContext>(options => options.UseSqlServer(shopConnection));
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(identityConnection));
+builder.Services.AddDbContext<ShopContext>(options => options.UseSqlServer("Server=DESKTOP-3I419VG\\SQLEXPRESS;Database=AlphaDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"));
+builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer("Server=DESKTOP-3I419VG\\SQLEXPRESS;Database=AlphaDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"));
 #region giriş
 // Identity configuration
 builder.Services.AddIdentity<User, IdentityRole>(options => {
@@ -131,7 +131,8 @@ builder.Services.Configure<RequestLocalizationOptions>(options => {
         new CultureInfo("fr-FR"),
         new CultureInfo("de-DE"),
         new CultureInfo("en-US"),
-        new CultureInfo("tr-TR")
+        new CultureInfo("tr-TR"),
+        new CultureInfo("ar-SA")
     };
     options.DefaultRequestCulture = new RequestCulture("tr-TR", "tr-TR");
     options.SupportedCultures = supportedCultures;

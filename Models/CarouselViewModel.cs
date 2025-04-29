@@ -35,6 +35,7 @@ namespace Alpha.Models
         public CarouselTranslation TranslationsTR { get; set; } = new();
         public CarouselTranslation TranslationsDE { get; set; } = new();
         public CarouselTranslation TranslationsFR { get; set; } = new();
+        public CarouselTranslation TranslationsAR { get; set; } = new();
     }
 
     public class CarouselTranslation

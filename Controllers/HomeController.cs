@@ -339,87 +339,104 @@ public class HomeController : Controller
 #endregion
 
 #region Contact
-
-[HttpGet]
-public IActionResult Contact()
-{
-    var model = new ContactViewModel
-    {
-        Contact_Title               = _localization.GetKey("Contact_Title")?.Value ?? "Contact Us",
-        Contact_HeroDescription     = _localization.GetKey("Contact_HeroDescription")?.Value ?? "We're here to assist you.",
-        Contact_OurAddress          = _localization.GetKey("Contact_OurAddress")?.Value ?? "Our Address",
-        Contact_PhoneNumber         = _localization.GetKey("Contact_PhoneNumber")?.Value ?? "Phone Number",
-        Contact_EmailUs             = _localization.GetKey("Contact_EmailUs")?.Value ?? "Email Us",
-        Contact_SendUsMessage       = _localization.GetKey("Contact_SendUsMessage")?.Value ?? "Send Us a Message",
-        Contact_YourName            = _localization.GetKey("Contact_YourName")?.Value ?? "Your Name",
-        Contact_YourEmail           = _localization.GetKey("Contact_YourEmail")?.Value ?? "Your Email",
-        Contact_Subject             = _localization.GetKey("Contact_Subject")?.Value ?? "Subject",
-        Contact_Message             = _localization.GetKey("Contact_Message")?.Value ?? "Message",
-        Contact_SendMessageButton   = _localization.GetKey("Contact_SendMessageButton")?.Value ?? "Send",
-        Contact_OurLocation         = _localization.GetKey("Contact_OurLocation")?.Value ?? "Our Location",
-        Contact_FollowUsSocialMedia = _localization.GetKey("Contact_FollowUsSocialMedia")?.Value ?? "Follow Us",
-        Contact_OurAddressValue     = _localization.GetKey("Contact_OurAddressValue")?.Value ?? "123 Alpha Street",
-        Contact_PhoneNumberValue    = _localization.GetKey("Contact_PhoneNumberValue")?.Value ?? "+1 (555) 123-4567",
-        Contact_EmailAddressValue   = _localization.GetKey("Contact_EmailAddressValue")?.Value ?? "info@alphasafetyshoes.com"
-    };
-
-    return View(model);
-}
-
-[HttpPost]
-[ActionName("Contact")] // 💡 Bu çok önemli: POST methodu çakışmasın diye!
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> ContactPost(ContactViewModel model)
-{
-    if (!ModelState.IsValid)
-        return View(model);
-
-    try
-    {
-        string adminEmail = "owner-email@example.com";
-        var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-
-        string emailRoot = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates");
-        string adminTemplatePath = Path.Combine(emailRoot, "AdminNotification.html");
-
-        string userTemplatePath = culture switch
+        private void PopulateContactViewModel(ContactViewModel m)
         {
-            "en" => Path.Combine(emailRoot, "UserNotification_en.html"),
-            "de" => Path.Combine(emailRoot, "UserNotification_de.html"),
-            "fr" => Path.Combine(emailRoot, "UserNotification_fr.html"),
-            _    => Path.Combine(emailRoot, "UserNotification_tr.html")
-        };
+            m.Contact_Title               = _localization.GetKey("Contact_Title")?.Value               ?? "Contact Us";
+            m.Contact_HeroDescription     = _localization.GetKey("Contact_HeroDescription")?.Value     ?? "We're here to assist you.";
+            m.Contact_OurAddress          = _localization.GetKey("Contact_OurAddress")?.Value          ?? "Our Address";
+            m.Contact_PhoneNumber         = _localization.GetKey("Contact_PhoneNumber")?.Value         ?? "Phone Number";
+            m.Contact_EmailUs             = _localization.GetKey("Contact_EmailUs")?.Value             ?? "Email Us";
+            m.Contact_SendUsMessage       = _localization.GetKey("Contact_SendUsMessage")?.Value       ?? "Send Us a Message";
+            m.Contact_YourName            = _localization.GetKey("Contact_YourName")?.Value            ?? "Your Name";
+            m.Contact_YourEmail           = _localization.GetKey("Contact_YourEmail")?.Value           ?? "Your Email";
+            m.Contact_Subject             = _localization.GetKey("Contact_Subject")?.Value             ?? "Subject";
+            m.Contact_Message             = _localization.GetKey("Contact_Message")?.Value             ?? "Message";
+            m.Contact_SendMessageButton   = _localization.GetKey("Contact_SendMessageButton")?.Value   ?? "Send";
+            m.Contact_OurLocation         = _localization.GetKey("Contact_OurLocation")?.Value         ?? "Our Location";
+            m.Contact_FollowUsSocialMedia = _localization.GetKey("Contact_FollowUsSocialMedia")?.Value ?? "Follow Us";
 
-        string adminTemplate = await System.IO.File.ReadAllTextAsync(adminTemplatePath);
-        string userTemplate = await System.IO.File.ReadAllTextAsync(userTemplatePath);
+            // İletişim detayları
+            m.Contact_OurAddressValue     = _localization.GetKey("Contact_OurAddressValue")?.Value     ?? "123 Alpha Street";
+            m.Contact_PhoneNumberValue    = _localization.GetKey("Contact_PhoneNumberValue")?.Value    ?? "+1 (555) 123-4567";
+            m.Contact_EmailAddressValue   = _localization.GetKey("Contact_EmailAddressValue")?.Value   ?? "info@alphasafetyshoes.com";
+        }
 
-        string adminBody = adminTemplate
-            .Replace("{UserName}", model.Name)
-            .Replace("{UserEmail}", model.Email)
-            .Replace("{UserMessage}", model.Message);
-
-        string adminSubject = "Yeni İletişim Formu Mesajı";
-        string userSubject = culture switch
+        /// <summary>
+        /// GET: /Home/Contact
+        /// </summary>
+        [HttpGet]
+        public IActionResult Contact()
         {
-            "en" => "Thank You for Your Message",
-            "de" => "Vielen Dank für Ihre Nachricht",
-            "fr" => "Merci pour votre message",
-            _    => "Mesajınız İçin Teşekkürler"
-        };
+            var model = new ContactViewModel();
+            PopulateContactViewModel(model);
+            return View(model);
+        }
 
-        await _emailSender.SendEmailAsync(adminEmail, adminSubject, adminBody);
-        await _emailSender.SendEmailAsync(model.Email, userSubject, userTemplate);
+        /// <summary>
+        /// POST: /Home/Contact
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Contact")]
+        public async Task<IActionResult> ContactPost(ContactViewModel model)
+        {
+            // UI metinlerinin eksiksiz gelmesi için POST'ta da doldur:
+            PopulateContactViewModel(model);
 
-        TempData["SuccessMessage"] = _localization.GetKey("ContactSuccessMessage").Value;
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "Contact form error");
-        TempData["ErrorMessage"] = _localization.GetKey("ContactErrorMessage").Value;
-    }
+            if (!ModelState.IsValid)
+                return View(model);
 
-    return View(model);
-}
+            try
+            {
+                // --- Admin bildirim e-postası ---
+                var adminEmail = "owner-email@example.com";
+                var adminSubject = "Yeni İletişim Formu Mesajı";
+                var adminBody = $@"
+                    <p><strong>From:</strong> {model.Name} ({model.Email})</p>
+                    <p><strong>Subject:</strong> {model.Subject}</p>
+                    <hr/>
+                    <p>{model.Message}</p>";
+
+                await _emailSender.SendEmailAsync(adminEmail, adminSubject, adminBody);
+
+                // --- Kullanıcıya teşekkür e-postası ---
+                var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                var userSubject = culture switch
+                {
+                    "en" => "Thank You for Your Message",
+                    "de" => "Vielen Dank für Ihre Nachricht",
+                    "fr" => "Merci pour votre message",
+                    "ar" => "شكراً لرسالتك",
+                    _    => "Mesajınız İçin Teşekkürler"
+                };
+
+                // EmailTemplates klasöründe UserNotification_tr.html gibi dosyalarınız var:
+                var templatePath = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "EmailTemplates",
+                    $"UserNotification_{culture}.html"
+                );
+                var userBodyTpl = System.IO.File.Exists(templatePath)
+                    ? await System.IO.File.ReadAllTextAsync(templatePath)
+                    : "<p>Hi {UserName}, thanks for reaching out!</p>";
+                var userBody = userBodyTpl.Replace("{UserName}", model.Name);
+
+                await _emailSender.SendEmailAsync(model.Email, userSubject, userBody);
+
+                TempData["SuccessMessage"] = _localization.GetKey("ContactSuccessMessage")?.Value
+                                             ?? "Your message has been sent!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Contact form error");
+                TempData["ErrorMessage"] = _localization.GetKey("ContactErrorMessage")?.Value
+                                           ?? "There was an error sending your message.";
+            }
+
+            // Her durumda aynı view’a, dolu model ile dönüyoruz:
+            return View(model);
+        }
+    
 
 #endregion
 

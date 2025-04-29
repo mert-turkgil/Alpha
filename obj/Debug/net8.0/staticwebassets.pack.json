@@ -77,6 +77,10 @@
       "PackagePath": "staticwebassets\\img\\40598b76-e4f2-4773-8bb6-16415c79ccf8.webp"
     },
     {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\59a91272-5a3c-4f77-bfa5-d59f1213b490.jpg",
+      "PackagePath": "staticwebassets\\img\\59a91272-5a3c-4f77-bfa5-d59f1213b490.jpg"
+    },
+    {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\600w-Carousel1.jpg",
       "PackagePath": "staticwebassets\\img\\600w-Carousel1.jpg"
     },
@@ -143,6 +147,10 @@
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\ct2.png",
       "PackagePath": "staticwebassets\\img\\ct2.png"
+    },
+    {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\default-image.jpg",
+      "PackagePath": "staticwebassets\\img\\default-image.jpg"
     },
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\exploring-the-future-of-renewable-energy_cover.jpg",
@@ -587,6 +595,18 @@
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\lib\\viewerjs\\types\\index.d.ts",
       "PackagePath": "staticwebassets\\lib\\viewerjs\\types\\index.d.ts"
+    },
+    {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\temp\\6e16b98dd1f53343474fdd840a230a3a.gif",
+      "PackagePath": "staticwebassets\\temp\\6e16b98dd1f53343474fdd840a230a3a.gif"
+    },
+    {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\temp\\8fe2fffb9e29dce6cbd04b0ab0862674.gif",
+      "PackagePath": "staticwebassets\\temp\\8fe2fffb9e29dce6cbd04b0ab0862674.gif"
+    },
+    {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\temp\\f9387b0777d6c83d05bfbbdbe60b96cd.gif",
+      "PackagePath": "staticwebassets\\temp\\f9387b0777d6c83d05bfbbdbe60b96cd.gif"
     },
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\videos\\SplashVid.mp4",

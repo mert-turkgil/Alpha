@@ -476,3 +476,12 @@ C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\Resources\SharedResource.de-DE.r
 C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\Resources\SharedResource.en-US.resx
 C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\Resources\SharedResource.fr-FR.resx
 C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\Resources\SharedResource.tr-TR.resx
+C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\EmailTemplates\AdminNotification.html
+C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\EmailTemplates\UserConfirm_de.html
+C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\EmailTemplates\UserConfirm_en.html
+C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\EmailTemplates\UserConfirm_fr.html
+C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\EmailTemplates\UserConfirm_tr.html
+C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\EmailTemplates\UserNotification_de.html
+C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\EmailTemplates\UserNotification_en.html
+C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\EmailTemplates\UserNotification_fr.html
+C:\Users\mertu\Desktop\Alpha\bin\Release\net8.0\EmailTemplates\UserNotification_tr.html

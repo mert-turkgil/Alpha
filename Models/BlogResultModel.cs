@@ -15,5 +15,7 @@ namespace Alpha.Models
         public string ContentDE { get; set; } // German Content
         public string TitleFR { get; set; } // French Title
         public string ContentFR { get; set; } // French Content
+        public string TitleAR { get; set; } // Arabic Title
+        public string ContentAR { get; set; } // Arabic Content
     }
 }

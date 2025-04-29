@@ -344,6 +344,9 @@
           "Alpha.dll": {}
         },
         "resources": {
+          "ar-SA/Alpha.resources.dll": {
+            "locale": "ar-SA"
+          },
           "de-DE/Alpha.resources.dll": {
             "locale": "de-DE"
           },

@@ -58,6 +58,7 @@ function initializeCKEditor() {
     initializeEditor('ContentTR', editorSettings);
     initializeEditor('ContentDE', editorSettings);
     initializeEditor('ContentFR', editorSettings);
+    initializeEditor('ContentAR', editorSettings);
 
     console.log('[DEBUG] CKEditor initialized successfully.');
 
@@ -90,14 +91,20 @@ function initializeCKEditor() {
 }
 
 // Function to initialize CKEditor instances for specific fields
-function initializeEditor(elementId, config) {
-    if (document.getElementById(elementId) && !CKEDITOR.instances[elementId]) {
-        console.log(`[DEBUG] Initializing CKEditor instance: ${elementId}`);
-        CKEDITOR.replace(elementId, config);
-    } else {
-        console.log(`[DEBUG] CKEditor instance already exists for: ${elementId}`);
+function initializeEditor(id, config) {
+    console.log(`→ trying to init editor on: ${id}`);
+    const el = document.getElementById(id);
+    if (!el) {
+      console.warn(`❌ no element with id="${id}" found`);
+      return;
     }
-}
+    if (CKEDITOR.instances[id]) {
+      console.log(`⚠ already initialized: ${id}`);
+      return;
+    }
+    console.log(`✅ attaching CKEditor to: ${id}`);
+    CKEDITOR.replace(id, config);
+  }
 
 // Function to destroy any existing CKEditor instances
 function destroyExistingCKEditors() {

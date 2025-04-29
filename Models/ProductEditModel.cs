@@ -165,5 +165,26 @@ namespace Alpha.Models
 
     [Required(ErrorMessage = "SoleTR is required.")]
     public string SoleTR { get; set; }
+    //AR
+    [Required(ErrorMessage = "DescriptionAR is required.")]
+    public string DescriptionAR { get; set; }
+
+    [Required(ErrorMessage = "UpperAR is required.")]
+    public string UpperAR { get; set; }
+
+    [Required(ErrorMessage = "LiningAR is required.")]
+    public string LiningAR { get; set; }
+
+    [Required(ErrorMessage = "ProtectionAR is required.")]
+    public string ProtectionAR { get; set; }
+
+    [Required(ErrorMessage = "MidsoleAR is required.")]
+    public string MidsoleAR { get; set; }
+
+    [Required(ErrorMessage = "InsoleAR is required.")]
+    public string InsoleAR { get; set; }
+
+    [Required(ErrorMessage = "SoleAR is required.")]
+    public string SoleAR { get; set; }
     }
 }

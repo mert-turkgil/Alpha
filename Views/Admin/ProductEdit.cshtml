@@ -8,6 +8,8 @@
     <h1 class="text-center mb-4 animate__animated animate__fadeInDown">Edit Product</h1>
 
     <form asp-action="ProductEdit" method="post" class="needs-validation" novalidate>
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
         <input type="hidden" asp-for="ProductId" />
 
         <!-- Basic Product Details -->
@@ -49,7 +51,7 @@
             </div>
             <div class="card-body">
                 <div class="accordion" id="translationAccordion">
-                    @foreach (var culture in new[] { "FR", "US", "DE", "TR" })
+                    @foreach (var culture in new[] { "FR", "US", "DE", "TR","AR" })
                     {
                         <div class="card">
                             <div class="card-header" id="heading-@culture">

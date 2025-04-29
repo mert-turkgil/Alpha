@@ -52,14 +52,14 @@ namespace Alpha.ViewComponents
             // Map to BlogIndexModel with translations
             var blogModels = pagedBlogs.Select(blog => new BlogIndexModel
             {
-                Blogs = pagedBlogs,
-
-                // Fetch translations dynamically
+                Blogs = new List<Blog> { blog }, // ✅ ONLY THIS blog
+                
                 Title = _localization.GetKey($"Title_{blog.BlogId}_{blog.Url}_{culture}").Value ?? blog.Title,
                 Content = ProcessContentImagesForEdit(
                     _localization.GetKey($"Content_{blog.BlogId}_{blog.Url}_{culture}")?.Value ?? blog.Content
                 )
             }).ToList();
+
 
             // Pass data to view
             ViewBag.Head = head;
@@ -76,8 +76,9 @@ namespace Alpha.ViewComponents
             if (string.IsNullOrEmpty(content))
                 return string.Empty;
 
-            // Replace relative paths with absolute URLs
-            return content.Replace("src=\"/", "src=\"https://example.com/");
+            var baseUrl = $"{Request.Scheme}://{Request.Host}/"; 
+            return content.Replace("src=\"/", $"src=\"{baseUrl}");
         }
+
     }
 }

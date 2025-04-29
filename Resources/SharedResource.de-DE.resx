@@ -439,37 +439,37 @@
   <data name="country1" xml:space="preserve">
     <value>Deutschland</value>
   </data>
-    <data name="country2" xml:space="preserve">
+  <data name="country2" xml:space="preserve">
     <value>Polen</value>
   </data>
-    <data name="country3" xml:space="preserve">
+  <data name="country3" xml:space="preserve">
     <value>Rumänien</value>
   </data>
-    <data name="country4" xml:space="preserve">
+  <data name="country4" xml:space="preserve">
     <value>Bulgarien</value>
   </data>
-    <data name="country5" xml:space="preserve">
+  <data name="country5" xml:space="preserve">
     <value>Aserbaidschan</value>
   </data>
-    <data name="country6" xml:space="preserve">
+  <data name="country6" xml:space="preserve">
     <value>Usbekistan</value>
   </data>
-    <data name="country7" xml:space="preserve">
+  <data name="country7" xml:space="preserve">
     <value>Kroatien</value>
   </data>
-    <data name="country8" xml:space="preserve">
+  <data name="country8" xml:space="preserve">
     <value>Griechenland</value>
   </data>
-    <data name="country9" xml:space="preserve">
+  <data name="country9" xml:space="preserve">
     <value>Algerien</value>
   </data>
-    <data name="country10" xml:space="preserve">
+  <data name="country10" xml:space="preserve">
     <value>Elfenbeinküste</value>
   </data>
-    <data name="country11" xml:space="preserve">
+  <data name="country11" xml:space="preserve">
     <value>Mosambik</value>
   </data>
-    <data name="country12" xml:space="preserve">
+  <data name="country12" xml:space="preserve">
     <value>Türkei</value>
   </data>
   <data name="CountryQuote" xml:space="preserve">

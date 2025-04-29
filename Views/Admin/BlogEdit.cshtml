@@ -37,7 +37,7 @@
 
 @section Scripts {
     <script src="https://cdn.ckeditor.com/4.21.0/full/ckeditor.js"></script>
-    <script src="~/js/ckeditor-config.js"></script>
+    <script src="~/js/ckeditor-config.js?v=@DateTime.UtcNow.Ticks"></script>
         <script>
         function initializeEditor(editorId, content) {
             if (document.getElementById(editorId)) {
@@ -56,6 +56,7 @@
             initializeEditor('ContentTR', '@Html.Raw(Model.ContentTR)');
             initializeEditor('ContentDE', '@Html.Raw(Model.ContentDE)');
             initializeEditor('ContentFR', '@Html.Raw(Model.ContentFR)');
+            initializeEditor('ContentAR', '@Html.Raw(Model.ContentAR)');
         });
     </script>
         <!-- Initialize DataTables -->
@@ -208,7 +209,11 @@
             <input asp-for="TitleFR" class="form-control" />
             <textarea asp-for="ContentFR" id="ContentFR" class="form-control" rows="10"></textarea>
         </div>
-
+        <div class="mb-3">
+            <label class="form-label">Title (Arabia)</label>
+            <input asp-for="TitleAR" class="form-control" />
+            <textarea asp-for="ContentAR" class="form-control" id="ContentAR" rows="10"></textarea>
+        </div>
         <!-- Submit -->
         <div class="d-flex justify-content-between mt-4">
             <button type="submit" class="btn btn-primary">Save Changes</button>

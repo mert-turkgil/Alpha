@@ -436,40 +436,40 @@
   <data name="About_PersonnelShoesDescription" xml:space="preserve">
     <value>Des chaussures confortables et élégantes pour des environnements professionnels.</value>
   </data>
-    <data name="country1" xml:space="preserve">
+  <data name="country1" xml:space="preserve">
     <value>Allemagne</value>
   </data>
-    <data name="country2" xml:space="preserve">
+  <data name="country2" xml:space="preserve">
     <value>Pologne</value>
   </data>
-    <data name="country3" xml:space="preserve">
+  <data name="country3" xml:space="preserve">
     <value>Roumanie</value>
   </data>
-    <data name="country4" xml:space="preserve">
+  <data name="country4" xml:space="preserve">
     <value>Bulgarie</value>
   </data>
-    <data name="country5" xml:space="preserve">
+  <data name="country5" xml:space="preserve">
     <value>Azerbaïdjan</value>
   </data>
-    <data name="country6" xml:space="preserve">
+  <data name="country6" xml:space="preserve">
     <value>Ouzbékistan</value>
   </data>
-    <data name="country7" xml:space="preserve">
+  <data name="country7" xml:space="preserve">
     <value>Croatie</value>
   </data>
-    <data name="country8" xml:space="preserve">
+  <data name="country8" xml:space="preserve">
     <value>Grèce</value>
   </data>
-    <data name="country9" xml:space="preserve">
+  <data name="country9" xml:space="preserve">
     <value>Algérie</value>
   </data>
-    <data name="country10" xml:space="preserve">
+  <data name="country10" xml:space="preserve">
     <value>Côte d’Ivoire</value>
   </data>
-    <data name="country11" xml:space="preserve">
+  <data name="country11" xml:space="preserve">
     <value>Mozambique</value>
   </data>
-    <data name="country12" xml:space="preserve">
+  <data name="country12" xml:space="preserve">
     <value>Turquie</value>
   </data>
   <data name="CountryQuote" xml:space="preserve">
@@ -634,7 +634,7 @@
     <value>L'avenir des maisons intelligentes : Quand la technologie rencontre le confort</value>
   </data>
   <data name="Content_1_toeergy_fr" xml:space="preserve">
-    <value>&lt;p&gt;aaaaaaaaaaaaaaaaaaaaa&lt;/p&gt;
+    <value>&lt;p&gt;aمقالمقالمقالمقالمقالمقالمقالمقالمقالمقالمقال&lt;img src="/blog/gif/6e16b98dd1f53343474fdd840a230a3a.gif" style="height:480px; width:270px" /&gt;&lt;img src="/blog/gif/f9387b0777d6c83d05bfbbdbe60b96cd.gif" style="height:280px; width:500px" /&gt;&lt;/p&gt;
 </value>
   </data>
   <data name="Product_4_Description_fr-FR" xml:space="preserve">

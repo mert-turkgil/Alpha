@@ -7,6 +7,15 @@ C:\Users\mertu\Desktop\publish\Resources\SharedResource.de-DE.resx
 C:\Users\mertu\Desktop\publish\Resources\SharedResource.en-US.resx
 C:\Users\mertu\Desktop\publish\Resources\SharedResource.fr-FR.resx
 C:\Users\mertu\Desktop\publish\Resources\SharedResource.tr-TR.resx
+C:\Users\mertu\Desktop\publish\EmailTemplates\AdminNotification.html
+C:\Users\mertu\Desktop\publish\EmailTemplates\UserConfirm_de.html
+C:\Users\mertu\Desktop\publish\EmailTemplates\UserConfirm_en.html
+C:\Users\mertu\Desktop\publish\EmailTemplates\UserConfirm_fr.html
+C:\Users\mertu\Desktop\publish\EmailTemplates\UserConfirm_tr.html
+C:\Users\mertu\Desktop\publish\EmailTemplates\UserNotification_de.html
+C:\Users\mertu\Desktop\publish\EmailTemplates\UserNotification_en.html
+C:\Users\mertu\Desktop\publish\EmailTemplates\UserNotification_fr.html
+C:\Users\mertu\Desktop\publish\EmailTemplates\UserNotification_tr.html
 C:\Users\mertu\Desktop\publish\refs\Microsoft.AspNetCore.Antiforgery.dll
 C:\Users\mertu\Desktop\publish\refs\Microsoft.AspNetCore.Authentication.Abstractions.dll
 C:\Users\mertu\Desktop\publish\refs\Microsoft.AspNetCore.Authentication.BearerToken.dll

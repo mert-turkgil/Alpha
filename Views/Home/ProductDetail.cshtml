@@ -1,12 +1,13 @@
 @model Alpha.Models.ProductDetailViewModel
-
+@using Alpha.Entity
 @{
     ViewData["Title"] = Model.Name;
 }
 @section Css{
     <link rel="stylesheet" href="~/css/Category.css" />
-    <link rel="stylesheet" href="~/lib/imageviewer/1.1.0/viewer.min.css" />
+    <link rel="stylesheet" href="~/lib/viewerjs/dist/viewer.min.css" />
 }
+
 <!-- Hero Section -->
 <section class="py-5 bg-light text-center">
     <div class="container">
@@ -34,31 +35,51 @@
                 <div class="card-body">
                     @if (Model.ProductImages != null && Model.ProductImages.Any())
                     {
-                        <!-- Main Image -->
-                        var mainImgUrl = Model.ProductImages.First().Image?.ImageUrl ?? "default-image.jpg";
-                        <div id="productImageGallery" class="text-center mb-3">
-                            <img src="~/img/@mainImgUrl"
-                                 alt="@Model.Name"
-                                 class="img-fluid rounded shadow-sm"
-                                 style="max-height: 400px; object-fit: cover;"
-                                 onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Unavailable';" />
-                        </div>
-
+                        @if(Model.ProductImages.Count == 1)
+                        {
+                            var mainImgUrl = Model.ProductImages.First().Image?.ImageUrl ?? "default-image.jpg";
+                            <div id="productImageGallery" class="text-center mb-3">
+                                <div class="main-image">
+                                <img src="~/img/@mainImgUrl"
+                                    alt="@Model.Name"
+                                    class="img-fluid rounded shadow-sm"
+                                    style="max-height: 400px; object-fit: cover;"
+                                    onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Unavailable';" />
+                                    </div>
+                            </div>
+                        }
                         <!-- Thumbnails -->
                         @if (Model.ProductImages.Count > 1)
                         {
-                            <div id="productImageGallery" class="d-flex flex-wrap justify-content-center gap-2">
-                                @foreach (var img in Model.ProductImages)
+                            var images = Model.ProductImages ?? new List<ProductImage>();
+                            
+                                @if (images.Any())
                                 {
-                                    <a href="~/img/@img.Image.ImageUrl" data-fslightbox="gallery">
-                                        <img src="~/img/@img.Image.ImageUrl"
-                                             alt="@Model.Name"
-                                             class="img-fluid"
-                                             style="width: 100px; height: 100px; object-fit: cover;"
-                                             onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=Image+Unavailable';" />
-                                    </a>
+                                    <!-- first image as main -->
+                                    <div class="main-image mb-3">
+                                        <img src="~/img/@images[0].Image.ImageUrl"
+                                            alt="@Model.Name"
+                                            class="img-fluid rounded shadow-sm w-100"
+                                            style="max-height:400px;object-fit:cover;"
+                                            onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Unavailable';" />
+                                    </div>
+
+                                    <!-- the rest as normal thumbs -->
+                                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                                        @foreach (var img in images.Skip(1))
+                                        {
+                                            <img src="~/img/@img.Image.ImageUrl"
+                                                alt="@Model.Name"
+                                                class="img-fluid"
+                                                style="width:100px;height:100px;object-fit:cover;border:1px solid #ddd;border-radius:4px;"
+                                                onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=Image+Unavailable';" />
+                                        }
+                                    </div>
                                 }
-                            </div>
+                                else
+                                {
+                                    <p class="text-muted">No images available for this product.</p>
+                                }
                         }
                     }
                     else
@@ -214,23 +235,26 @@
 </div>
 
 @section Scripts {
-    <script src="~/lib/imageviewer/1.1.0/viewer.min.js"></script>
-    <script>
-    $(document).ready(function() {
-        // "productImageGallery" kapsayıcısındaki resimler için imageviewer'ı etkinleştir
-        $('#productImageGallery').viewer({
-            // Tüm özellikleri aktif ediyoruz
-            toolbar: true,       // Alt kısımda yakınlaştırma, döndürme, bir-sona sığdır gibi araçları göster
-            navbar: true,        // Çoklu resim varsa küçük önizleme şeridini (navbar) göster
-            title: true,         // Üstte başlık (örneğin resim numarası veya adı) göster
-            fullscreen: true,    // Tam ekran moduna geçiş butonunu aktif et
-            rotatable: true,     // Resmi döndürme özelliğini aktif et
-            scalable: true,      // Resmi yatay/dikey çevirme (flip) özelliğini aktif et
-            zoomable: true,      // Yakınlaştırma/uzaklaştırma özelliğini aktif et
-            movable: true,       // Büyütülen resmin sürüklenerek taşınmasını aktif et
-            keyboard: true,      // Klavye ok tuşları ile navigasyon ve +/- ile zoom yap
-            loop: true           // Son resimde ileri tuşuna basılırsa ilk resme döngü yap (galeriyi döngüsel yap)
-        });
+  <script src="~/lib/viewerjs/dist/viewer.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Find the left‐column card-body that holds both main + thumbs
+      var galleryContainer = document.querySelector('.col-lg-6.mb-4 .card-body');
+      if (!galleryContainer) return;
+
+      // Initialize Viewer.js on that container
+      new Viewer(galleryContainer, {
+        toolbar:    true,
+        navbar:     true,
+        title:      true,
+        fullscreen: true,
+        rotatable:  true,
+        scalable:   true,
+        zoomable:   true,
+        movable:    true,
+        keyboard:   true,
+        loop:       true
+      });
     });
-    </script>
+  </script>
 }
