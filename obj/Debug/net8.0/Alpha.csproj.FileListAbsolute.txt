@@ -492,3 +492,14 @@ C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\refint\Alpha.dll
 C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\Alpha.pdb
 C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\Alpha.genruntimeconfig.cache
 C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\ref\Alpha.dll
+C:\Users\mertu\Desktop\Alpha\bin\Debug\net8.0\HtmlAgilityPack.dll
+C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\Alpha.BlogResources.SharedResource.ar-SA.resources
+C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\Alpha.BlogResources.SharedResource.de-DE.resources
+C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\Alpha.BlogResources.SharedResource.en-US.resources
+C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\Alpha.BlogResources.SharedResource.fr-FR.resources
+C:\Users\mertu\Desktop\Alpha\obj\Debug\net8.0\Alpha.BlogResources.SharedResource.tr-TR.resources
+C:\Users\mertu\Desktop\Alpha\bin\Debug\net8.0\BlogResources\SharedResource.ar-SA.resx
+C:\Users\mertu\Desktop\Alpha\bin\Debug\net8.0\BlogResources\SharedResource.de-DE.resx
+C:\Users\mertu\Desktop\Alpha\bin\Debug\net8.0\BlogResources\SharedResource.en-US.resx
+C:\Users\mertu\Desktop\Alpha\bin\Debug\net8.0\BlogResources\SharedResource.fr-FR.resx
+C:\Users\mertu\Desktop\Alpha\bin\Debug\net8.0\BlogResources\SharedResource.tr-TR.resx

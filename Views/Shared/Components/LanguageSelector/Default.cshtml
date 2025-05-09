@@ -1,8 +1,7 @@
 @model List<SelectListItem>
 
-<form id="language-selector" asp-controller="Home" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post">
-<select class="form-select" style="border-color: #e79c00;" name="culture" id="culture" onchange="this.form.submit()">
-  @foreach (var culture in Model.Where(c => c.Value == "en-US" || c.Value == "tr-TR" || c.Value == "fr-FR" || c.Value == "de-DE"|| c.Value == "ar-SA"))
+<select class="form-select" style="border-color: #e79c00;" onchange="switchLanguage(this.value)">
+@foreach (var culture in Model.Where(c => c.Value == "en-US" || c.Value == "tr-TR" || c.Value == "fr-FR" || c.Value == "de-DE" || c.Value == "ar-SA"))
 {
     if (culture.Selected)
     {
@@ -14,4 +13,30 @@
     }
 }
 </select>
-</form>
+
+<script>
+function switchLanguage(langCode) {
+    const shortLang = langCode.split('-')[0];
+    const path = window.location.pathname;
+    const segments = path.split('/');
+
+    // Admin panelindeysek kültür değiştirmeyi atla
+    if (segments.length > 1 && segments[1].toLowerCase() === "admin") {
+        // Yalnızca cookie güncellensin
+        document.cookie = ".AspNetCore.Culture=c=" + langCode + "|uic=" + langCode + "; path=/";
+        location.reload(); // sadece içerik değişsin
+        return;
+    }
+
+    // Normal sayfa → dil segmentini değiştir
+    if (segments.length > 1 && /^[a-z]{2}$/.test(segments[1])) {
+        segments[1] = shortLang;
+    } else {
+        segments.splice(1, 0, shortLang);
+    }
+
+    const newPath = segments.join('/');
+    document.cookie = ".AspNetCore.Culture=c=" + langCode + "|uic=" + langCode + "; path=/";
+    window.location.href = newPath + window.location.search;
+}
+</script>

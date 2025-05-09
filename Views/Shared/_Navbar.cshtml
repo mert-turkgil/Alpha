@@ -22,19 +22,37 @@
           <a class="nav-link fw-semibold" href="/">@Model.Home</a>
         </li>
         <li id="orta" class="nav-item">
-          <a asp-controller="Home" asp-action="About"  class="nav-link fw-semibold">@Model.About</a>
+              @{
+              var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+              }
+            <a asp-controller="Home"
+            asp-action="About"
+            asp-route-culture="@culture"
+            class="nav-link fw-semibold">
+            @Model.About
+          </a>
         </li>
         <li id="orta" class="nav-item">
-          <a asp-controller="Home" asp-action="Services" class="nav-link fw-semibold">@Model.Services</a>
+          <a asp-controller="Home"
+            asp-action="Services"
+            asp-route-culture="@culture"
+            class="nav-link fw-semibold">
+            @Model.Services
+          </a>
         </li>
         <li id="orta" class="nav-item">
-          <a asp-controller="Home" asp-action="Blog" class="nav-link fw-semibold">@Model.Blog</a>
+            <a asp-controller="Home"
+            asp-action="Blog"
+            asp-route-culture="@culture"
+            class="nav-link fw-semibold">
+            @Model.Blog
+          </a>
         </li>
         <li id="orta" class="nav-item">
           <a asp-controller="Home" asp-action="Privacy" class="nav-link fw-semibold">@Model.Privacy</a>
         </li>
       </ul>
-      <a asp-controller="Home" asp-action="Contact" style="border-radius: 0px;" class="btn btn-outline-e79c00  btn-lg fw-semibold ms-3">@Model.Contact</a>
+      <a asp-controller="Home" asp-route-culture="@culture" asp-action="Contact" style="border-radius: 0px;" class="btn btn-outline-e79c00  btn-lg fw-semibold ms-3">@Model.Contact</a>
     </div> 
     <!-- #endregion -->
     <!-- #giriş çıkış -->
@@ -68,19 +86,49 @@
                   <a class="nav-link fw-semibold @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" href="/">@Model.Home</a>
               </li>
               <li id="ofcanva" class="nav-item">
-                  <a asp-controller="Home" asp-action="About" class="nav-link fw-semibold @(ViewContext.RouteData.Values["action"]?.ToString() == "About" ? "active" : "")">@Model.About</a>
+               @{
+                    var isActiveAbout = ViewContext.RouteData.Values["action"]?.ToString() == "About";
+                }
+                <a asp-controller="Home"
+                  asp-action="About"
+                  asp-route-culture="@culture"
+                  class="nav-link @(isActiveAbout ? "active" : "")">
+                    @Model.About
+                </a>
               </li>
               <li id="ofcanva" class="nav-item">
-                  <a asp-controller="Home" asp-action="Services" class="nav-link fw-semibold @(ViewContext.RouteData.Values["action"]?.ToString() == "Services" ? "active" : "")">@Model.Services</a>
+                  @{
+                    var isActive = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Services", StringComparison.OrdinalIgnoreCase);
+                  }
+                  <a asp-controller="Home"
+                    asp-action="Services"
+                    asp-route-culture="@culture"
+                    class="nav-link fw-semibold @(isActive ? "active" : "")">
+                    @Model.Services
+                  </a>
               </li>
               <li id="ofcanva" class="nav-item">
-                  <a asp-controller="Home" asp-action="Blog" class="nav-link fw-semibold @(ViewContext.RouteData.Values["action"]?.ToString() == "Blog" ? "active" : "")">@Model.Blog</a>
+                @{
+                    var isActiveBlog = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Blog", StringComparison.OrdinalIgnoreCase);
+                }
+                <a asp-controller="Home"
+                  asp-action="Blog"
+                  asp-route-culture="@culture"
+                  class="nav-link fw-semibold @(isActiveBlog ? "active" : "")">
+                    @Model.Blog
+                </a>
               </li>
               <li id="ofcanva" class="nav-item">
                   <a asp-controller="Home" asp-action="Privacy" class="nav-link fw-semibold @(ViewContext.RouteData.Values["action"]?.ToString() == "Privacy" ? "active" : "")">@Model.Privacy</a>
               </li>
               <li id="ofcanva" class="nav-item">
-                  <a asp-controller="Home" asp-action="Contact" class="nav-link fw-semibold @(ViewContext.RouteData.Values["action"]?.ToString() == "Contact" ? "active" : "")">@Model.Contact</a>
+                @{var isActiveContact = ViewContext.RouteData.Values["action"]?.ToString() == "Contact";}
+                  <a asp-controller="Home"
+                    asp-action="Contact"
+                    asp-route-culture="@culture"
+                    class="nav-link @(isActiveContact ? "active" : "")">
+                      @Model.Contact
+                  </a>
               </li>
           </ul>
           <!-- Add Language Selector Below Menu -->

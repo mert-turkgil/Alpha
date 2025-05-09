@@ -23,6 +23,7 @@ public class HomeController : Controller
     private LanguageService _localization;
     private readonly IEmailSender _emailSender;
     private readonly IConfiguration _configuration;
+    private readonly IBlogResxService _blogResxService;
 
     public HomeController(ILogger<HomeController> logger
     ,LanguageService localization
@@ -32,6 +33,7 @@ public class HomeController : Controller
     ,ICarouselRepository carouselRepository
     ,IEmailSender emailSender
     ,IConfiguration configuration
+    , IBlogResxService blogResxService
     )
     {
         _logger = logger;
@@ -42,6 +44,7 @@ public class HomeController : Controller
         _carouselRepository = carouselRepository;
         _emailSender = emailSender;
         _configuration = configuration;
+        _blogResxService = blogResxService;
     }
 
     #region SetLanguage
@@ -59,9 +62,22 @@ public class HomeController : Controller
 
 
 #region Blog
-
-    public async Task<IActionResult> Blog(string category, string brand, string searchTerm, int page = 1, int pageSize = 3)
+    [HttpGet("{culture}/blog")]
+    public async Task<IActionResult> Blog(string culture,string category, string brand, string searchTerm, int page = 1, int pageSize = 3)
     {
+        // 🌍 Dil ayarını uygula
+        CultureInfo.CurrentUICulture = new CultureInfo(culture);
+        CultureInfo.CurrentCulture = new CultureInfo(culture);
+        ViewBag.Title = _localization.GetKey("SEO_Blog_Title") 
+                        ?? "Blog | İş Güvenliği Rehberleri ve Haberler | Alpha Ayakkabı";
+
+        ViewBag.MetaDescription = _localization.GetKey("SEO_Blog_Description") 
+                        ?? "İş güvenliği, askeri botlar ve koruyucu ekipmanlar hakkında ipuçları, haberler ve rehber içerikler Alpha Blog’da.";
+
+        ViewBag.MetaKeywords = _localization.GetKey("SEO_Blog_Keywords") 
+                        ?? "iş güvenliği blogu, askeri botlar, alpha ayakkabı, güvenlik ayakkabısı, çalışma güvenliği";
+
+
         // 1. Get all blogs (with related ProductBlogs & CategoryBlogs)
         var allBlogs = await _blogRepository.GetAllAsync();
 
@@ -106,8 +122,8 @@ public class HomeController : Controller
             var contentKey = $"Content_{blog.BlogId}_{blog.Url}_{currentCulture}";
 
             // Attempt to retrieve translation from .resx
-            var translatedTitle = _localization.GetKey(titleKey)?.Value;    // or .GetValue() depending on your service
-            var translatedContent = _localization.GetKey(contentKey)?.Value;
+            var translatedTitle = _localization.GetKey(titleKey);    // or .GetValue() depending on your service
+            var translatedContent = _localization.GetKey(contentKey);
 
             // If found, override the default
             if (!string.IsNullOrEmpty(translatedTitle))
@@ -115,17 +131,18 @@ public class HomeController : Controller
             if (!string.IsNullOrEmpty(translatedContent))
                 blog.Content = translatedContent;
         }
+            var cultureName = CultureInfo.CurrentCulture.Name;
             // Fallback to some default if the localization is missing:
-            var blogListTitle = _localization.GetKey("BlogList_Title")?.Value ?? "Our Blog";
-            var blogListDescription = _localization.GetKey("BlogList_Description")?.Value ?? "Explore the latest news...";
-            var blogListSearchLabel = _localization.GetKey("BlogList_SearchLabel")?.Value ?? "Search";
-            var blogListCategoryLabel = _localization.GetKey("BlogList_CategoryLabel")?.Value ?? "Category";
-            var blogListAllCategories = _localization.GetKey("BlogList_AllCategories")?.Value ?? "All Categories";
-            var blogListBrandLabel = _localization.GetKey("BlogList_BrandLabel")?.Value ?? "Brand";
-            var blogListBrandPlaceholder = _localization.GetKey("BlogList_BrandPlaceholder")?.Value ?? "Enter brand name";
-            var blogListApplyFiltersButton = _localization.GetKey("BlogList_ApplyFiltersButton")?.Value ?? "Apply Filters";
-            var blogListNoPostsMessage = _localization.GetKey("BlogList_NoPostsMessage")?.Value ?? "No blog posts available at this time. Check back soon!";
-            var bloglistreadmore = _localization.GetKey("BlogList_ReadMoreButton")?.Value ??"Read More!";
+            var blogListTitle = _blogResxService.Read("BlogList_Title", cultureName) ?? "Our Blog";
+            var blogListDescription = _blogResxService.Read("BlogList_Description", cultureName) ?? "Explore the latest news...";
+            var blogListSearchLabel = _blogResxService.Read("BlogList_SearchLabel", cultureName) ?? "Search";
+            var blogListCategoryLabel = _blogResxService.Read("BlogList_CategoryLabel", cultureName) ?? "Category";
+            var blogListAllCategories = _blogResxService.Read("BlogList_AllCategories", cultureName) ?? "All Categories";
+            var blogListBrandLabel = _blogResxService.Read("BlogList_BrandLabel", cultureName) ?? "Brand";
+            var blogListBrandPlaceholder = _blogResxService.Read("BlogList_BrandPlaceholder", cultureName) ?? "Enter brand name";
+            var blogListApplyFiltersButton = _blogResxService.Read("BlogList_ApplyFiltersButton", cultureName) ?? "Apply Filters";
+            var blogListNoPostsMessage = _blogResxService.Read("BlogList_NoPostsMessage", cultureName) ?? "No blog posts available at this time. Check back soon!";
+            var bloglistreadmore = _blogResxService.Read("BlogList_ReadMoreButton", cultureName) ?? "Read More!";
 
         // 5. Construct your ViewModel
         var model = new BlogFilterViewModel
@@ -162,82 +179,68 @@ public class HomeController : Controller
 
 
 
-    public async Task<IActionResult> BlogDetails(int id, string type)
+    [HttpGet("{culture}/blog/{id}/{slug?}")]
+    public async Task<IActionResult> BlogDetails(string culture, int id, string? slug)
     {
-        if (type == "product")
-        {
-            var product = await _productRepository.GetByIdAsync(id);
-            if (product == null) return NotFound();
-            return View("ProductDetail", product);
-        }
-        // 3) Get current language code (like "en", "tr", "de", "fr"...) 
-        var currentCulture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+        CultureInfo.CurrentUICulture = new CultureInfo(culture);
+        CultureInfo.CurrentCulture = new CultureInfo(culture);
 
-        // 1) Fetch the blog record
         var blog = await _blogRepository.GetByIdAsync(id);
-        if (blog == null) return NotFound();
-        var titleKey = $"Title_{blog.BlogId}_{blog.Url}_{currentCulture}";
-        var contentKey = $"Content_{blog.BlogId}_{blog.Url}_{currentCulture}";
-        // Attempt to retrieve translation from .resx
-        var translatedTitle = _localization.GetKey(titleKey)?.Value; 
-        var translatedContent = _localization.GetKey(contentKey)?.Value;
-        // If found, override the default
-        if (!string.IsNullOrEmpty(translatedTitle))
-            blog.Title = translatedTitle;
-        if (!string.IsNullOrEmpty(translatedContent))
-            blog.Content = translatedContent;
-        // 2) Also fetch categories specifically linked to this blog
-        //    (assuming blog.CategoryBlogs is loaded via includes)
-        var relatedCategories = blog.CategoryBlogs?.Select(cb => cb.Category).ToList();
+        if (blog == null)
+            return NotFound();
 
-        // 3) Also fetch products linked to this blog
-        //    (assuming blog.ProductBlogs is loaded)
+        var expectedSlug = blog.Url?.ToLower() ?? "blog";
+
+        // Slug yanlışsa düzelt
+        if (!string.Equals(slug, expectedSlug, StringComparison.OrdinalIgnoreCase))
+        {
+            return RedirectToAction("BlogDetails", new { culture = culture, id = blog.BlogId, slug = expectedSlug });
+        }
+
+        // Localization
+        var titleKey = $"Title_{blog.BlogId}_{blog.Url}_{culture}";
+        var contentKey = $"Content_{blog.BlogId}_{blog.Url}_{culture}";
+
+        var translatedTitle = _blogResxService.Read(titleKey, culture);
+        var translatedContent = _blogResxService.Read(contentKey, culture);
+
+        if (!string.IsNullOrWhiteSpace(translatedTitle))
+            blog.Title = translatedTitle;
+        if (!string.IsNullOrWhiteSpace(translatedContent))
+            blog.Content = translatedContent;
+
+        ViewBag.Title = $"{blog.Title} | Alpha Blog";
+        ViewBag.MetaDescription = blog.Content?.Length > 160
+            ? blog.Content.Substring(0, 160) + "..."
+            : blog.Content;
+        ViewBag.MetaKeywords = $"alpha blog, {blog.Title}, iş güvenliği, güvenlik ayakkabısı";
+
+        var relatedCategories = blog.CategoryBlogs?.Select(cb => cb.Category).ToList();
         var relatedProducts = blog.ProductBlogs?.Select(pb => pb.Product).ToList();
 
-        // 4) Localized strings from .resx (you can rename keys as needed)
-        var detailPublishedOn  = _localization.GetKey("BlogDetail_PublishedOn")?.Value  ?? "Published on";
-        var detailByAuthor     = _localization.GetKey("BlogDetail_ByAuthor")?.Value     ?? "by";
-        var detailRecentPosts  = _localization.GetKey("BlogDetail_RecentPosts")?.Value  ?? "Recent Posts";
-        var detailCategories   = _localization.GetKey("BlogDetail_CategoriesTitle")?.Value ?? "Categories";
-        var detailNextPost     = _localization.GetKey("BlogDetail_NextPost")?.Value     ?? "Next Post";
-        var detailPreviousPost = _localization.GetKey("BlogDetail_PreviousPost")?.Value ?? "Previous Post";
-        var detailRelCategories= _localization.GetKey("BlogDetail_RelatedCategories")?.Value ?? "Related Categories";
-        var detailRelProducts  = _localization.GetKey("BlogDetail_RelatedProducts")?.Value ?? "Related Products";
-        var detailEmptyVideo   = _localization.GetKey("BlogDetail_EmptyVideoMsg")?.Value ?? "No video available.";
-        var detailEmptyMap     = _localization.GetKey("BlogDetail_EmptyMapMsg")?.Value   ?? "No map available.";
-        var emptycategory = _localization.GetKey("BlogDetail_EmptyCategory")?.Value ?? "Commen Use";
-        var viewbutton = _localization.GetKey("ViewButton")?.Value ?? "Commen Use";
-
-        // 5) Build the ViewModel
         var model = new BlogDetailsViewModel
         {
             Blog = blog,
+            RelatedCategories = relatedCategories ?? new(),
+            RelatedProducts = relatedProducts ?? new(),
 
-            RelatedCategories = relatedCategories,
-            RelatedProducts = relatedProducts,
-
-            BlogDetail_PublishedOn = detailPublishedOn,
-            BlogDetail_ByAuthor = detailByAuthor,
-            BlogDetail_RecentPosts = detailRecentPosts,
-            BlogDetail_CategoriesTitle = detailCategories,
-            BlogDetail_NextPost = detailNextPost,
-            BlogDetail_PreviousPost = detailPreviousPost,
-            BlogDetail_RelatedCategories = detailRelCategories,
-            BlogDetail_RelatedProducts = detailRelProducts,
-            BlogDetail_EmptyVideoMsg = detailEmptyVideo,
-            BlogDetail_EmptyMapMsg = detailEmptyMap,
-            BlogDetail_EmptyCategory = emptycategory,
-            ViewButton = viewbutton
+            BlogDetail_PublishedOn = _localization.GetKey("BlogDetail_PublishedOn") ?? "Published on",
+            BlogDetail_ByAuthor = _localization.GetKey("BlogDetail_ByAuthor") ?? "by",
+            BlogDetail_RecentPosts = _localization.GetKey("BlogDetail_RecentPosts") ?? "Recent Posts",
+            BlogDetail_CategoriesTitle = _localization.GetKey("BlogDetail_CategoriesTitle") ?? "Categories",
+            BlogDetail_NextPost = _localization.GetKey("BlogDetail_NextPost") ?? "Next Post",
+            BlogDetail_PreviousPost = _localization.GetKey("BlogDetail_PreviousPost") ?? "Previous Post",
+            BlogDetail_RelatedCategories = _localization.GetKey("BlogDetail_RelatedCategories") ?? "Related Categories",
+            BlogDetail_RelatedProducts = _localization.GetKey("BlogDetail_RelatedProducts") ?? "Related Products",
+            BlogDetail_EmptyVideoMsg = _localization.GetKey("BlogDetail_EmptyVideoMsg") ?? "No video available.",
+            BlogDetail_EmptyMapMsg = _localization.GetKey("BlogDetail_EmptyMapMsg") ?? "No map available.",
+            BlogDetail_EmptyCategory = _localization.GetKey("BlogDetail_EmptyCategory") ?? "General",
+            ViewButton = _localization.GetKey("ViewButton") ?? "View"
         };
 
-        // 6) Recent blogs for sidebar
         ViewBag.RecentBlogs = await _blogRepository.GetRecentBlogsAsync();
+        ViewBag.Categories = relatedCategories;
 
-        // 7) All categories (for sidebar)
-        ViewBag.Categories = blog.CategoryBlogs?.Select(cb => cb.Category).ToList();
-
-
-        // 8) Return the strongly-typed view
         return View("BlogDetail", model);
     }
 
@@ -259,48 +262,61 @@ public class HomeController : Controller
 
 
 #region About
-  public IActionResult About()
+  [HttpGet("{culture}/about")]
+  public IActionResult About(string culture)
     {
+        CultureInfo.CurrentUICulture = new CultureInfo(culture);
+        CultureInfo.CurrentCulture = new CultureInfo(culture);
+        ViewBag.Title = _localization.GetKey("SEO_About_Title") 
+                        ?? "Hakkımızda | Alpha Güvenlik Ayakkabıları";
+
+        ViewBag.MetaDescription = _localization.GetKey("SEO_About_Description") 
+                        ?? "Alpha Ayakkabı olarak, iş güvenliği ve konforu bir araya getiren yüksek kaliteli ayakkabılar üretiyoruz. Biz kimiz, neden tercih edilmeliyiz, öğrenin.";
+
+        ViewBag.MetaKeywords = _localization.GetKey("SEO_About_Keywords") 
+                        ?? "hakkımızda, alpha ayakkabı, iş güvenliği, güvenlikli ayakkabı, askeri bot";
+
+
         var model = new AboutViewModel
         {
             // Hero Section
-            HeroTitle = _localization.GetKey("About_HeroTitle").Value,
-            HeroDescription = _localization.GetKey("About_HeroDescription").Value,
+            HeroTitle = _localization.GetKey("About_HeroTitle"),
+            HeroDescription = _localization.GetKey("About_HeroDescription"),
 
             // Who We Are
-            WhoWeAreTitle = _localization.GetKey("About_WhoWeAreTitle").Value,
-            WhoWeAreDescription1 = _localization.GetKey("About_WhoWeAreDescription1").Value,
-            WhoWeAreDescription2 = _localization.GetKey("About_WhoWeAreDescription2").Value,
+            WhoWeAreTitle = _localization.GetKey("About_WhoWeAreTitle"),
+            WhoWeAreDescription1 = _localization.GetKey("About_WhoWeAreDescription1"),
+            WhoWeAreDescription2 = _localization.GetKey("About_WhoWeAreDescription2"),
 
             // Core Values
-            CoreValuesTitle = _localization.GetKey("About_CoreValuesTitle").Value,
-            QualityAssuranceTitle = _localization.GetKey("About_QualityAssuranceTitle").Value,
-            QualityAssuranceDescription = _localization.GetKey("About_QualityAssuranceDescription").Value,
-            InnovationTitle = _localization.GetKey("About_InnovationTitle").Value,
-            InnovationDescription = _localization.GetKey("About_InnovationDescription").Value,
-            CustomerFocusTitle = _localization.GetKey("About_CustomerFocusTitle").Value,
-            CustomerFocusDescription = _localization.GetKey("About_CustomerFocusDescription").Value,
-            SustainabilityTitle = _localization.GetKey("About_SustainabilityTitle").Value,
-            SustainabilityDescription = _localization.GetKey("About_SustainabilityDescription").Value,
+            CoreValuesTitle = _localization.GetKey("About_CoreValuesTitle"),
+            QualityAssuranceTitle = _localization.GetKey("About_QualityAssuranceTitle"),
+            QualityAssuranceDescription = _localization.GetKey("About_QualityAssuranceDescription"),
+            InnovationTitle = _localization.GetKey("About_InnovationTitle"),
+            InnovationDescription = _localization.GetKey("About_InnovationDescription"),
+            CustomerFocusTitle = _localization.GetKey("About_CustomerFocusTitle"),
+            CustomerFocusDescription = _localization.GetKey("About_CustomerFocusDescription"),
+            SustainabilityTitle = _localization.GetKey("About_SustainabilityTitle"),
+            SustainabilityDescription = _localization.GetKey("About_SustainabilityDescription"),
 
             // Why Choose Us
-            WhyChooseUsTitle = _localization.GetKey("About_WhyChooseUsTitle").Value,
-            ExperienceTitle = _localization.GetKey("About_ExperienceTitle").Value,
-            ExperienceDescription = _localization.GetKey("About_ExperienceDescription").Value,
-            FocusTitle = _localization.GetKey("About_FocusTitle").Value,
-            FocusDescription = _localization.GetKey("About_FocusDescription").Value,
-            TrustTitle = _localization.GetKey("About_TrustTitle").Value,
-            TrustDescription = _localization.GetKey("About_TrustDescription").Value,
+            WhyChooseUsTitle = _localization.GetKey("About_WhyChooseUsTitle"),
+            ExperienceTitle = _localization.GetKey("About_ExperienceTitle"),
+            ExperienceDescription = _localization.GetKey("About_ExperienceDescription"),
+            FocusTitle = _localization.GetKey("About_FocusTitle"),
+            FocusDescription = _localization.GetKey("About_FocusDescription"),
+            TrustTitle = _localization.GetKey("About_TrustTitle"),
+            TrustDescription = _localization.GetKey("About_TrustDescription"),
 
             // Product Range
-            ProductRangeTitle = _localization.GetKey("About_ProductRangeTitle").Value,
-            ProductRangeDescription = _localization.GetKey("About_ProductRangeDescription").Value,
-            SafetyShoesTitle = _localization.GetKey("About_SafetyShoesTitle").Value,
-            SafetyShoesDescription = _localization.GetKey("About_SafetyShoesDescription").Value,
-            IndustrialBootsTitle = _localization.GetKey("About_IndustrialBootsTitle").Value,
-            IndustrialBootsDescription = _localization.GetKey("About_IndustrialBootsDescription").Value,
-            PersonnelShoesTitle = _localization.GetKey("About_PersonnelShoesTitle").Value,
-            PersonnelShoesDescription = _localization.GetKey("About_PersonnelShoesDescription").Value
+            ProductRangeTitle = _localization.GetKey("About_ProductRangeTitle"),
+            ProductRangeDescription = _localization.GetKey("About_ProductRangeDescription"),
+            SafetyShoesTitle = _localization.GetKey("About_SafetyShoesTitle"),
+            SafetyShoesDescription = _localization.GetKey("About_SafetyShoesDescription"),
+            IndustrialBootsTitle = _localization.GetKey("About_IndustrialBootsTitle"),
+            IndustrialBootsDescription = _localization.GetKey("About_IndustrialBootsDescription"),
+            PersonnelShoesTitle = _localization.GetKey("About_PersonnelShoesTitle"),
+            PersonnelShoesDescription = _localization.GetKey("About_PersonnelShoesDescription")
         };
 
         return View(model);
@@ -341,32 +357,42 @@ public class HomeController : Controller
 #region Contact
         private void PopulateContactViewModel(ContactViewModel m)
         {
-            m.Contact_Title               = _localization.GetKey("Contact_Title")?.Value               ?? "Contact Us";
-            m.Contact_HeroDescription     = _localization.GetKey("Contact_HeroDescription")?.Value     ?? "We're here to assist you.";
-            m.Contact_OurAddress          = _localization.GetKey("Contact_OurAddress")?.Value          ?? "Our Address";
-            m.Contact_PhoneNumber         = _localization.GetKey("Contact_PhoneNumber")?.Value         ?? "Phone Number";
-            m.Contact_EmailUs             = _localization.GetKey("Contact_EmailUs")?.Value             ?? "Email Us";
-            m.Contact_SendUsMessage       = _localization.GetKey("Contact_SendUsMessage")?.Value       ?? "Send Us a Message";
-            m.Contact_YourName            = _localization.GetKey("Contact_YourName")?.Value            ?? "Your Name";
-            m.Contact_YourEmail           = _localization.GetKey("Contact_YourEmail")?.Value           ?? "Your Email";
-            m.Contact_Subject             = _localization.GetKey("Contact_Subject")?.Value             ?? "Subject";
-            m.Contact_Message             = _localization.GetKey("Contact_Message")?.Value             ?? "Message";
-            m.Contact_SendMessageButton   = _localization.GetKey("Contact_SendMessageButton")?.Value   ?? "Send";
-            m.Contact_OurLocation         = _localization.GetKey("Contact_OurLocation")?.Value         ?? "Our Location";
-            m.Contact_FollowUsSocialMedia = _localization.GetKey("Contact_FollowUsSocialMedia")?.Value ?? "Follow Us";
+            m.Contact_Title               = _localization.GetKey("Contact_Title")               ?? "Contact Us";
+            m.Contact_HeroDescription     = _localization.GetKey("Contact_HeroDescription")     ?? "We're here to assist you.";
+            m.Contact_OurAddress          = _localization.GetKey("Contact_OurAddress")          ?? "Our Address";
+            m.Contact_PhoneNumber         = _localization.GetKey("Contact_PhoneNumber")         ?? "Phone Number";
+            m.Contact_EmailUs             = _localization.GetKey("Contact_EmailUs")             ?? "Email Us";
+            m.Contact_SendUsMessage       = _localization.GetKey("Contact_SendUsMessage")       ?? "Send Us a Message";
+            m.Contact_YourName            = _localization.GetKey("Contact_YourName")            ?? "Your Name";
+            m.Contact_YourEmail           = _localization.GetKey("Contact_YourEmail")           ?? "Your Email";
+            m.Contact_Subject             = _localization.GetKey("Contact_Subject")             ?? "Subject";
+            m.Contact_Message             = _localization.GetKey("Contact_Message")             ?? "Message";
+            m.Contact_SendMessageButton   = _localization.GetKey("Contact_SendMessageButton")   ?? "Send";
+            m.Contact_OurLocation         = _localization.GetKey("Contact_OurLocation")         ?? "Our Location";
+            m.Contact_FollowUsSocialMedia = _localization.GetKey("Contact_FollowUsSocialMedia") ?? "Follow Us";
 
             // İletişim detayları
-            m.Contact_OurAddressValue     = _localization.GetKey("Contact_OurAddressValue")?.Value     ?? "123 Alpha Street";
-            m.Contact_PhoneNumberValue    = _localization.GetKey("Contact_PhoneNumberValue")?.Value    ?? "+1 (555) 123-4567";
-            m.Contact_EmailAddressValue   = _localization.GetKey("Contact_EmailAddressValue")?.Value   ?? "info@alphasafetyshoes.com";
+            m.Contact_OurAddressValue     = _localization.GetKey("Contact_OurAddressValue")     ?? "123 Alpha Street";
+            m.Contact_PhoneNumberValue    = _localization.GetKey("Contact_PhoneNumberValue")    ?? "+1 (555) 123-4567";
+            m.Contact_EmailAddressValue   = _localization.GetKey("Contact_EmailAddressValue")   ?? "info@alphasafetyshoes.com";
         }
 
         /// <summary>
         /// GET: /Home/Contact
         /// </summary>
-        [HttpGet]
-        public IActionResult Contact()
+        [HttpGet("{culture}/contact")]
+        public IActionResult Contact(string culture)
         {
+            CultureInfo.CurrentUICulture = new CultureInfo(culture);
+            CultureInfo.CurrentCulture = new CultureInfo(culture);
+            ViewBag.Title = _localization.GetKey("SEO_Contact_Title") 
+                            ?? "İletişim | Alpha Güvenlik Ayakkabıları";
+            ViewBag.MetaDescription = _localization.GetKey("SEO_Contact_Description") 
+                            ?? "Bize ulaşın. Alpha Ayakkabı ile iletişime geçin ve iş güvenliği çözümlerimizi keşfedin.";
+            ViewBag.MetaKeywords = _localization.GetKey("SEO_Contact_Keywords") 
+                            ?? "iletişim, alpha ayakkabı, iş güvenliği, güvenlikli ayakkabı, ulaşım";
+
+
             var model = new ContactViewModel();
             PopulateContactViewModel(model);
             return View(model);
@@ -382,14 +408,18 @@ public class HomeController : Controller
         {
             // UI metinlerinin eksiksiz gelmesi için POST'ta da doldur:
             PopulateContactViewModel(model);
-
+            if (!Request.Form.TryGetValue("g-recaptcha-response", out var token) || string.IsNullOrWhiteSpace(token.ToString()) || !await VerifyCaptchaAsync(token.ToString()))
+            {
+                ModelState.AddModelError(string.Empty, "Lütfen robot olmadığınızı doğrulayın.");
+                return View(model);
+            }
             if (!ModelState.IsValid)
                 return View(model);
 
             try
             {
                 // --- Admin bildirim e-postası ---
-                var adminEmail = "owner-email@example.com";
+                var adminEmail = "support@alphaayakkabi.com";
                 var adminSubject = "Yeni İletişim Formu Mesajı";
                 var adminBody = $@"
                     <p><strong>From:</strong> {model.Name} ({model.Email})</p>
@@ -423,13 +453,13 @@ public class HomeController : Controller
 
                 await _emailSender.SendEmailAsync(model.Email, userSubject, userBody);
 
-                TempData["SuccessMessage"] = _localization.GetKey("ContactSuccessMessage")?.Value
+                TempData["SuccessMessage"] = _localization.GetKey("ContactSuccessMessage")
                                              ?? "Your message has been sent!";
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Contact form error");
-                TempData["ErrorMessage"] = _localization.GetKey("ContactErrorMessage")?.Value
+                TempData["ErrorMessage"] = _localization.GetKey("ContactErrorMessage")
                                            ?? "There was an error sending your message.";
             }
 
@@ -437,41 +467,61 @@ public class HomeController : Controller
             return View(model);
         }
     
+private async Task<bool> VerifyCaptchaAsync(string token)
+{
+    var secretKey = "***REMOVED***";
+    using var client = new HttpClient();
+    var response = await client.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={token}", null);
+    var json = await response.Content.ReadAsStringAsync();
+    return json.Contains("\"success\": true");
+}
 
 #endregion
 
 #region  Services
-    public async Task<IActionResult> Services(string category, string brand, string search)
+    [HttpGet("{culture}/hizmetler")]
+    public async Task<IActionResult> Services(string culture,string category, string brand, string search)
     {
+        CultureInfo.CurrentUICulture = new CultureInfo(culture);
+        CultureInfo.CurrentCulture = new CultureInfo(culture);
+        ViewBag.Title = _localization.GetKey("SEO_Services_Title") 
+                        ?? "Ürünlerimiz ve Hizmetlerimiz | Alpha Güvenlik Ayakkabıları";
+
+        ViewBag.MetaDescription = _localization.GetKey("SEO_Services_Description") 
+                        ?? "Alpha Ayakkabı iş güvenliği ayakkabıları, askeri botlar ve endüstriyel çözümleriyle hizmetinizde. Tüm ürünleri keşfedin.";
+
+        ViewBag.MetaKeywords = _localization.GetKey("SEO_Services_Keywords") 
+                        ?? "alpha ürünleri, iş güvenliği ayakkabısı, askeri bot, endüstriyel ayakkabı, alpha hizmetleri";
+
         // Retrieve all products and categories
         var allProducts = await _productRepository.GetAllAsync();
         var categories = await _categoryRepository.GetAllAsync();
         // 1) Retrieve localized strings from your resource service
-        var servicesTitle = _localization.GetKey("Services_Title")?.Value ?? "Our Services";
-        var servicesHeroDescription = _localization.GetKey("Services_HeroDescription")?.Value 
+        var servicesTitle = _localization.GetKey("Services_Title") ?? "Our Services";
+        var servicesHeroDescription = _localization.GetKey("Services_HeroDescription") 
             ?? "Discover Alpha Safety Shoes' premium products and services...";
-        var servicesCatalogFilterTitle = _localization.GetKey("Services_CatalogFilterTitle")?.Value 
+        var servicesCatalogFilterTitle = _localization.GetKey("Services_CatalogFilterTitle") 
             ?? "Catalog & Filters";
-        var servicesViewCatalogButton = _localization.GetKey("Services_ViewCatalogButton")?.Value 
+        var servicesViewCatalogButton = _localization.GetKey("Services_ViewCatalogButton") 
             ?? "View Our Catalog";
-        var servicesFilterProductsTitle = _localization.GetKey("Services_FilterProductsTitle")?.Value 
+        var servicesFilterProductsTitle = _localization.GetKey("Services_FilterProductsTitle") 
             ?? "Filter Products";
-        var servicesCategoryLabel = _localization.GetKey("Services_CategoryLabel")?.Value 
+        var servicesCategoryLabel = _localization.GetKey("Services_CategoryLabel") 
             ?? "Category";
-        var servicesBrandLabel = _localization.GetKey("Services_BrandLabel")?.Value 
+        var servicesBrandLabel = _localization.GetKey("Services_BrandLabel") 
             ?? "Brand";
-        var servicesBrandPlaceholder = _localization.GetKey("Services_BrandPlaceholder")?.Value 
+        var servicesBrandPlaceholder = _localization.GetKey("Services_BrandPlaceholder") 
             ?? "Enter brand name";
-        var servicesSearchProductLabel = _localization.GetKey("Services_SearchProductLabel")?.Value 
+        var servicesSearchProductLabel = _localization.GetKey("Services_SearchProductLabel") 
             ?? "Search Product";
-        var servicesApplyFiltersButton = _localization.GetKey("Services_ApplyFiltersButton")?.Value 
+        var servicesApplyFiltersButton = _localization.GetKey("Services_ApplyFiltersButton") 
             ?? "Apply Filters";
-        var servicesOurProductsTitle = _localization.GetKey("Services_OurProductsTitle")?.Value 
+        var servicesOurProductsTitle = _localization.GetKey("Services_OurProductsTitle") 
             ?? "Our Products";
-        var servicesNoProductsMessage = _localization.GetKey("Services_NoProductsMessage")?.Value 
+        var servicesNoProductsMessage = _localization.GetKey("Services_NoProductsMessage") 
             ?? "No products found matching your criteria.";
 
-        var Btn = _localization.GetKey("ViewButton")?.Value 
+        var Btn = _localization.GetKey("ViewButton") 
             ?? "View Details";    
 
         // Filtering Logic
@@ -523,104 +573,105 @@ public class HomeController : Controller
 
 
 
-[HttpGet]
-public async Task<IActionResult> ProductDetail(int id)
-{
-    if (id <= 0)
-        return BadRequest("Invalid product ID.");
-
-    // 1) Fetch the product by ID
-    var product = await _productRepository.GetByIdAsync(id);
-    if (product == null)
-        return NotFound("Product not found.");
-
-    // 2) Fetch translations for non-variable text
-    ViewBag.BrandLabel = _localization.GetKey("ProductDetail_BrandLabel")?.Value ?? "Brand";
-    ViewBag.DescriptionLabel = _localization.GetKey("ProductDetail_DescriptionLabel")?.Value ?? "Description";
-    ViewBag.InsoleLabel = _localization.GetKey("ProductDetail_InsoleLabel")?.Value ?? "Insole";
-    ViewBag.UpperLabel = _localization.GetKey("ProductDetail_UpperLabel")?.Value ?? "Upper";
-    ViewBag.ImagesLabel = _localization.GetKey("ProductDetail_ImagesLabel")?.Value ?? "Images";
-    ViewBag.DateAddedLabel = _localization.GetKey("ProductDetail_DateAddedLabel")?.Value ?? "Date Added";
-    ViewBag.CategoryLabel = _localization.GetKey("ProductDetail_CategoryLabel")?.Value ?? "Category";
-    ViewBag.BodyNoLabel = _localization.GetKey("ProductDetail_BodyNoLabel")?.Value ?? "Body Number";
-    ViewBag.BrandFieldLabel = _localization.GetKey("ProductDetail_BrandFieldLabel")?.Value ?? "Brand";
-    ViewBag.ModelLabel = _localization.GetKey("ProductDetail_ModelLabel")?.Value ?? "Model";
-    ViewBag.SoleLabel = _localization.GetKey("ProductDetail_SoleLabel")?.Value ?? "Sole";
-    ViewBag.LiningLabel = _localization.GetKey("ProductDetail_LiningLabel")?.Value ?? "Lining";
-    ViewBag.ProtectionLabel = _localization.GetKey("ProductDetail_ProtectionLabel")?.Value ?? "Protection";
-    ViewBag.MidsoleLabel = _localization.GetKey("ProductDetail_MidsoleLabel")?.Value ?? "Midsole";
-    ViewBag.SizeLabel = _localization.GetKey("ProductDetail_SizeLabel")?.Value ?? "Size";
-    ViewBag.CertificateLabel = _localization.GetKey("ProductDetail_CertificateLabel")?.Value ?? "Certificate";
-    ViewBag.StandardLabel = _localization.GetKey("ProductDetail_StandardLabel")?.Value ?? "Standard";
-    ViewBag.Message = _localization.GetKey("ProductDetail_CategoryLabel").Value?? "Categories";
-    ViewBag.BTN = _localization.GetKey("ViewButton")?.Value ?? "Details";
-
-    // 3) Detect the user’s current language
-    var currentLang = CultureInfo.CurrentUICulture.Name;
-
-    // 4) Localize translatable fields dynamically
-    var prefix = $"Product_{product.ProductId}_";
-
-    string? TryLocalize(string fieldName)
+    [HttpGet("{culture}/urun/{id}/{slug?}")]
+    public async Task<IActionResult> ProductDetail(string culture, int id, string? slug)
     {
-        var key = $"{prefix}{fieldName}_{currentLang}";
-        var val = _localization.GetKey(key)?.Value;
-        return string.IsNullOrEmpty(val) ? null : val;
+        if (id <= 0)
+            return BadRequest("Invalid product ID.");
+
+        // 🌍 Culture ayarla
+        CultureInfo.CurrentUICulture = new CultureInfo(culture);
+        CultureInfo.CurrentCulture = new CultureInfo(culture);
+
+        var product = await _productRepository.GetByIdAsync(id);
+        if (product == null)
+            return NotFound("Product not found.");
+
+        // 🔤 Doğru slug mı? Değilse yönlendir.
+        var expectedSlug = product.Url.ToLower();
+        if (!string.Equals(slug, expectedSlug, StringComparison.OrdinalIgnoreCase))
+        {
+            return RedirectToAction("ProductDetail", new { culture = culture, id = product.ProductId, slug = expectedSlug });
+        }
+
+        // 🧠 SEO Meta Etiketleri
+        ViewBag.Title = $"{product.Name} | Alpha Güvenlik Ayakkabıları";
+        ViewBag.MetaDescription = !string.IsNullOrWhiteSpace(product.Description)
+            ? (product.Description.Length > 160
+                ? product.Description.Substring(0, 160) + "..."
+                : product.Description)
+            : "Alpha Ayakkabı'nın en güvenilir iş güvenliği ve askeri ayakkabı ürünlerini keşfedin.";
+        ViewBag.MetaKeywords = $"alpha ayakkabı, {product.Name}, iş güvenliği ayakkabısı, askeri bot, endüstriyel ayakkabı";
+
+        // 🔄 ViewBag çeviri etiketleri (aynen kalabilir)
+        ViewBag.BrandLabel = _localization.GetKey("ProductDetail_BrandLabel") ?? "Brand";
+        ViewBag.DescriptionLabel = _localization.GetKey("ProductDetail_DescriptionLabel") ?? "Description";
+        ViewBag.InsoleLabel = _localization.GetKey("ProductDetail_InsoleLabel") ?? "Insole";
+        ViewBag.UpperLabel = _localization.GetKey("ProductDetail_UpperLabel") ?? "Upper";
+        ViewBag.ImagesLabel = _localization.GetKey("ProductDetail_ImagesLabel") ?? "Images";
+        ViewBag.DateAddedLabel = _localization.GetKey("ProductDetail_DateAddedLabel") ?? "Date Added";
+        ViewBag.CategoryLabel = _localization.GetKey("ProductDetail_CategoryLabel") ?? "Category";
+        ViewBag.BodyNoLabel = _localization.GetKey("ProductDetail_BodyNoLabel") ?? "Body Number";
+        ViewBag.BrandFieldLabel = _localization.GetKey("ProductDetail_BrandFieldLabel") ?? "Brand";
+        ViewBag.ModelLabel = _localization.GetKey("ProductDetail_ModelLabel") ?? "Model";
+        ViewBag.SoleLabel = _localization.GetKey("ProductDetail_SoleLabel") ?? "Sole";
+        ViewBag.LiningLabel = _localization.GetKey("ProductDetail_LiningLabel") ?? "Lining";
+        ViewBag.ProtectionLabel = _localization.GetKey("ProductDetail_ProtectionLabel") ?? "Protection";
+        ViewBag.MidsoleLabel = _localization.GetKey("ProductDetail_MidsoleLabel") ?? "Midsole";
+        ViewBag.SizeLabel = _localization.GetKey("ProductDetail_SizeLabel") ?? "Size";
+        ViewBag.CertificateLabel = _localization.GetKey("ProductDetail_CertificateLabel") ?? "Certificate";
+        ViewBag.StandardLabel = _localization.GetKey("ProductDetail_StandardLabel") ?? "Standard";
+        ViewBag.Message = _localization.GetKey("ProductDetail_CategoryLabel") ?? "Categories";
+        ViewBag.BTN = _localization.GetKey("ViewButton") ?? "Details";
+
+        // 🌐 Dinamik içerik çevirileri (aynen kalabilir)
+        var currentLang = CultureInfo.CurrentUICulture.Name;
+        string? TryLocalize(string field) =>
+            _localization.GetKey($"Product_{product.ProductId}_{field}_{currentLang}") ?? null;
+
+        product.Description = TryLocalize("Description") ?? product.Description;
+        product.Upper = TryLocalize("Upper") ?? product.Upper;
+        product.Insole = TryLocalize("Insole") ?? product.Insole;
+        product.Lining = TryLocalize("Lining") ?? product.Lining;
+        product.Protection = TryLocalize("Protection") ?? product.Protection;
+        product.Midsole = TryLocalize("Midsole") ?? product.Midsole;
+        product.Sole = TryLocalize("Sole") ?? product.Sole;
+
+        var relatedBlogs = product.ProductBlogs?.Select(pb => pb.Blog).Where(b => b != null).ToList() ?? new();
+        var relatedCategories = product.ProductCategories?.Select(pc => pc.Category).Where(c => c != null).ToList() ?? new();
+        var recentProducts = await _productRepository.GetRecentProductsAsync() ?? new();
+
+        var viewModel = new ProductDetailViewModel
+        {
+            ProductId = product.ProductId,
+            Name = product.Name,
+            Description = product.Description,
+            Upper = product.Upper,
+            Insole = product.Insole,
+            Lining = product.Lining,
+            Protection = product.Protection,
+            Midsole = product.Midsole,
+            Sole = product.Sole,
+            Model = product.Model,
+            Standard = product.Standard,
+            Certificate = product.Certificate,
+            Brand = product.Brand,
+            Size = product.Size,
+            BodyNo = product.BodyNo,
+            DateAdded = product.DateAdded,
+            ProductImages = product.ProductImages?.ToList() ?? new(),
+            RelatedBlogs = relatedBlogs,
+            RelatedCategories = relatedCategories,
+            RecentProducts = recentProducts,
+            CategoryName = relatedCategories.FirstOrDefault()?.Name ?? "Unknown Category"
+        };
+
+        ViewBag.RelatedBlogs = relatedBlogs;
+        ViewBag.RelatedCategories = relatedCategories;
+        ViewBag.RecentProducts = recentProducts;
+
+        return View("ProductDetail", viewModel);
     }
-
-    product.Description = TryLocalize("Description") ?? product.Description;
-    product.Upper = TryLocalize("Upper") ?? product.Upper;
-    product.Insole = TryLocalize("Insole") ?? product.Insole;
-    product.Lining = TryLocalize("Lining") ?? product.Lining;
-    product.Protection = TryLocalize("Protection") ?? product.Protection;
-    product.Midsole = TryLocalize("Midsole") ?? product.Midsole;
-    product.Sole = TryLocalize("Sole") ?? product.Sole;
-
-    // 5) Fetch related blogs, categories, and recent products
-    var relatedBlogs = product.ProductBlogs?
-        .Select(pb => pb.Blog)
-        .Where(b => b != null)
-        .ToList() ?? new List<Blog>();
-    ViewBag.RelatedBlogs = relatedBlogs;
-
-    var relatedCategories = product.ProductCategories?
-        .Select(pc => pc.Category)
-        .Where(c => c != null)
-        .ToList() ?? new List<Category>();
-    ViewBag.RelatedCategories = relatedCategories;
-        // 5) Map product to ProductDetailViewModel
-    var viewModel = new ProductDetailViewModel
-    {
-        ProductId = product.ProductId,
-        Name = product.Name,
-        Description = TryLocalize("Description") ?? product.Description,
-        Upper = TryLocalize("Upper") ?? product.Upper,
-        Insole = TryLocalize("Insole") ?? product.Insole,
-        Lining = TryLocalize("Lining") ?? product.Lining,
-        Protection = TryLocalize("Protection") ?? product.Protection,
-        Midsole = TryLocalize("Midsole") ?? product.Midsole,
-        Sole = TryLocalize("Sole") ?? product.Sole,
-        Model = product.Model,
-        Standard = product.Standard,
-        Certificate = product.Certificate,
-        Brand = product.Brand,
-        Size = product.Size,
-        BodyNo = product.BodyNo,
-        DateAdded = product.DateAdded,
-        ProductImages = product.ProductImages?.ToList() ?? new List<ProductImage>(),
-        RelatedBlogs = product.ProductBlogs?.Select(pb => pb.Blog).Where(b => b != null).ToList() ?? new List<Blog>(),
-        RelatedCategories = product.ProductCategories?.Select(pc => pc.Category).Where(c => c != null).ToList() ?? new List<Category>(),
-        RecentProducts = await _productRepository.GetRecentProductsAsync() ?? new List<Product>(),
-        CategoryName = product.ProductCategories?.FirstOrDefault()?.Category?.Name ?? "Unknown Category"
-    };
-
-    var recentProducts = await _productRepository.GetRecentProductsAsync();
-    ViewBag.RecentProducts = recentProducts ?? new List<Product>();
-
-    // 6) Return the product to the view
-    return View("ProductDetail", viewModel);
-}
-
 
 
 
@@ -630,27 +681,34 @@ public async Task<IActionResult> ProductDetail(int id)
 
 
 #region Index
-    public async Task<IActionResult> Index()
+    [HttpGet("{culture}")]
+    public async Task<IActionResult> Index(string culture)
     {
-        var heroTitle = _localization.GetKey("HeroTitle").Value;
-        var heroDescription = _localization.GetKey("HeroDescription").Value;
-        var heroLink = _localization.GetKey("HeroLink").Value;
-        var CountryQuote = _localization.GetKey("CountryQuote").Value;
-        var country1 = _localization.GetKey("country1").Value;
-        var country2 = _localization.GetKey("country2").Value;
-        var country3 = _localization.GetKey("country3").Value;
-        var country4 = _localization.GetKey("country4").Value;  
-        var country5 = _localization.GetKey("country5").Value;  
-        var country6 = _localization.GetKey("country6").Value;  
-        var country7 = _localization.GetKey("country7").Value;  
-        var country8 = _localization.GetKey("country8").Value;          
-        var country9 = _localization.GetKey("country9").Value;  
-        var country10 = _localization.GetKey("country10").Value;  
-        var country11 = _localization.GetKey("country11").Value;  
-        var country12 = _localization.GetKey("country12").Value;    
-        var Talker1 = _localization.GetKey("Talker1").Value;  
-        var Talker2 = _localization.GetKey("Talker2").Value; 
-        var Talker3 = _localization.GetKey("Talker3").Value;         
+        CultureInfo.CurrentUICulture = new CultureInfo(culture);
+        CultureInfo.CurrentCulture = new CultureInfo(culture);
+        ViewBag.Title = _localization.GetKey("SEO_Index_Title") ?? "Alpha Ayakkabı - Güvenlikli İş Ayakkabıları";
+        ViewBag.MetaDescription = _localization.GetKey("SEO_Index_Description") ?? "İş güvenliği için en kaliteli ayakkabılar. Alpha ile tanışın.";
+        ViewBag.MetaKeywords = _localization.GetKey("SEO_Index_Keywords") ?? "iş güvenliği ayakkabısı, alpha bot, askeri bot";
+
+        var heroTitle = _localization.GetKey("HeroTitle");
+        var heroDescription = _localization.GetKey("HeroDescription");
+        var heroLink = _localization.GetKey("HeroLink");
+        var CountryQuote = _localization.GetKey("CountryQuote");
+        var country1 = _localization.GetKey("country1");
+        var country2 = _localization.GetKey("country2");
+        var country3 = _localization.GetKey("country3");
+        var country4 = _localization.GetKey("country4");  
+        var country5 = _localization.GetKey("country5");  
+        var country6 = _localization.GetKey("country6");  
+        var country7 = _localization.GetKey("country7");  
+        var country8 = _localization.GetKey("country8");          
+        var country9 = _localization.GetKey("country9");  
+        var country10 = _localization.GetKey("country10");  
+        var country11 = _localization.GetKey("country11");  
+        var country12 = _localization.GetKey("country12");    
+        var Talker1 = _localization.GetKey("Talker1");  
+        var Talker2 = _localization.GetKey("Talker2"); 
+        var Talker3 = _localization.GetKey("Talker3");         
         var carousels = await _carouselRepository.GetAllAsync();
         var viewModel = new IndexViewModel
         {
@@ -695,51 +753,58 @@ public async Task<IActionResult> ProductDetail(int id)
 #region Privacy
 public IActionResult Privacy()
 {
+    ViewBag.Title = _localization.GetKey("Privacy_SEOTitle") 
+                ?? "Gizlilik Politikası | Alpha İş Güvenliği Ayakkabıları";
+    ViewBag.MetaDescription = _localization.GetKey("Privacy_SEODescription") 
+                    ?? "Alpha Ayakkabı’nın gizlilik politikası hakkında detaylı bilgilere buradan ulaşabilirsiniz.";
+    ViewBag.MetaKeywords = _localization.GetKey("Privacy_SEOKeywords") 
+                    ?? "gizlilik politikası, alpha güvenlik ayakkabıları, veri güvenliği";
+
     var model = new PrivacyViewModel
     {
         // Hero Section
-        Title = _localization.GetKey("Privacy_Title").Value,
-        HeroDescription = _localization.GetKey("Privacy_HeroDescription").Value,
+        Title = _localization.GetKey("Privacy_Title"),
+        HeroDescription = _localization.GetKey("Privacy_HeroDescription"),
 
         // Information We Collect
-        InfoCollectionTitle = _localization.GetKey("Privacy_InfoCollectionTitle").Value,
-        InfoCollectionPersonal = _localization.GetKey("Privacy_InfoCollectionPersonal").Value,
-        InfoCollectionPayment = _localization.GetKey("Privacy_InfoCollectionPayment").Value,
-        InfoCollectionUsage = _localization.GetKey("Privacy_InfoCollectionUsage").Value,
-        InfoCollectionCookies = _localization.GetKey("Privacy_InfoCollectionCookies").Value,
+        InfoCollectionTitle = _localization.GetKey("Privacy_InfoCollectionTitle"),
+        InfoCollectionPersonal = _localization.GetKey("Privacy_InfoCollectionPersonal"),
+        InfoCollectionPayment = _localization.GetKey("Privacy_InfoCollectionPayment"),
+        InfoCollectionUsage = _localization.GetKey("Privacy_InfoCollectionUsage"),
+        InfoCollectionCookies = _localization.GetKey("Privacy_InfoCollectionCookies"),
 
         // How We Use Your Information
-        UsageTitle = _localization.GetKey("Privacy_UsageTitle").Value,
-        UsageIntro = _localization.GetKey("Privacy_UsageIntro").Value,
-        UsagePurpose1 = _localization.GetKey("Privacy_UsagePurpose1").Value,
-        UsagePurpose2 = _localization.GetKey("Privacy_UsagePurpose2").Value,
-        UsagePurpose3 = _localization.GetKey("Privacy_UsagePurpose3").Value,
+        UsageTitle = _localization.GetKey("Privacy_UsageTitle"),
+        UsageIntro = _localization.GetKey("Privacy_UsageIntro"),
+        UsagePurpose1 = _localization.GetKey("Privacy_UsagePurpose1"),
+        UsagePurpose2 = _localization.GetKey("Privacy_UsagePurpose2"),
+        UsagePurpose3 = _localization.GetKey("Privacy_UsagePurpose3"),
 
         // How We Protect Your Data
-        ProtectionTitle = _localization.GetKey("Privacy_ProtectionTitle").Value,
-        ProtectionIntro = _localization.GetKey("Privacy_ProtectionIntro").Value,
-        ProtectionSSL = _localization.GetKey("Privacy_ProtectionSSL").Value,
-        ProtectionFirewalls = _localization.GetKey("Privacy_ProtectionFirewalls").Value,
-        ProtectionAccess = _localization.GetKey("Privacy_ProtectionAccess").Value,
+        ProtectionTitle = _localization.GetKey("Privacy_ProtectionTitle"),
+        ProtectionIntro = _localization.GetKey("Privacy_ProtectionIntro"),
+        ProtectionSSL = _localization.GetKey("Privacy_ProtectionSSL"),
+        ProtectionFirewalls = _localization.GetKey("Privacy_ProtectionFirewalls"),
+        ProtectionAccess = _localization.GetKey("Privacy_ProtectionAccess"),
 
         // Sharing Information
-        SharingIntro =_localization.GetKey("Privacy_SharingIntro").Value,
-        SharingTitle = _localization.GetKey("Privacy_SharingTitle").Value,
-        SharingThirdParty = _localization.GetKey("Privacy_SharingThirdParty").Value,
-        SharingLegal = _localization.GetKey("Privacy_SharingLegal").Value,
+        SharingIntro =_localization.GetKey("Privacy_SharingIntro"),
+        SharingTitle = _localization.GetKey("Privacy_SharingTitle"),
+        SharingThirdParty = _localization.GetKey("Privacy_SharingThirdParty"),
+        SharingLegal = _localization.GetKey("Privacy_SharingLegal"),
 
         // Your Rights
-        RightsTitle = _localization.GetKey("Privacy_RightsTitle").Value,
-        RightsAccess = _localization.GetKey("Privacy_RightsAccess").Value,
-        RightsDelete = _localization.GetKey("Privacy_RightsDelete").Value,
-        RightsOptOut = _localization.GetKey("Privacy_RightsOptOut").Value,
+        RightsTitle = _localization.GetKey("Privacy_RightsTitle"),
+        RightsAccess = _localization.GetKey("Privacy_RightsAccess"),
+        RightsDelete = _localization.GetKey("Privacy_RightsDelete"),
+        RightsOptOut = _localization.GetKey("Privacy_RightsOptOut"),
 
         // Contact Section
-        ContactTitle = _localization.GetKey("Privacy_ContactTitle").Value,
-        ContactQuestion = _localization.GetKey("Privacy_ContactQuestion").Value,
-        ContactEmail = _localization.GetKey("Privacy_ContactEmail").Value,
-        ContactPhone = _localization.GetKey("Privacy_ContactPhone").Value,
-        ContactAddress = _localization.GetKey("Privacy_ContactAddress").Value
+        ContactTitle = _localization.GetKey("Privacy_ContactTitle"),
+        ContactQuestion = _localization.GetKey("Privacy_ContactQuestion"),
+        ContactEmail = _localization.GetKey("Privacy_ContactEmail"),
+        ContactPhone = _localization.GetKey("Privacy_ContactPhone"),
+        ContactAddress = _localization.GetKey("Privacy_ContactAddress")
     };
 
     return View(model);

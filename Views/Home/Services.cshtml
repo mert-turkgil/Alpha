@@ -176,7 +176,7 @@
                     {
                         <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
                             <div class="card h-100 shadow-sm border-0">
-                                <img src="~/img/@(product.ProductImages?.FirstOrDefault()?.Image?.ImageUrl ?? "default-image.jpg")" 
+                                <img src="@(product.ProductImages?.FirstOrDefault()?.Image?.ImageUrl ?? "default-image.jpg")" 
                                      alt="@product.Name" 
                                      class="card-img-top img-fluid"
                                      style="object-fit: cover; height: 200px;"
@@ -189,7 +189,16 @@
                                     <p class="card-text text-muted mb-2">
                                         <strong>Brand:</strong> @product.Brand
                                     </p>
-                                <a href="@Url.Action("ProductDetail", "Home", new { id = product.ProductId })" class="btn btn-outline-e79c00 btn-sm">
+                                @{
+                                    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                                    var slug = product.Url?.ToLower() ?? "urun";
+                                }
+                                <a asp-controller="Home"
+                                asp-action="ProductDetail"
+                                asp-route-culture="@culture"
+                                asp-route-id="@product.ProductId"
+                                asp-route-slug="@slug"
+                                class="btn btn-outline-e79c00 btn-sm">
                                         <i class="fa-solid fa-circle-info fa-beat-fade"></i>
                                             @Model.button
                                 </a>

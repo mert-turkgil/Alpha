@@ -58,6 +58,51 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="SEO_Index_Title_fr" xml:space="preserve">
+  <value>Alpha Chaussures – Chaussures de Sécurité</value>
+</data>
+<data name="SEO_Index_Description_fr" xml:space="preserve">
+  <value>Découvrez les meilleures chaussures de sécurité. Découvrez Alpha.</value>
+</data>
+<data name="SEO_Index_Keywords_fr" xml:space="preserve">
+  <value>chaussures de sécurité, bottes alpha, bottes militaires</value>
+</data>
+<data name="SEO_Blog_Title_fr" xml:space="preserve">
+  <value>Blog</value>
+</data>
+<data name="SEO_Blog_Description_fr" xml:space="preserve">
+  <value>Conseils, actualités et guides sur les bottes de sécurité sur le blog d’Alpha.</value>
+</data>
+<data name="SEO_Blog_Keywords_fr" xml:space="preserve">
+  <value>blog sécurité, alpha chaussures, protection au travail</value>
+</data>
+<data name="SEO_About_Title_fr" xml:space="preserve">
+  <value>À propos</value>
+</data>
+<data name="SEO_About_Description_fr" xml:space="preserve">
+  <value>Alpha combine sécurité et confort. Apprenez-en plus sur nous.</value>
+</data>
+<data name="SEO_About_Keywords_fr" xml:space="preserve">
+  <value>à propos d'alpha, chaussures de sécurité, info entreprise</value>
+</data>
+<data name="SEO_Contact_Title_fr" xml:space="preserve">
+  <value>Contact</value>
+</data>
+<data name="SEO_Contact_Description_fr" xml:space="preserve">
+  <value>Contactez Alpha Chaussures.</value>
+</data>
+<data name="SEO_Contact_Keywords_fr" xml:space="preserve">
+  <value>contact, alpha chaussures, nous joindre</value>
+</data>
+<data name="SEO_Services_Title_fr" xml:space="preserve">
+  <value>Nos Produits et Services</value>
+</data>
+<data name="SEO_Services_Description_fr" xml:space="preserve">
+  <value>Découvrez les chaussures et services de sécurité d'Alpha.</value>
+</data>
+<data name="SEO_Services_Keywords_fr" xml:space="preserve">
+  <value>alpha produits, chaussures de sécurité</value>
+</data>
   <data name="ProductDetail_StandardLabel" xml:space="preserve">
     <value>Standard</value>
   </data>
@@ -623,20 +668,20 @@
   </data>
   <data name="Carousel_1_Title" xml:space="preserve">
     <value>S1-S1P</value>
-  </data>
+  <comment></comment></data>
   <data name="Carousel_1_Description" xml:space="preserve">
     <value>İş ayakkabılarını satın alırken kararsızlık yaşamak doğal olabilir...</value>
-  </data>
+  <comment></comment></data>
   <data name="Carousel_1_LinkText" xml:space="preserve">
     <value>Buraya Tıkla</value>
-  </data>
+  <comment></comment></data>
   <data name="Title_1_toeergy_fr" xml:space="preserve">
-    <value>L'avenir des maisons intelligentes : Quand la technologie rencontre le confort</value>
-  </data>
+    <value>ee</value>
+  <comment></comment></data>
   <data name="Content_1_toeergy_fr" xml:space="preserve">
-    <value>&lt;p&gt;aمقالمقالمقالمقالمقالمقالمقالمقالمقالمقالمقال&lt;img src="/blog/gif/6e16b98dd1f53343474fdd840a230a3a.gif" style="height:480px; width:270px" /&gt;&lt;img src="/blog/gif/f9387b0777d6c83d05bfbbdbe60b96cd.gif" style="height:280px; width:500px" /&gt;&lt;/p&gt;
+    <value>&lt;p&gt;e&lt;/p&gt;
 </value>
-  </data>
+  <comment></comment></data>
   <data name="Product_4_Description_fr-FR" xml:space="preserve">
     <value>aaaaaaaaa</value>
   </data>
@@ -657,5 +702,51 @@
   </data>
   <data name="Product_4_Sole_fr-FR" xml:space="preserve">
     <value>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Product_2_Description_fr-FR" xml:space="preserve">
+    <value>n</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Upper_fr-FR" xml:space="preserve">
+    <value>na</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Lining_fr-FR" xml:space="preserve">
+    <value>n</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Protection_fr-FR" xml:space="preserve">
+    <value>n</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Midsole_fr-FR" xml:space="preserve">
+    <value>n</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Insole_fr-FR" xml:space="preserve">
+    <value>n</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Sole_fr-FR" xml:space="preserve">
+    <value>n</value>
+    <comment></comment>
+  </data>
+  <data name="Title_1__fr" xml:space="preserve">
+    <value>baban</value>
+    <comment></comment>
+  </data>
+  <data name="Content_1__fr" xml:space="preserve">
+    <value>&lt;p&gt;baban&lt;/p&gt;
+</value>
+    <comment></comment>
+  </data>
+  <data name="Title_1_default_fr" xml:space="preserve">
+    <value>eeesg</value>
+    <comment></comment>
+  </data>
+  <data name="Content_1_default_fr" xml:space="preserve">
+    <value>&lt;p&gt;eesgesg&lt;/p&gt;
+</value>
+    <comment></comment>
   </data>
 </root>

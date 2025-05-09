@@ -24,7 +24,7 @@ namespace Alpha.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             // 1) Localized heading from your LanguageService
-            var productHead = _localization.GetKey("HomeProductHead").Value;
+            var productHead = _localization.GetKey("HomeProductHead");
 
             // 2) Fetch all products
             var allProducts = await _productRepository.GetAllAsync();
@@ -42,18 +42,18 @@ namespace Alpha.ViewComponents
                     Name =  p.Name,
                     BodyNo = p.BodyNo,
                     Url = p.Url,
-                    Upper = _localization.GetKey($"Product_{p.ProductId}_Upper_{culture}")?.Value ?? p.Upper,
-                    Lining = _localization.GetKey($"Product_{p.ProductId}_Lining_{culture}")?.Value ?? p.Lining,
-                    Protection = _localization.GetKey($"Product_{p.ProductId}_Protection_{culture}")?.Value ?? p.Protection,
+                    Upper = _localization.GetKey($"Product_{p.ProductId}_Upper_{culture}") ?? p.Upper,
+                    Lining = _localization.GetKey($"Product_{p.ProductId}_Lining_{culture}") ?? p.Lining,
+                    Protection = _localization.GetKey($"Product_{p.ProductId}_Protection_{culture}") ?? p.Protection,
                     Brand = p.Brand,
-                    Standard = _localization.GetKey($"Product_{p.ProductId}_Standard_{culture}")?.Value ?? p.Standard,
-                    Midsole = _localization.GetKey($"Product_{p.ProductId}_Midsole_{culture}")?.Value ?? p.Midsole,
-                    Insole = _localization.GetKey($"Product_{p.ProductId}_Insole_{culture}")?.Value ?? p.Insole,
+                    Standard = _localization.GetKey($"Product_{p.ProductId}_Standard_{culture}") ?? p.Standard,
+                    Midsole = _localization.GetKey($"Product_{p.ProductId}_Midsole_{culture}") ?? p.Midsole,
+                    Insole = _localization.GetKey($"Product_{p.ProductId}_Insole_{culture}") ?? p.Insole,
                     Certificate = p.Certificate,
-                    Size = _localization.GetKey($"Product_{p.ProductId}_Size_{culture}")?.Value ?? p.Size,
-                    Model = _localization.GetKey($"Product_{p.ProductId}_Model_{culture}")?.Value ?? p.Model,
-                    Sole = _localization.GetKey($"Product_{p.ProductId}_Sole_{culture}")?.Value ?? p.Sole,
-                    Description =_localization.GetKey($"Product_{p.ProductId}_Description_{culture}")?.Value ?? p.Description,
+                    Size = _localization.GetKey($"Product_{p.ProductId}_Size_{culture}") ?? p.Size,
+                    Model = _localization.GetKey($"Product_{p.ProductId}_Model_{culture}") ?? p.Model,
+                    Sole = _localization.GetKey($"Product_{p.ProductId}_Sole_{culture}") ?? p.Sole,
+                    Description =_localization.GetKey($"Product_{p.ProductId}_Description_{culture}") ?? p.Description,
                     DateAdded = p.DateAdded,
                     CategoryId = p.CategoryId,
                     ProductImages = p.ProductImages?.ToList() ?? new List<ProductImage>(),
@@ -68,7 +68,7 @@ namespace Alpha.ViewComponents
                 Products = productCardList,
                 StatusMessage = statusMessage,
                 ProductHead = productHead,
-                AvailableLanguages = new List<string> { "en", "fr", "de", "tr" }
+                AvailableLanguages = new List<string> { "en", "fr", "de", "tr","ar" }
             };
 
             // 6) Return strongly-typed view
@@ -86,7 +86,7 @@ namespace Alpha.ViewComponents
             var oneMonthAgo = DateTime.Now.AddMonths(-1);
             var oneYearAgo  = DateTime.Now.AddYears(-1);
 
-            string message = _localization.GetKey("Recently").Value;
+            string message = _localization.GetKey("Recently");
 
             // 1. Check last week
             var filteredProducts = products
@@ -95,7 +95,7 @@ namespace Alpha.ViewComponents
 
             if (filteredProducts.Any())
             {
-                message = _localization.GetKey("LastWeek").Value;
+                message = _localization.GetKey("LastWeek");
                 return (filteredProducts, message);
             }
 
@@ -106,7 +106,7 @@ namespace Alpha.ViewComponents
 
             if (filteredProducts.Any())
             {
-                message = _localization.GetKey("LastMonth").Value;
+                message = _localization.GetKey("LastMonth");
                 return (filteredProducts, message);
             }
 
@@ -117,7 +117,7 @@ namespace Alpha.ViewComponents
 
             if (filteredProducts.Any())
             {
-                message = _localization.GetKey("LastYear").Value;
+                message = _localization.GetKey("LastYear");
                 return (filteredProducts, message);
             }
 
@@ -129,11 +129,11 @@ namespace Alpha.ViewComponents
 
             if (filteredProducts.Any())
             {
-                message = _localization.GetKey("FallbackProducts").Value;
+                message = _localization.GetKey("FallbackProducts");
             }
             else
             {
-                message = _localization.GetKey("NoProductsAvailable").Value;
+                message = _localization.GetKey("NoProductsAvailable");
             }
 
             return (filteredProducts, message);

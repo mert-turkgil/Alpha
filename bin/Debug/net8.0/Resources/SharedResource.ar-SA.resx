@@ -617,21 +617,21 @@
     <value />
   </data>
   <data name="Carousel_1_Title" xml:space="preserve">
-    <value>S1-S1P</value>
-  </data>
+    <value>S1-S1Pesfaaaaaaa</value>
+  <comment></comment></data>
   <data name="Carousel_1_Description" xml:space="preserve">
-    <value>قد يكون من الطبيعي التردد عند شراء أحذية العمل...</value>
-  </data>
+    <value>قد يكون من الطبيعي التردد عند شراء أحذية العمل...sef</value>
+  <comment></comment></data>
   <data name="Carousel_1_LinkText" xml:space="preserve">
-    <value>انقر هنا</value>
-  </data>
+    <value>انقر هناsefse</value>
+  <comment></comment></data>
   <data name="Title_1_toeergy_ar" xml:space="preserve">
-    <value>Loremمقالمقالمقالa</value>
-  <comment>N/A</comment></data>
+    <value>h</value>
+  <comment></comment></data>
   <data name="Content_1_toeergy_ar" xml:space="preserve">
-    <value>&lt;p&gt;aمقالمقالمقالمقالمقالمقالمقالمقالمقالمقالمقال&lt;img src="/blog/gif/6e16b98dd1f53343474fdd840a230a3a.gif" style="height:480px; width:270px" /&gt;&lt;img src="/blog/gif/f9387b0777d6c83d05bfbbdbe60b96cd.gif" style="height:280px; width:500px" /&gt;&lt;/p&gt;
+    <value>&lt;p&gt;h&lt;/p&gt;
 </value>
-  </data>
+  <comment></comment></data>
   <data name="Product_4_Description_ar-SA" xml:space="preserve">
     <value>مقال</value>
   </data>
@@ -652,5 +652,51 @@
   </data>
   <data name="Product_4_Sole_ar-SA" xml:space="preserve">
     <value>awdawdمقال</value>
+  </data>
+  <data name="Product_2_Description_ar-SA" xml:space="preserve">
+    <value>m</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Upper_ar-SA" xml:space="preserve">
+    <value>m</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Lining_ar-SA" xml:space="preserve">
+    <value>m</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Protection_ar-SA" xml:space="preserve">
+    <value>m</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Midsole_ar-SA" xml:space="preserve">
+    <value>m</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Insole_ar-SA" xml:space="preserve">
+    <value>m</value>
+    <comment></comment>
+  </data>
+  <data name="Product_2_Sole_ar-SA" xml:space="preserve">
+    <value>m</value>
+    <comment></comment>
+  </data>
+  <data name="Title_1__ar" xml:space="preserve">
+    <value>anan</value>
+    <comment></comment>
+  </data>
+  <data name="Content_1__ar" xml:space="preserve">
+    <value>&lt;p&gt;anan&lt;/p&gt;
+</value>
+    <comment></comment>
+  </data>
+  <data name="Title_1_default_ar" xml:space="preserve">
+    <value>hesg</value>
+    <comment></comment>
+  </data>
+  <data name="Content_1_default_ar" xml:space="preserve">
+    <value>&lt;p&gt;hgsegse&lt;/p&gt;
+</value>
+    <comment></comment>
   </data>
 </root>

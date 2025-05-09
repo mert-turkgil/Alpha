@@ -5,30 +5,6 @@
       "PackagePath": "staticwebassets\\Alpha.bundle.scp.css"
     },
     {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\blog\\gif\\6e16b98dd1f53343474fdd840a230a3a.gif",
-      "PackagePath": "staticwebassets\\blog\\gif\\6e16b98dd1f53343474fdd840a230a3a.gif"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\blog\\gif\\7489db83ec06622f7aaa58f85e747dd8.gif",
-      "PackagePath": "staticwebassets\\blog\\gif\\7489db83ec06622f7aaa58f85e747dd8.gif"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\blog\\gif\\8fe2fffb9e29dce6cbd04b0ab0862674.gif",
-      "PackagePath": "staticwebassets\\blog\\gif\\8fe2fffb9e29dce6cbd04b0ab0862674.gif"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\blog\\gif\\99ae98e90cf043fcc27e9d32e4240939.gif",
-      "PackagePath": "staticwebassets\\blog\\gif\\99ae98e90cf043fcc27e9d32e4240939.gif"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\blog\\gif\\b089c981796de907176ec48516887acd.gif",
-      "PackagePath": "staticwebassets\\blog\\gif\\b089c981796de907176ec48516887acd.gif"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\blog\\gif\\bc5e45901d2e91b8615f8669f30b9a45.gif",
-      "PackagePath": "staticwebassets\\blog\\gif\\bc5e45901d2e91b8615f8669f30b9a45.gif"
-    },
-    {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\blog\\gif\\f9387b0777d6c83d05bfbbdbe60b96cd.gif",
       "PackagePath": "staticwebassets\\blog\\gif\\f9387b0777d6c83d05bfbbdbe60b96cd.gif"
     },
@@ -47,6 +23,10 @@
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\css\\custom-masonry.css",
       "PackagePath": "staticwebassets\\css\\custom-masonry.css"
+    },
+    {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\css\\main.css",
+      "PackagePath": "staticwebassets\\css\\main.css"
     },
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\css\\site.css",
@@ -69,18 +49,6 @@
       "PackagePath": "staticwebassets\\img\\1200w-Carousel2.jpg"
     },
     {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\37e4f288-d0a4-4556-b58a-0cde44a18655.jpg",
-      "PackagePath": "staticwebassets\\img\\37e4f288-d0a4-4556-b58a-0cde44a18655.jpg"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\40598b76-e4f2-4773-8bb6-16415c79ccf8.webp",
-      "PackagePath": "staticwebassets\\img\\40598b76-e4f2-4773-8bb6-16415c79ccf8.webp"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\59a91272-5a3c-4f77-bfa5-d59f1213b490.jpg",
-      "PackagePath": "staticwebassets\\img\\59a91272-5a3c-4f77-bfa5-d59f1213b490.jpg"
-    },
-    {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\600w-Carousel1.jpg",
       "PackagePath": "staticwebassets\\img\\600w-Carousel1.jpg"
     },
@@ -89,28 +57,12 @@
       "PackagePath": "staticwebassets\\img\\600w-Carousel2.jpg"
     },
     {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\8c038bb8-e299-42b2-bd8c-a8f01f857c76.webp",
-      "PackagePath": "staticwebassets\\img\\8c038bb8-e299-42b2-bd8c-a8f01f857c76.webp"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\9126ade2-96e5-4451-8a95-a59b6629bf22.jpg",
-      "PackagePath": "staticwebassets\\img\\9126ade2-96e5-4451-8a95-a59b6629bf22.jpg"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\941295de-d7e6-4b64-a730-97153c9647b5.webp",
-      "PackagePath": "staticwebassets\\img\\941295de-d7e6-4b64-a730-97153c9647b5.webp"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\9d11016f-bba5-4309-840e-02ee1efc9162.webp",
-      "PackagePath": "staticwebassets\\img\\9d11016f-bba5-4309-840e-02ee1efc9162.webp"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\Carousel1.jpg",
-      "PackagePath": "staticwebassets\\img\\Carousel1.jpg"
-    },
-    {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\Carousel2.jpg",
       "PackagePath": "staticwebassets\\img\\Carousel2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\a448c1c7-08b0-4802-a420-aa0f10f16ae9.jpg",
+      "PackagePath": "staticwebassets\\img\\a448c1c7-08b0-4802-a420-aa0f10f16ae9.jpg"
     },
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\about-us-hero.jpg",
@@ -205,14 +157,6 @@
       "PackagePath": "staticwebassets\\img\\flags\\uzbekistan.png"
     },
     {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\image1.jpg",
-      "PackagePath": "staticwebassets\\img\\image1.jpg"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\image2.jpg",
-      "PackagePath": "staticwebassets\\img\\image2.jpg"
-    },
-    {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\img\\industrial-boots.jpg",
       "PackagePath": "staticwebassets\\img\\industrial-boots.jpg"
     },
@@ -239,6 +183,10 @@
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\js\\custom-masonry.js",
       "PackagePath": "staticwebassets\\js\\custom-masonry.js"
+    },
+    {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\js\\main.js",
+      "PackagePath": "staticwebassets\\js\\main.js"
     },
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\js\\owl.carousel.js",
@@ -595,18 +543,6 @@
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\lib\\viewerjs\\types\\index.d.ts",
       "PackagePath": "staticwebassets\\lib\\viewerjs\\types\\index.d.ts"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\temp\\6e16b98dd1f53343474fdd840a230a3a.gif",
-      "PackagePath": "staticwebassets\\temp\\6e16b98dd1f53343474fdd840a230a3a.gif"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\temp\\8fe2fffb9e29dce6cbd04b0ab0862674.gif",
-      "PackagePath": "staticwebassets\\temp\\8fe2fffb9e29dce6cbd04b0ab0862674.gif"
-    },
-    {
-      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\temp\\f9387b0777d6c83d05bfbbdbe60b96cd.gif",
-      "PackagePath": "staticwebassets\\temp\\f9387b0777d6c83d05bfbbdbe60b96cd.gif"
     },
     {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\videos\\SplashVid.mp4",

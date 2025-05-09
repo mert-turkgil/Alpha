@@ -1,86 +1,87 @@
 using Data.Concrete.EfCore;
-using System.Globalization;
-using System.Reflection;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using System.Globalization;
 using Alpha.Services;
 using Alpha.Identity;
 using Microsoft.AspNetCore.Identity;
 using Alpha.EmailServices;
 using Data.Abstract;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Infrastructure;
-using Alpha.Extensions;
 using Alpha.Data;
+using Alpha.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+#region Configuration
+
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddUserSecrets<Program>(optional: true)     
-    .AddEnvironmentVariables();                   
-#region değişken
-// Load configuration
+    .AddUserSecrets<Program>(optional: true)
+    .AddEnvironmentVariables();
+
 var config = builder.Configuration;
 
-// Configure EmailSender settings
 var emailSection = config.GetSection("EmailSender");
-var host     = emailSection.GetValue<string>("SMTPMail") 
-               ?? throw new InvalidOperationException("SMTP host missing");
-var port     = emailSection.GetValue<int>("Port");
-var username = emailSection.GetValue<string>("Username") 
-               ?? throw new InvalidOperationException("SMTP username missing");
-var password = emailSection.GetValue<string>("Password") 
-               ?? throw new InvalidOperationException("SMTP password missing");
-var enablessl = emailSection.GetValue<bool?>("EnableSsl") ?? true;
+var host = emailSection.GetValue<string>("SMTPMail")
+    ?? throw new InvalidOperationException("SMTP host missing");
+var port = emailSection.GetValue<int>("Port");
+var username = emailSection.GetValue<string>("Username")
+    ?? throw new InvalidOperationException("SMTP username missing");
+// Email password'i ortam değişkeninden alalım, gerekiyorsa override yapalım
+var password = Environment.GetEnvironmentVariable("EmailSender__Password")
+    ?? emailSection.GetValue<string>("Password")
+    ?? throw new InvalidOperationException("SMTP password missing");
+var enableSsl = emailSection.GetValue<bool?>("EnableSsl") ?? true;
+
 #endregion
-// Add connection strings
-var shopConnection = builder.Configuration.GetConnectionString("ShopContext")
+
+#region ConnectionStrings
+//"Server=localhost\\SQLEXPRESS;Database=AlphaDb;User Id=sa;Password=*.;TrustServerCertificate=True;"
+var shopConnection = config.GetConnectionString("ShopContext")
     ?? throw new InvalidOperationException("Connection string 'ShopContext' not found.");
 
-var identityConnection = builder.Configuration.GetConnectionString("ApplicationContext")
+var identityConnection = config.GetConnectionString("ApplicationContext")
     ?? throw new InvalidOperationException("Connection string 'ApplicationContext' not found.");
 
-builder.Services.AddDbContext<ShopContext>(options => options.UseSqlServer("Server=DESKTOP-3I419VG\\SQLEXPRESS;Database=AlphaDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"));
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer("Server=DESKTOP-3I419VG\\SQLEXPRESS;Database=AlphaDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"));
-#region giriş
-// Identity configuration
-builder.Services.AddIdentity<User, IdentityRole>(options => {
-    options.SignIn.RequireConfirmedAccount = false;
+builder.Services.AddDbContext<ShopContext>(options =>
+    options.UseSqlServer(shopConnection));
 
-    // Password policy
+builder.Services.AddDbContext<ApplicationContext>(options =>
+    options.UseSqlServer(identityConnection));
+
+#endregion
+
+#region IdentityConfiguration
+
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 8;
     options.Password.RequireNonAlphanumeric = false;
-
-    // Lockout policy
     options.Lockout.MaxFailedAccessAttempts = 4;
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(4);
     options.Lockout.AllowedForNewUsers = true;
-
-    // User settings
     options.User.RequireUniqueEmail = true;
-    options.User.AllowedUserNameCharacters = 
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-
-    // Sign-in settings
     options.SignIn.RequireConfirmedEmail = true;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationContext>()
 .AddDefaultTokenProviders();
 
-// Configure cookies
-builder.Services.ConfigureApplicationCookie(options => {
+builder.Services.ConfigureApplicationCookie(options =>
+{
     options.LoginPath = "/admin/login";
     options.LogoutPath = "/admin/logout";
     options.AccessDeniedPath = "/accessdenied";
     options.SlidingExpiration = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-    options.Cookie = new CookieBuilder {
+    options.Cookie = new CookieBuilder
+    {
         HttpOnly = true,
         Name = ".Alpha.Security.Cookie",
         SameSite = SameSiteMode.None,
@@ -89,64 +90,45 @@ builder.Services.ConfigureApplicationCookie(options => {
 });
 
 #endregion
-#region güvenlik
+
+#region Security
+
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN";
     options.Cookie.Name = ".Alpha.AntiForgery";
 });
+
 #endregion
-#region dil
-// Localization
-builder.Services.AddSingleton<LanguageService>();
+
+#region Localization
+
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-builder.Services.AddMvc()
-    .AddViewLocalization()
-    .AddDataAnnotationsLocalization(options =>
-    {
-        var assemblyInfo = typeof(SharedResource).GetTypeInfo().Assembly;
 
-        if (assemblyInfo == null)
-            throw new InvalidOperationException("Assembly information for SharedResource is missing.");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "fr-FR", "de-DE", "en-US", "tr-TR", "ar-SA" }
+        .Select(c => new CultureInfo(c)).ToList();
 
-        var assemblyName = new AssemblyName(assemblyInfo.FullName ?? throw new InvalidOperationException("Assembly full name cannot be null."));
-        
-        if (string.IsNullOrEmpty(assemblyName.Name))
-            throw new InvalidOperationException("Assembly name cannot be null or empty.");
-
-        options.DataAnnotationLocalizerProvider = (type, factory) =>
-        {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory), "Localizer factory cannot be null.");
-            
-            // Ensure location is not null
-            var location = assemblyName.Name ?? throw new ArgumentNullException(nameof(assemblyName.Name), "Location cannot be null.");
-            return factory.Create(nameof(SharedResource), location);
-        };
-    });
-
-
-builder.Services.Configure<RequestLocalizationOptions>(options => {
-    var supportedCultures = new List<CultureInfo> {
-        new CultureInfo("fr-FR"),
-        new CultureInfo("de-DE"),
-        new CultureInfo("en-US"),
-        new CultureInfo("tr-TR"),
-        new CultureInfo("ar-SA")
-    };
-    options.DefaultRequestCulture = new RequestCulture("tr-TR", "tr-TR");
+    options.DefaultRequestCulture = new RequestCulture("tr-TR");
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
     options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
 });
+
 #endregion
+
 #region Services
-// Dependency injection for services
-builder.Services.AddSingleton<AliveResourceService>(p =>
-    new AliveResourceService(Path.Combine(Directory.GetCurrentDirectory(), "Resources")));
-    
-builder.Services.AddSingleton<IManageResourceService>(sp =>
-    new ManageResourceService(Path.Combine(Directory.GetCurrentDirectory(), "Resources")));
+
+string resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
+
+builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(resourcesPath));
+builder.Services.AddSingleton<AliveResourceService>(sp => new AliveResourceService(resourcesPath));
+builder.Services.AddSingleton<IResxResourceService, ResxResourceService>();
+builder.Services.AddSingleton<IBlogResxService, BlogResxService>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<LanguageService>();
 builder.Services.AddScoped<INavbarService, NavbarService>();
 builder.Services.AddScoped<IImageRepository, EfCoreImageRepository>();
 builder.Services.AddScoped<IFooterService, FooterService>();
@@ -154,33 +136,32 @@ builder.Services.AddScoped<ICarouselRepository, EfCoreCarouselRepository>();
 builder.Services.AddScoped<IBlogRepository, EfCoreBlogRepository>();
 builder.Services.AddScoped<IProductRepository, EfCoreProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
-    if (string.IsNullOrEmpty(host))
-        throw new ArgumentNullException(nameof(host), "SMTP host cannot be null or empty.");
-    if (port <= 0)
-        throw new ArgumentOutOfRangeException(nameof(port), "SMTP port must be a positive number.");
-    if (string.IsNullOrEmpty(username))
-        throw new ArgumentNullException(nameof(username), "SMTP username cannot be null or empty.");
-    if (string.IsNullOrEmpty(password))
-        throw new ArgumentNullException(nameof(password), "SMTP password cannot be null or empty.");
 
-    builder.Services.AddScoped<IEmailSender, SmtpEmailSender>(i =>
-        new SmtpEmailSender(host, port, enablessl, username, password));
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>(i =>
+    new SmtpEmailSender(host, port, enableSsl, username, password));
 
-builder.Services.AddScoped<UserManager<User>>();
-
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-// Static file provider
-string resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
-builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(resourcesPath));
 #endregion
+
+#region MVC & Razor
+
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson()
     .AddViewLocalization()
-        .AddDataAnnotationsLocalization()
-            .AddRazorRuntimeCompilation();
+    .AddDataAnnotationsLocalization()
+    .AddRazorRuntimeCompilation();
+
+builder.Services.AddMvc()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization(options =>
+    {
+        options.DataAnnotationLocalizerProvider = (type, factory) =>
+            factory.Create(typeof(SharedResource));
+    });
+#endregion
 
 var app = builder.Build();
+
+#region SeedIdentityData
 
 using (var scope = app.Services.CreateScope())
 {
@@ -197,53 +178,97 @@ using (var scope = app.Services.CreateScope())
 
         if (string.IsNullOrWhiteSpace(rootEmail))
         {
-            Console.WriteLine("⚠️ Root email is not provided in configuration. Skipping seeding.");
-            return;
-        }
-
-        var rootUser = await userManager.FindByEmailAsync(rootEmail);
-        if (rootUser != null)
-        {
-            Console.WriteLine($"✅ Root user '{rootEmail}' already exists. Skipping seeding.");
+            Console.WriteLine("⚠️ Root email is not provided. Skipping seeding.");
         }
         else
         {
-            Console.WriteLine($"🔨 Root user '{rootEmail}' does not exist. Starting seeding...");
-            await SeedIdentity.Seed(userManager, roleManager, configuration);
-            Console.WriteLine("✅ Seeding completed.");
+            var rootUser = await userManager.FindByEmailAsync(rootEmail);
+            if (rootUser == null)
+            {
+                Console.WriteLine("🔨 Seeding root user...");
+                await SeedIdentity.Seed(userManager, roleManager, configuration);
+                Console.WriteLine("✅ Root user seeding completed.");
+            }
+            else
+            {
+                Console.WriteLine($"✅ Root user '{rootEmail}' already exists.");
+            }
         }
     }
     else
     {
-        Console.WriteLine("⚠️ No root user definition found in appsettings.json (Data:Users).");
+        Console.WriteLine("⚠️ No root user defined in configuration.");
     }
 }
 
+#endregion
 
+#region AppMiddleware
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        var defaultCulture = "tr"; // veya "en"
+        context.Response.Redirect($"/{defaultCulture}");
+        return;
+    }
 
+    await next();
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
+
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    name: "localized_product",
+    pattern: "{culture}/urun/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "ProductDetail" });
+
+app.MapControllerRoute(
+    name: "localized_services",
+    pattern: "{culture}/hizmetler",
+    defaults: new { controller = "Home", action = "Services" });
+
+app.MapControllerRoute(
+    name: "localized_blog_detail",
+    pattern: "{culture}/blog/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "BlogDetails" });
+
+app.MapControllerRoute(
+    name: "localized_blog",
+    pattern: "{culture}/blog",
+    defaults: new { controller = "Home", action = "Blog" });
+
+app.MapControllerRoute(
+    name: "localized_contact",
+    pattern: "{culture}/contact",
+    defaults: new { controller = "Home", action = "Contact" });
+
+app.MapControllerRoute(
+    name: "localized_about",
+    pattern: "{culture}/about", // veya: "{culture}/hakkimizda"
+    defaults: new { controller = "Home", action = "About" });
 
 app.MapControllerRoute(
     name: "admin",
     pattern: "Admin/{action=Index}/{id?}",
-    defaults: new { controller = "Admin", action = "Index" });
+    defaults: new { controller = "Admin" });
 
 app.MapControllerRoute(
-    name: "productDetail",
-    pattern: "Product/Detail/{id}",
-    defaults: new { controller = "Home", action = "ProductDetail" });
+    name: "localized_index",
+    pattern: "{culture}",
+    defaults: new { controller = "Home", action = "Index" });
 
 
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+#endregion
 
 app.Run();

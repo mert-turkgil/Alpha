@@ -1,36 +1,42 @@
 using Alpha.Services;
-using Data.Abstract; 
-using Alpha.Entity;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using System.Globalization;
 using Alpha.Models;
-using Alpha.Controllers;
+using Data.Abstract;
 
 namespace Alpha.ViewComponents
 {
     public class CarouselViewComponent : ViewComponent
     {
-        private readonly ICarouselRepository _carouselRepository;
+        private readonly ICarouselRepository _carouselService;
         private readonly LanguageService _localization;
+        private readonly IActionDescriptorCollectionProvider _actionDescriptorProvider;
 
-        public CarouselViewComponent(ICarouselRepository carouselRepository, LanguageService localization)
+        public CarouselViewComponent(
+            ICarouselRepository carouselService,
+            LanguageService localization,
+            IActionDescriptorCollectionProvider actionDescriptorProvider)
         {
-            _carouselRepository = carouselRepository;
+            _carouselService = carouselService;
             _localization = localization;
+            _actionDescriptorProvider = actionDescriptorProvider;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var carousels = await _carouselRepository.GetAllAsync();
+            var carousels = await _carouselService.GetAllAsync();
+            var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
             var carouselViewModel = new CarouselResourceViewModel
             {
                 CarouselItems = carousels.Select(c =>
                 {
-                    var action = string.IsNullOrEmpty(c.CarouselLink) ? "Services" : c.CarouselLink;
+                    var action = string.IsNullOrWhiteSpace(c.CarouselLink) ? "Services" : c.CarouselLink;
                     var finalAction = ActionExists(action, "Home") ? action : "Services";
+
+                    var link = Url.Action(finalAction, "Home", new { culture });
 
                     return new CarouselItemViewModel
                     {
@@ -38,10 +44,10 @@ namespace Alpha.ViewComponents
                         CarouselImage = c.CarouselImage,
                         CarouselImage600w = c.CarouselImage600w,
                         CarouselImage1200w = c.CarouselImage1200w,
-                        CarouselTitle = _localization.GetKey($"Carousel_{c.CarouselId}_Title")?.Value ?? c.CarouselTitle,
-                        CarouselDescription = _localization.GetKey($"Carousel_{c.CarouselId}_Description")?.Value ?? c.CarouselDescription,
-                        CarouselLink = Url.Action(finalAction, "Home"), // Use the validated action
-                        CarouselLinkText = _localization.GetKey($"Carousel_{c.CarouselId}_LinkText")?.Value ?? c.CarouselLinkText
+                        CarouselTitle = _localization.GetKey($"Carousel_{c.CarouselId}_Title") ?? c.CarouselTitle,
+                        CarouselDescription = _localization.GetKey($"Carousel_{c.CarouselId}_Description") ?? c.CarouselDescription,
+                        CarouselLink = link,
+                        CarouselLinkText = _localization.GetKey($"Carousel_{c.CarouselId}_LinkText") ?? c.CarouselLinkText
                     };
                 }).ToList()
             };
@@ -49,17 +55,13 @@ namespace Alpha.ViewComponents
             return View(carouselViewModel);
         }
 
-
         private bool ActionExists(string actionName, string controllerName)
         {
-            var controllerType = typeof(HomeController); // Update this if checking another controller.
-            var methods = controllerType.GetMethods();
-
-            return methods.Any(m => 
-                m.Name.Equals(actionName, StringComparison.OrdinalIgnoreCase) &&
-                m.GetCustomAttributes(typeof(NonActionAttribute), false).Length == 0);
+            return _actionDescriptorProvider.ActionDescriptors.Items
+                .OfType<ControllerActionDescriptor>()
+                .Any(descriptor =>
+                    string.Equals(descriptor.ControllerName, controllerName, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(descriptor.ActionName, actionName, StringComparison.OrdinalIgnoreCase));
         }
-
-
     }
 }

@@ -1,12 +1,12 @@
 @model Alpha.Models.ContactViewModel
-
 @{
     ViewData["Title"] = @Model.Contact_Title;
 }
 @section Css{ 
 <!-- Include Animate.css CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
+<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/45.0.0/ckeditor5.css" crossorigin>
+<link rel="stylesheet" href="~/css/main.css">
 }
 @if (TempData["SuccessMessage"] != null)
 {
@@ -59,28 +59,50 @@
                 <form asp-action="Contact" asp-controller="Home" method="post">
                     @Html.AntiForgeryToken()
 
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <div asp-validation-summary="All"></div>
+                        </div>
+                    }
+
+
                     <div class="mb-3">
                         <label asp-for="Name" class="form-label">@Model.Contact_YourName</label>
                         <input asp-for="Name" class="form-control" required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="Email" class="form-label">@Model.Contact_YourEmail</label>
                         <input asp-for="Email" type="email" class="form-control" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="Subject" class="form-label">@Model.Contact_Subject</label>
                         <input asp-for="Subject" class="form-control" required />
+                        <span asp-validation-for="Subject" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="Message" class="form-label">@Model.Contact_Message</label>
-                        <textarea asp-for="Message" class="form-control" rows="4" required></textarea>
+
+                        <!-- Normal textarea – CKEditor bunu editöre çevirecek -->
+                        <textarea asp-for="Message" class="form-control" id="editor" rows="6"></textarea>
+
+                        <span asp-validation-for="Message" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <div class="g-recaptcha" data-sitekey="***REMOVED***"></div>
                     </div>
 
                     <button type="submit" class="btn btn-primary">@Model.Contact_SendMessageButton</button>
                 </form>
+
 
 
 
@@ -106,3 +128,35 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/ckeditor5/45.0.0/ckeditor5.umd.js" crossorigin></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+        <!-- jQuery & Validation -->
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.6/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/js/main.js"></script>
+
+        <!-- CKEditor init -->
+
+    <script>
+        let editor;
+
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(error => {
+                console.error('CKEditor init error:', error);
+            });
+
+        // Form submit olmadan önce CKEditor içeriğini textarea'ya aktar
+        document.querySelector('form').addEventListener('submit', function (e) {
+            document.querySelector('#editor').value = editor.getData().trim();
+        });
+    </script>
+
+}

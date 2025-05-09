@@ -1,9 +1,10 @@
+@using System.Globalization
 @model Alpha.Models.BlogDetailsViewModel
 
 @{
     ViewData["Title"] = Model.Blog.Title;
+    var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 }
-
 <section class="py-5 bg-light text-center" data-aos="fade-down">
     <div class="container">
         <h1 style="color: #e79c00;" class="fw-bold display-5 text-uppercase">@Model.Blog.Title</h1>
@@ -63,12 +64,12 @@
 
             <!-- Post Navigation -->
             <div class="d-flex justify-content-between mt-5">
-                <a href="@Url.Action("BlogDetails", "Home", new { id = Model.Blog.BlogId - 1, type = "blog" })"
-                   class="btn btn-outline-e79c00 btn-sm @(Model.Blog.BlogId <= 1 ? "disabled" : "")">
+                <a href="@Url.Action("BlogDetails", "Home", new { culture, id = Model.Blog.BlogId - 1, type = "blog" })"
+                class="btn btn-outline-e79c00 btn-sm @(Model.Blog.BlogId <= 1 ? "disabled" : "")">
                     &larr; @Model.BlogDetail_PreviousPost
                 </a>
-                <a href="@Url.Action("BlogDetails", "Home", new { id = Model.Blog.BlogId + 1, type = "blog" })"
-                   class="btn btn-outline-e79c00 btn-sm">
+                <a href="@Url.Action("BlogDetails", "Home", new { culture, id = Model.Blog.BlogId + 1, type = "blog" })"
+                class="btn btn-outline-e79c00 btn-sm">
                     @Model.BlogDetail_NextPost &rarr;
                 </a>
             </div>
@@ -86,8 +87,8 @@
                             foreach (var b in ViewBag.RecentBlogs)
                             {
                                 <li class="mb-2">
-                                    <a href="@Url.Action("BlogDetails", "Home", new { id = b.BlogId, type = "blog" })"
-                                       class="text-decoration-none text-muted">
+                                    <a href="@Url.Action("BlogDetails", "Home", new { culture, id = b.BlogId, type = "blog" })"
+                                    class="text-decoration-none text-muted">
                                         <i style="color: #e79c00;" class="fa fa-arrow-right me-2"></i>@b.Title
                                     </a>
                                 </li>
@@ -110,9 +111,9 @@
                             {
                                 <li>
                                     <a
-                                    style="background-color: #e79c00;" 
-                                     href="@Url.Action("Services", "Home", new { category = cat.Url })"
-                                       class="badge text-decoration-none">
+                                        style="background-color: #e79c00;" 
+                                        href="@Url.Action("Services", "Home", new { culture, category = cat.Url })"
+                                        class="badge text-decoration-none">
                                         @cat.Name
                                     </a>
                                 </li>
@@ -158,7 +159,7 @@
                             {
                                 <div class="card me-3 shadow-sm border-0"
                                     style="min-width: 250px; max-width: 250px; text-align: left;">
-                                    <img src="~/img/@(prod.ProductImages?.FirstOrDefault()?.Image?.ImageUrl ?? "default-image.jpg")"
+                                    <img src="@(prod.ProductImages?.FirstOrDefault()?.Image?.ImageUrl ?? "default-image.jpg")"
                                         class="card-img-top"
                                         alt="@prod.Name"
                                         style="height: 150px; object-fit: cover;"
@@ -168,11 +169,12 @@
                                         <p class="card-text mb-2">
                                             <strong>@Model.BlogDetail_CategoriesTitle:</strong> @prod.Brand
                                         </p>
-                                        <a href="@Url.Action("ProductDetail", "Home", new { id = prod.ProductId })"
+                                        <a href="@Url.Action("ProductDetail", "Home", new { culture, id = prod.ProductId })"
                                         class="btn btn-outline-e79c00 btn-sm">
-                                        <i class="fa-solid fa-circle-info fa-beat-fade"></i>
+                                            <i class="fa-solid fa-circle-info fa-beat-fade"></i>
                                             @Model.ViewButton
                                         </a>
+
                                     </div>
                                 </div>
                             }

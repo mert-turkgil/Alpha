@@ -1,3 +1,4 @@
+@using System.Globalization
 <!-- Footer Section -->
 <div class="container-fluid footer-container">
     <div class="row text-center">
@@ -6,9 +7,27 @@
         <div class="col-md-4">
             <h3 class="footer-heading">@Model.QuickLinks</h3>
             <a asp-action="Index" asp-controller="Home" class="footer-link">@Model.Home</a><br />
-            <a asp-action="Services" asp-controller="Home" class="footer-link">@Model.Services</a><br />
-            <a asp-action="Contact" asp-controller="Home" class="footer-link">@Model.Contact</a><br />
-            <a asp-action="Blog" asp-controller="Home" class="footer-link">@Model.Blog</a>
+                @{
+                    var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                    var isActive = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Services", StringComparison.OrdinalIgnoreCase);
+                  }
+                  <a asp-controller="Home"
+                    asp-action="Services"
+                    asp-route-culture="@culture"
+                    class="footer-link fw-semibold @(isActive ? "active" : "")">
+                    @Model.Services
+                  </a>
+                  <br />
+            <a asp-action="Contact" asp-route-culture="@culture" asp-controller="Home" class="footer-link">@Model.Contact</a><br />
+            @{
+                var isActiveBlog = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Blog", StringComparison.OrdinalIgnoreCase);
+            }
+                    <a asp-controller="Home"
+                    asp-action="Blog"
+                    asp-route-culture="@culture"
+                    class="footer-link fw-semibold @(isActiveBlog ? "active" : "")">
+                    @Model.Blog
+                  </a>
         </div>
 
         <!-- Column 2: Employee Login -->

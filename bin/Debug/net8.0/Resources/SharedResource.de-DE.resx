@@ -632,26 +632,26 @@
     <value>Rutschfeste Gummisohle für besseren Halt.</value>
   </data>
   <data name="Product_2_Description_de-DE" xml:space="preserve">
-    <value>Hochwertige Sicherheitsschuhe für industrielle Umgebungen.</value>
-  </data>
+    <value>ddddd</value>
+  <comment></comment></data>
   <data name="Product_2_Upper_de-DE" xml:space="preserve">
-    <value>Robustes Lederobermaterial</value>
-  </data>
+    <value>dd</value>
+  <comment></comment></data>
   <data name="Product_2_Lining_de-DE" xml:space="preserve">
-    <value>Atmungsaktives Stofffutter</value>
-  </data>
+    <value>dd</value>
+  <comment></comment></data>
   <data name="Product_2_Protection_de-DE" xml:space="preserve">
-    <value>Verstärkte Stahlkappe</value>
-  </data>
+    <value>dd</value>
+  <comment></comment></data>
   <data name="Product_2_Midsole_de-DE" xml:space="preserve">
-    <value>Durchtrittsicheres Kevlar</value>
-  </data>
+    <value>d</value>
+  <comment></comment></data>
   <data name="Product_2_Insole_de-DE" xml:space="preserve">
-    <value>Memory-Schaum für Komfort</value>
-  </data>
+    <value>d</value>
+  <comment></comment></data>
   <data name="Product_2_Sole_de-DE" xml:space="preserve">
-    <value>Rutschfeste Gummisohle</value>
-  </data>
+    <value>d</value>
+  <comment></comment></data>
   <data name="Title_1_exploring-the-future-of-renewable-energy_de" xml:space="preserve">
     <value>Wie innovative Technologien eine nachhaltige Welt gestalten</value>
   </data>
@@ -664,21 +664,21 @@
 </value>
   </data>
   <data name="Carousel_1_Title" xml:space="preserve">
-    <value>S1-S1P</value>
-  </data>
+    <value>S1-S1Paaaaaaa</value>
+  <comment></comment></data>
   <data name="Carousel_1_Description" xml:space="preserve">
     <value>İş ayakkabılarını satın alırken kararsızlık yaşamak doğal olabilir...</value>
-  </data>
+  <comment></comment></data>
   <data name="Carousel_1_LinkText" xml:space="preserve">
     <value>Buraya Tıkla</value>
-  </data>
+  <comment></comment></data>
   <data name="Title_1_toeergy_de" xml:space="preserve">
-    <value>ddddddddddddddddddddddddddddd</value>
-  </data>
+    <value>d</value>
+  <comment></comment></data>
   <data name="Content_1_toeergy_de" xml:space="preserve">
-    <value>&lt;p&gt;aaaaaaaaaaaaaaaaaa&lt;/p&gt;
+    <value>&lt;p&gt;d&lt;/p&gt;
 </value>
-  </data>
+  <comment></comment></data>
   <data name="Product_4_Description_de-DE" xml:space="preserve">
     <value>Ein Hightech-Sicherheitsschuh, der mit futuristischen Materialien für maximalen Komfort und Schutz entwickelt wurde.</value>
   </data>
@@ -699,5 +699,23 @@
   </data>
   <data name="Product_4_Sole_de-DE" xml:space="preserve">
     <value>aaaaaaaaaaaaaaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Title_1__de" xml:space="preserve">
+    <value>deden</value>
+    <comment></comment>
+  </data>
+  <data name="Content_1__de" xml:space="preserve">
+    <value>&lt;p&gt;deden&lt;/p&gt;
+</value>
+    <comment></comment>
+  </data>
+  <data name="Title_1_default_de" xml:space="preserve">
+    <value>ddwwwwwwwww</value>
+    <comment></comment>
+  </data>
+  <data name="Content_1_default_de" xml:space="preserve">
+    <value>&lt;p&gt;degsges&lt;/p&gt;
+</value>
+    <comment></comment>
   </data>
 </root>
