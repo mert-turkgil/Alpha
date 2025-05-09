@@ -112,7 +112,7 @@
                         <div class="col-md-6 col-lg-4" data-aos="fade-up">
                             <div class="card blog-card h-100 shadow-sm">
                                 <!-- Blog Image -->
-                                <img src="~/img/@(string.IsNullOrEmpty(blog.Image) ? "default-image.jpg" : blog.Image)"
+                                <img src="@(string.IsNullOrEmpty(blog.Image) ? "default-image.jpg" : blog.Image)"
                                      alt="@blog.Title"
                                      class="card-img-top"
                                      onerror="this.onerror=null;this.src='https://via.placeholder.com/300x200?text=Image+Unavailable';" />
@@ -141,9 +141,18 @@
                                                 @Html.Raw(blog.Content)
                                             }
                                     </div>
-                                    <a href="@Url.Action("BlogDetails", "Home", new { id = blog.BlogId, type = "blog" })" class="btn btn-outline-e79c00 btn-sm">
-                                        @Model.BlogList_ReadMore
-                                    </a>
+                                        @{
+                                            var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                                            var slug = blog.Url?.ToLower() ?? "blog";
+                                        }
+                                        <a asp-controller="Home"
+                                        asp-action="BlogDetails"
+                                        asp-route-culture="@culture"
+                                        asp-route-id="@blog.BlogId"
+                                        asp-route-slug="@slug"
+                                        class="btn btn-outline-e79c00 btn-sm">
+                                            @Model.BlogList_ReadMore
+                                        </a>
                                 </div>
                             </div>
                         </div>

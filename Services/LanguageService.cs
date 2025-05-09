@@ -1,36 +1,26 @@
 using System;
-using System.Reflection;
-using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 
 namespace Alpha.Services
 {
-    public class SharedResource
-    { }
-
     public class LanguageService
     {
-        private readonly IStringLocalizer _localizer;
+        private readonly AliveResourceService _aliveResourceService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public LanguageService(IStringLocalizerFactory factory)
+        public LanguageService(AliveResourceService aliveResourceService, IHttpContextAccessor httpContextAccessor)
         {
-            var type = typeof(SharedResource);
-
-            // Ensure Assembly.FullName is not null
-            var assemblyFullName = type.Assembly.FullName 
-                ?? throw new InvalidOperationException("Assembly FullName cannot be null.");
-
-            var assemblyName = new AssemblyName(assemblyFullName);
-
-            // Ensure AssemblyName.Name is not null
-            var location = assemblyName.Name 
-                ?? throw new InvalidOperationException("Assembly name cannot be null.");
-
-            _localizer = factory.Create(nameof(SharedResource), location);
+            _aliveResourceService = aliveResourceService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public LocalizedString GetKey(string key)
+        public string GetKey(string key)
         {
-            return _localizer[key];
+            var culture = _httpContextAccessor.HttpContext?.Features
+                .Get<IRequestCultureFeature>()?.RequestCulture.Culture.Name ?? "tr-TR";
+
+            return _aliveResourceService.GetResource(key, culture);
         }
     }
 }

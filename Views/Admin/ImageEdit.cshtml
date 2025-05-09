@@ -26,7 +26,8 @@
             <label class="form-label">Current Image</label>
             @if (!string.IsNullOrEmpty(Model.ImageUrl))
             {
-                <img src="~/img/@Model.ImageUrl" class="img-thumbnail" style="width: 200px;" alt="Current Image" />
+                <img src="@Model.ImageUrl?v=@DateTime.UtcNow.Ticks" alt="Current Image" width="150" />
+
             }
         </div>
 

@@ -1,5 +1,4 @@
 @model Alpha.Models.ProductIndexViewModel
-
 <!-- Container to scope all Product Card CSS -->
 
     <h4 style="color: #e79c00;" class="text-uppercase mb-0 ms-3">@Model.StatusMessage</h4>
@@ -16,18 +15,25 @@
         {
             @foreach (var product in Model.Products)
             {
+                var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                var slug = product?.Url?.ToLower() ?? "urun";
                 // Handle Image URL
                 string imageUrl = (product?.ProductImages != null && product.ProductImages.Any())
-                    ? Url.Content(product.ProductImages.FirstOrDefault()?.Image.ImageUrl ?? "~/img/default-image.jpg")
-                    : Url.Content("~/img/default-image.jpg");
+                    ? product.ProductImages.FirstOrDefault()?.Image.ImageUrl ?? "/img/default-image.jpg"
+                    : "/img/default-image.jpg";
                  <div class="col">
-                    <span onclick="location.href='@Url.Action("ProductDetail", "Home", new { id = product?.ProductId })'">
+                    <a asp-controller="Home" 
+                    asp-action="ProductDetail"
+                    asp-route-culture="@culture"
+                    asp-route-id="@product!.ProductId"
+                    asp-route-slug="@slug"
+                    class="text-decoration-none text-dark">
                     <div class="card">
-                        <img src="~/img/@imageUrl"
-                         class="card-img-top"
-                         alt="@(string.IsNullOrWhiteSpace(product?.Name) ? "test data" : product.Name)"
-                         loading="lazy"
-                         onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400?text=Image+Unavailable';">
+                    <img src="@($"{imageUrl}?v={DateTime.UtcNow.Ticks}")"
+                        class="card-img-top"
+                        alt="@(string.IsNullOrWhiteSpace(product?.Name) ? "test data" : product.Name)"
+                        loading="lazy"
+                        onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400?text=Image+Unavailable';">
                     <div style="  max-height: 200px; overflow-y: auto;" class="card-body">
                         <h5 style="color: #e79c00;" class="card-title">@(string.IsNullOrWhiteSpace(product?.Name) ? "test data" : product.Name)</h5>
                                         <div class="first-content">
@@ -57,7 +63,7 @@
                         @(string.IsNullOrWhiteSpace(product?.Certificate) ? "CE Certified" : product.Certificate)
                     </div>
                     </div>
-                    </span>
+                    </a>
                 </div>
 
             }

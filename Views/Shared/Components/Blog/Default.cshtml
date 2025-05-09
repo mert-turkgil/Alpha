@@ -84,9 +84,10 @@
         @foreach (var blogModel in Model)
         {
             var culture = CultureInfo.CurrentCulture.Name;
-
+            var culturee = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
             foreach (var blogData in blogModel.Blogs ?? new List<Alpha.Entity.Blog>())
             {
+                var slug = blogData.Url?.ToLower() ?? "blog";
                 string localizedTitle = blogModel.GetTitleByCulture(culture) ?? blogData.Title;
                 string localizedContent = blogModel.GetContentByCulture(culture) ?? string.Empty;
                 string snippet = Html.Raw(localizedContent).ToString() ?? string.Empty;
@@ -100,7 +101,11 @@
                     ? Url.Content($"~/img/{blogData.Image}")
                     : Url.Content("~/img/default-image.jpg");
         <div class="col">
-            <a asp-controller="Home" asp-action="BlogDetails" asp-route-id="@blogData.BlogId" asp-route-type="blog" class="text-decoration-none">
+            <a asp-controller="Home"
+                asp-action="BlogDetails"
+                asp-route-culture="@culturee"
+                asp-route-id="@blogData.BlogId"
+                asp-route-slug="@slug">
                 <div class="card blog-card shadow-sm border-0">
                     <img src="@imageUrl" alt="@localizedTitle" class="card-img" loading="lazy" />
                     <div class="card-img-overlay overlay-content">

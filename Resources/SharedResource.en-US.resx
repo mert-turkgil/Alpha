@@ -58,6 +58,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="SEO_Index_Title_en" xml:space="preserve">
+  <value>Alpha Shoes - Safety Work Boots</value>
+</data>
+<data name="SEO_Index_Description_en" xml:space="preserve">
+  <value>Discover the best safety shoes for work. Meet Alpha.</value>
+</data>
+<data name="SEO_Index_Keywords_en" xml:space="preserve">
+  <value>safety shoes, alpha boots, military boots</value>
+</data>
+<data name="SEO_Blog_Title_en" xml:space="preserve">
+  <value>Blog</value>
+</data>
+<data name="SEO_Blog_Description_en" xml:space="preserve">
+  <value>Tips, news, and guides about safety boots and work protection on the Alpha Blog.</value>
+</data>
+<data name="SEO_Blog_Keywords_en" xml:space="preserve">
+  <value>safety blog, alpha shoes, work protection</value>
+</data>
+<data name="SEO_About_Title_en" xml:space="preserve">
+  <value>About Us</value>
+</data>
+<data name="SEO_About_Description_en" xml:space="preserve">
+  <value>At Alpha Shoes, we combine safety and comfort. Learn more about us.</value>
+</data>
+<data name="SEO_About_Keywords_en" xml:space="preserve">
+  <value>about alpha, safety shoes, company info</value>
+</data>
+<data name="SEO_Contact_Title_en" xml:space="preserve">
+  <value>Contact</value>
+</data>
+<data name="SEO_Contact_Description_en" xml:space="preserve">
+  <value>Get in touch with Alpha Shoes.</value>
+</data>
+<data name="SEO_Contact_Keywords_en" xml:space="preserve">
+  <value>contact, alpha shoes, reach us</value>
+</data>
+<data name="SEO_Services_Title_en" xml:space="preserve">
+  <value>Our Products and Services</value>
+</data>
+<data name="SEO_Services_Description_en" xml:space="preserve">
+  <value>Explore Alpha's safety shoes and services.</value>
+</data>
+<data name="SEO_Services_Keywords_en" xml:space="preserve">
+  <value>alpha products, safety shoes</value>
+</data>
+
   <data name="ProductDetail_CertificateLabel" xml:space="preserve">
     <value>Certificate</value>
   </data>
@@ -565,51 +611,6 @@
   <data name="ContactErrorMessage" xml:space="preserve">
     <value>There was an error sending your message. Please try again later.</value>
   </data>
-  <data name="Carousel_3_Title" xml:space="preserve">
-    <value>Discover Nature</value>
-  </data>
-  <data name="Carousel_3_Description" xml:space="preserve">
-    <value>Explore the untouched beauty of nature with our exclusive travel packages.</value>
-  </data>
-  <data name="Carousel_3_LinkText" xml:space="preserve">
-    <value>Learn More</value>
-  </data>
-  <data name="Carousel_4_Title" xml:space="preserve">
-    <value>Steel Toe Work Boots</value>
-  </data>
-  <data name="Carousel_4_Description" xml:space="preserve">
-    <value>Durable steel toe work boots for ultimate protection and comfort on construction sites.</value>
-  </data>
-  <data name="Carousel_4_LinkText" xml:space="preserve">
-    <value>Shop Now</value>
-  </data>
-  <data name="Carousel_5_Title" xml:space="preserve">
-    <value>Slip-Resistant Safety Shoes</value>
-  </data>
-  <data name="Carousel_5_Description" xml:space="preserve">
-    <value>Lightweight safety shoes with slip-resistant soles for wet and oily surfaces.</value>
-  </data>
-  <data name="Carousel_5_LinkText" xml:space="preserve">
-    <value>Learn More</value>
-  </data>
-  <data name="Carousel_6_Title" xml:space="preserve">
-    <value>Waterproof Safety Boots</value>
-  </data>
-  <data name="Carousel_6_Description" xml:space="preserve">
-    <value>Stay dry and safe with waterproof safety boots, ideal for outdoor work environments.</value>
-  </data>
-  <data name="Carousel_6_LinkText" xml:space="preserve">
-    <value>Explore</value>
-  </data>
-  <data name="Carousel_7_Title" xml:space="preserve">
-    <value>Composite Toe Safety Shoes</value>
-  </data>
-  <data name="Carousel_7_Description" xml:space="preserve">
-    <value>Advanced protection with lightweight composite toe safety shoes.</value>
-  </data>
-  <data name="Carousel_7_LinkText" xml:space="preserve">
-    <value>Check Now</value>
-  </data>
   <data name="Title_1_exploring-the-future-of-renewable-energy_en" xml:space="preserve">
     <value>Exploring the Future of Renewable Energy</value>
   </data>
@@ -628,40 +629,216 @@
 </value>
   </data>
   <data name="Carousel_1_Title" xml:space="preserve">
-    <value>S1-S1P</value>
-  </data>
+    <value>Our Services</value>
+  <comment></comment></data>
   <data name="Carousel_1_Description" xml:space="preserve">
-    <value>İş ayakkabılarını satın alırken kararsızlık yaşamak doğal olabilir...</value>
-  </data>
+    <value>Alpha Safety Footwear sets industry standards with innovative and reliable solutions. Enhance your workplace safety with our services.</value>
+  <comment></comment></data>
   <data name="Carousel_1_LinkText" xml:space="preserve">
-    <value>Buraya Tıkla</value>
+    <value>Discover</value>
+  <comment></comment></data>
+  <data name="Carousel_2_Title" xml:space="preserve">
+    <value>Our Blog</value>
+  </data>
+  <data name="Carousel_2_Description" xml:space="preserve">
+    <value>The Alpha Blog goes beyond safety shoes—offering content on industry innovations, our production processes, employee stories, and sustainability. We invite you to explore and be inspired.</value>
+  </data>
+  <data name="Carousel_2_LinkText" xml:space="preserve">
+    <value>Discover</value>
   </data>
   <data name="Title_1_toeergy_en" xml:space="preserve">
-    <value>Lorem</value>
+    <value>How to Choose Safety Work Shoes?</value>
   </data>
   <data name="Content_1_toeergy_en" xml:space="preserve">
-    <value>&lt;p&gt;a&lt;/p&gt;
+    <value>&lt;h1&gt;What should you consider when buying safety shoes?&lt;/h1&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;Safety shoes are one of the most critical elements for protecting employees&amp;#39; health and safety. A proper choice boosts comfort and prevents serious injuries. So, what should you consider when buying safety shoes?&lt;/p&gt;
+
+&lt;h2&gt;&lt;strong&gt;Conduct a Risk Assessment&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;İş yerindeki tehlikeler belirlenmeli. D&amp;uuml;şme, delici cisimler, ağır y&amp;uuml;k d&amp;uuml;şmesi veya kimyasal sı&amp;ccedil;rama gibi riskler hangi t&amp;uuml;r korumaya ihtiya&amp;ccedil; duyduğunuzu belirler.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Ayakkabı Tipi ve Koruma Sınıfı Se&amp;ccedil;imi&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;EN ISO 20345 standartlarına g&amp;ouml;re ayakkabılar S1, S2, S3 gibi sınıflara ayrılır. &amp;Ouml;rneğin, suya dayanıklılık gerekiyorsa S3 tercih edilmelidir. &amp;Ccedil;elik burun, delinmez taban, kaymaz taban gibi &amp;ouml;zellikler iş t&amp;uuml;r&amp;uuml;ne g&amp;ouml;re değişmelidir.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Doğru Numara ve Uyum&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+	&lt;p&gt;Ayakkabının ne kadar koruyucu olduğu kadar, ne kadar rahat olduğu da &amp;ouml;nemlidir. Ayakta uzun s&amp;uuml;re kalanlar i&amp;ccedil;in ayakkabının ayağa tam oturması şarttır.&lt;/p&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Malzeme Kalitesi ve Nefes Alabilirlik&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+	&lt;p&gt;Deri, mikrofiber veya tekstil malzemelerden yapılan ayakkabılar farklı dayanıklılık seviyelerine sahiptir. Terlemeyi &amp;ouml;nlemek i&amp;ccedil;in nefes alabilir yapılar tercih edilmelidir.&lt;/p&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Sertifikasyon ve G&amp;uuml;venlik Belgeleri&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;&amp;Uuml;r&amp;uuml;nlerin gerekli standart belgelerine sahip olup olmadığı kontrol edilmelidir. ISO ve CE belgeleri g&amp;uuml;venilirliğin bir g&amp;ouml;stergesidir.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;İş g&amp;uuml;venliği ayakkabısı, sadece bir ayakkabı değil; bir koruma kalkanıdır. Doğru se&amp;ccedil;ilmiş bir model, &amp;ccedil;alışan verimliliğini ve g&amp;uuml;venliğini doğrudan etkiler.&lt;/p&gt;
+
+&lt;p style="margin-left:200px"&gt;&lt;img src="/blog/gif/f9387b0777d6c83d05bfbbdbe60b96cd.gif" style="height:140px; width:250px" /&gt;&lt;/p&gt;
 </value>
   </data>
   <data name="Product_4_Description_en-US" xml:space="preserve">
-    <value>aaaaaaaaa</value>
+    <value>-</value>
   </data>
   <data name="Product_4_Upper_en-US" xml:space="preserve">
-    <value>wadawd</value>
+    <value>-</value>
   </data>
   <data name="Product_4_Lining_en-US" xml:space="preserve">
-    <value>awdawd</value>
+    <value>-</value>
   </data>
   <data name="Product_4_Protection_en-US" xml:space="preserve">
-    <value>awdawd</value>
+    <value>-</value>
   </data>
   <data name="Product_4_Midsole_en-US" xml:space="preserve">
-    <value>awdawd</value>
+    <value>-</value>
   </data>
   <data name="Product_4_Insole_en-US" xml:space="preserve">
-    <value>awdawd</value>
+    <value>-</value>
   </data>
   <data name="Product_4_Sole_en-US" xml:space="preserve">
-    <value>awdawd</value>
+    <value>-</value>
+  </data>
+  <data name="Product_1_Description_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_1_Upper_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_1_Lining_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_1_Protection_en-US" xml:space="preserve">
+    <value>Fiberglass Tip</value>
+  </data>
+  <data name="Product_1_Midsole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_1_Insole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_1_Sole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_2_Description_en-US" xml:space="preserve">
+    <value>-</value>
+  <comment></comment></data>
+  <data name="Product_2_Upper_en-US" xml:space="preserve">
+    <value>-</value>
+  <comment></comment></data>
+  <data name="Product_2_Lining_en-US" xml:space="preserve">
+    <value>-</value>
+  <comment></comment></data>
+  <data name="Product_2_Protection_en-US" xml:space="preserve">
+    <value>-</value>
+  <comment></comment></data>
+  <data name="Product_2_Midsole_en-US" xml:space="preserve">
+    <value>-</value>
+  <comment></comment></data>
+  <data name="Product_2_Insole_en-US" xml:space="preserve">
+    <value>-</value>
+  <comment></comment></data>
+  <data name="Product_2_Sole_en-US" xml:space="preserve">
+    <value>-</value>
+  <comment></comment></data>
+  <data name="Product_3_Description_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_3_Upper_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_3_Lining_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_3_Protection_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_3_Midsole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_3_Insole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_3_Sole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_5_Description_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_5_Upper_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_5_Lining_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_5_Protection_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_5_Midsole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_5_Insole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_5_Sole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_6_Description_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_6_Upper_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_6_Lining_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_6_Protection_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_6_Midsole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_6_Insole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_6_Sole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_7_Description_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_7_Upper_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_7_Lining_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_7_Protection_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_7_Midsole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_7_Insole_en-US" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Product_7_Sole_en-US" xml:space="preserve">
+    <value>-</value>
   </data>
 </root>
