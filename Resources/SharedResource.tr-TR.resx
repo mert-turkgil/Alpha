@@ -58,6 +58,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="SEO_Index_Title_tr" xml:space="preserve">
+  <value>Alpha Ayakkabı - Güvenlikli İş Ayakkabıları</value>
+</data>
+<data name="SEO_Index_Description_tr" xml:space="preserve">
+  <value>İş güvenliği için en kaliteli ayakkabılar. Alpha ile tanışın.</value>
+</data>
+<data name="SEO_Index_Keywords_tr" xml:space="preserve">
+  <value>iş güvenliği ayakkabısı, alpha bot, askeri bot</value>
+</data>
+<data name="SEO_Blog_Title_tr" xml:space="preserve">
+  <value>Blog</value>
+</data>
+<data name="SEO_Blog_Description_tr" xml:space="preserve">
+  <value>İş güvenliği, askeri botlar ve koruyucu ekipmanlar hakkında ipuçları, haberler ve rehber içerikler Alpha Blog’da.</value>
+</data>
+<data name="SEO_Blog_Keywords_tr" xml:space="preserve">
+  <value>iş güvenliği blogu, askeri botlar, alpha ayakkabı, güvenlik ayakkabısı</value>
+</data>
+<data name="SEO_About_Title_tr" xml:space="preserve">
+  <value>Hakkımızda</value>
+</data>
+<data name="SEO_About_Description_tr" xml:space="preserve">
+  <value>Alpha Ayakkabı olarak iş güvenliği ve konforu bir araya getiriyoruz. Bizi yakından tanıyın.</value>
+</data>
+<data name="SEO_About_Keywords_tr" xml:space="preserve">
+  <value>alpha hakkında, iş güvenliği, güvenlikli ayakkabı</value>
+</data>
+<data name="SEO_Contact_Title_tr" xml:space="preserve">
+  <value>İletişim</value>
+</data>
+<data name="SEO_Contact_Description_tr" xml:space="preserve">
+  <value>Bize ulaşın. Alpha Ayakkabı ile iletişime geçin.</value>
+</data>
+<data name="SEO_Contact_Keywords_tr" xml:space="preserve">
+  <value>iletişim, alpha ayakkabı, ulaşım</value>
+</data>
+<data name="SEO_Services_Title_tr" xml:space="preserve">
+  <value>Ürünlerimiz ve Hizmetlerimiz</value>
+</data>
+<data name="SEO_Services_Description_tr" xml:space="preserve">
+  <value>Alpha Ayakkabı’nın iş güvenliği ürünlerini ve hizmetlerini keşfedin.</value>
+</data>
+<data name="SEO_Services_Keywords_tr" xml:space="preserve">
+  <value>alpha ürünleri, iş güvenliği ayakkabısı</value>
+</data>
+
   <data name="ViewButton" xml:space="preserve">
     <value>Detayları Görüntüle</value>
   </data>
@@ -632,26 +678,26 @@
     <value>Üstün kavrama için kaymaz kauçuk dış taban.</value>
   </data>
   <data name="Product_2_Description_tr-TR" xml:space="preserve">
-    <value>Endüstriyel ve inşaat ortamları için tasarlanmış yüksek kaliteli güvenlik ayakkabıları.</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Upper_tr-TR" xml:space="preserve">
-    <value>Dayanıklı Deri Üst Kısım</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Lining_tr-TR" xml:space="preserve">
-    <value>Nefes Alabilir Kumaş Astar</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Protection_tr-TR" xml:space="preserve">
-    <value>Güçlendirilmiş Çelik Burun</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Midsole_tr-TR" xml:space="preserve">
-    <value>Delinmeye Dayanıklı Kevlar</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Insole_tr-TR" xml:space="preserve">
-    <value>Konfor İçin Hafızalı Köpük</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Sole_tr-TR" xml:space="preserve">
-    <value>Kaymaz Kauçuk Taban</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Title_1_exploring-the-future-of-renewable-energy_tr" xml:space="preserve">
     <value>Yenilenebilir Enerjinin Geleceğini Keşfetmek</value>
   </data>
@@ -684,21 +730,21 @@
 </value>
   </data>
   <data name="Carousel_1_Title" xml:space="preserve">
-    <value>S1-S1P</value>
-  </data>
+    <value>S1-S1Paaaaa</value>
+  <comment></comment></data>
   <data name="Carousel_1_Description" xml:space="preserve">
     <value>İş ayakkabılarını satın alırken kararsızlık yaşamak doğal olabilir...</value>
-  </data>
+  <comment></comment></data>
   <data name="Carousel_1_LinkText" xml:space="preserve">
     <value>Buraya Tıkla</value>
-  </data>
+  <comment></comment></data>
   <data name="Title_1_toeergy_tr" xml:space="preserve">
-    <value>Akıllı Evlerin Geleceği: Teknoloji ve Konforun Buluşması</value>
-  </data>
+    <value>ccccccccccccccccc</value>
+  <comment></comment></data>
   <data name="Content_1_toeergy_tr" xml:space="preserve">
-    <value>&lt;p&gt;aaa&lt;/p&gt;
+    <value>&lt;p&gt;c&lt;/p&gt;
 </value>
-  </data>
+  <comment></comment></data>
   <data name="Product_4_Description_tr-TR" xml:space="preserve">
     <value>Maksimum konfor ve koruma için fütüristik malzemelerle tasarlanmış yüksek teknolojili bir güvenlik ayakkabısı.</value>
   </data>
@@ -719,5 +765,23 @@
   </data>
   <data name="Product_4_Sole_tr-TR" xml:space="preserve">
     <value>aaaaaaaaaaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Title_1__tr" xml:space="preserve">
+    <value>neden</value>
+    <comment></comment>
+  </data>
+  <data name="Content_1__tr" xml:space="preserve">
+    <value>&lt;p&gt;neden&lt;/p&gt;
+</value>
+    <comment></comment>
+  </data>
+  <data name="Title_1_default_tr" xml:space="preserve">
+    <value>ccccccccccccccccc</value>
+    <comment></comment>
+  </data>
+  <data name="Content_1_default_tr" xml:space="preserve">
+    <value>&lt;p&gt;cdwwwwww&lt;/p&gt;
+</value>
+    <comment></comment>
   </data>
 </root>

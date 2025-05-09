@@ -632,26 +632,26 @@
     <value>Üstün kavrama için kaymaz kauçuk dış taban.</value>
   </data>
   <data name="Product_2_Description_tr-TR" xml:space="preserve">
-    <value>Endüstriyel ve inşaat ortamları için tasarlanmış yüksek kaliteli güvenlik ayakkabıları.</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Upper_tr-TR" xml:space="preserve">
-    <value>Dayanıklı Deri Üst Kısım</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Lining_tr-TR" xml:space="preserve">
-    <value>Nefes Alabilir Kumaş Astar</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Protection_tr-TR" xml:space="preserve">
-    <value>Güçlendirilmiş Çelik Burun</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Midsole_tr-TR" xml:space="preserve">
-    <value>Delinmeye Dayanıklı Kevlar</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Insole_tr-TR" xml:space="preserve">
-    <value>Konfor İçin Hafızalı Köpük</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Product_2_Sole_tr-TR" xml:space="preserve">
-    <value>Kaymaz Kauçuk Taban</value>
-  </data>
+    <value>t</value>
+  <comment></comment></data>
   <data name="Title_1_exploring-the-future-of-renewable-energy_tr" xml:space="preserve">
     <value>Yenilenebilir Enerjinin Geleceğini Keşfetmek</value>
   </data>
@@ -684,21 +684,21 @@
 </value>
   </data>
   <data name="Carousel_1_Title" xml:space="preserve">
-    <value>S1-S1P</value>
-  </data>
+    <value>S1-S1Paaaaa</value>
+  <comment></comment></data>
   <data name="Carousel_1_Description" xml:space="preserve">
     <value>İş ayakkabılarını satın alırken kararsızlık yaşamak doğal olabilir...</value>
-  </data>
+  <comment></comment></data>
   <data name="Carousel_1_LinkText" xml:space="preserve">
     <value>Buraya Tıkla</value>
-  </data>
+  <comment></comment></data>
   <data name="Title_1_toeergy_tr" xml:space="preserve">
-    <value>Akıllı Evlerin Geleceği: Teknoloji ve Konforun Buluşması</value>
-  </data>
+    <value>ccccccccccccccccc</value>
+  <comment></comment></data>
   <data name="Content_1_toeergy_tr" xml:space="preserve">
-    <value>&lt;p&gt;aaa&lt;/p&gt;
+    <value>&lt;p&gt;c&lt;/p&gt;
 </value>
-  </data>
+  <comment></comment></data>
   <data name="Product_4_Description_tr-TR" xml:space="preserve">
     <value>Maksimum konfor ve koruma için fütüristik malzemelerle tasarlanmış yüksek teknolojili bir güvenlik ayakkabısı.</value>
   </data>
@@ -719,5 +719,23 @@
   </data>
   <data name="Product_4_Sole_tr-TR" xml:space="preserve">
     <value>aaaaaaaaaaaaaaaaaaaaaaa</value>
+  </data>
+  <data name="Title_1__tr" xml:space="preserve">
+    <value>neden</value>
+    <comment></comment>
+  </data>
+  <data name="Content_1__tr" xml:space="preserve">
+    <value>&lt;p&gt;neden&lt;/p&gt;
+</value>
+    <comment></comment>
+  </data>
+  <data name="Title_1_default_tr" xml:space="preserve">
+    <value>ccccccccccccccccc</value>
+    <comment></comment>
+  </data>
+  <data name="Content_1_default_tr" xml:space="preserve">
+    <value>&lt;p&gt;cdwwwwww&lt;/p&gt;
+</value>
+    <comment></comment>
   </data>
 </root>

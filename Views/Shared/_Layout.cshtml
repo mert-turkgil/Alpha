@@ -1,31 +1,67 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using System.Globalization
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta property="og:title"         content="Alpha Ayakkabı" />
-    <meta property="og:description"   content="Alpha Ayakkabı’nın resmi sitesi. ..." />
-    <meta property="og:url"           content="https://www.alphaayakkabi.com/" />
-    <meta property="og:type"          content="website" />
-    <meta property="og:image"         content="https://www.alphaayakkabi.com/img/biglogo.png" />
-    <meta property="og:image:width"   content="1200" />
-    <meta property="og:image:height"  content="630" />
 
-    <!-- Twitter varsa -->
-    <meta name="twitter:card"         content="summary_large_image" />
-    <meta name="twitter:image"        content="https://www.alphaayakkabi.com/img/biglogo.png" />
-    <title>@{
-    ViewData["Title"] = ViewData["Title"] ?? "Default Title";}- Alpha</title>
-    
+    <!-- 🌍 SEO Meta Tags -->
+    <title>@(ViewBag.Title ?? "Alpha Ayakkabı - Güvenlikli İş Ayakkabıları")</title>
+    <meta name="description" content="@(ViewBag.MetaDescription ?? "Alpha Ayakkabı iş güvenliği ayakkabıları ve askeri botlarda liderdir.")" />
+    <meta name="keywords" content="@(ViewBag.MetaKeywords ?? "iş güvenliği ayakkabısı, güvenlikli ayakkabı, alpha bot, askeri bot")" />
+    <meta name="author" content="Alpha Ayakkabı" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- 🌐 Open Graph Meta Tags (Facebook, LinkedIn vs.) -->
+    <meta property="og:title" content="@(ViewBag.Title ?? "Alpha Ayakkabı")" />
+    <meta property="og:description" content="@(ViewBag.MetaDescription ?? "Alpha Ayakkabı’nın resmi sitesi. İş güvenliği ayakkabıları, askeri botlar ve daha fazlası.")" />
+    <meta property="og:url" content="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}")" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="@(ViewBag.MetaImage ?? "https://www.alphaayakkabi.com/img/biglogo.png")" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- 🐦 Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@(ViewBag.Title ?? "Alpha Ayakkabı")" />
+    <meta name="twitter:description" content="@(ViewBag.MetaDescription ?? "Alpha Ayakkabı’nın resmi sitesi.")" />
+    <meta name="twitter:image" content="@(ViewBag.MetaImage ?? "https://www.alphaayakkabi.com/img/biglogo.png")" />
+
+    <!-- 🔗 Favicon & Styles -->
     <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <script src="https://kit.fontawesome.com/24d5ca79c2.js" crossorigin="anonymous"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/splash.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/splash.css" />
+    <link rel="canonical" href="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")" />
+    @{
+        var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+        var cultures = new[] { "en", "tr", "de", "fr", "ar" };
+        var action = ViewContext.RouteData.Values["action"]?.ToString()?.ToLower() ?? "index";
+        var id = ViewContext.RouteData.Values["id"]?.ToString();
+        var slug = ViewContext.RouteData.Values["slug"]?.ToString();
+    }
+    @foreach (var culture in cultures)
+    {
+        var path = $"/{culture}/{action}";
+        if (!string.IsNullOrEmpty(id))
+        {
+            path += $"/{id}";
+            if (!string.IsNullOrEmpty(slug))
+            {
+                path += $"/{slug}";
+            }
+        }
+        <link rel="alternate" hreflang="@culture" href="@($"{baseUrl}{path}")" />
+    }
+    <link rel="alternate" hreflang="x-default" href="@baseUrl" />
+
+    
+    
     @await RenderSectionAsync("Css", required: false)
 </head>
 <body style="font-family: Oswald, sans-serif;">

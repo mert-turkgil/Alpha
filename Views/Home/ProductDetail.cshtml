@@ -1,7 +1,9 @@
 @model Alpha.Models.ProductDetailViewModel
 @using Alpha.Entity
+@using System.Globalization
 @{
     ViewData["Title"] = Model.Name;
+    var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 }
 @section Css{
     <link rel="stylesheet" href="~/css/Category.css" />
@@ -40,7 +42,7 @@
                             var mainImgUrl = Model.ProductImages.First().Image?.ImageUrl ?? "default-image.jpg";
                             <div id="productImageGallery" class="text-center mb-3">
                                 <div class="main-image">
-                                <img src="~/img/@mainImgUrl"
+                                <img src="@mainImgUrl"
                                     alt="@Model.Name"
                                     class="img-fluid rounded shadow-sm"
                                     style="max-height: 400px; object-fit: cover;"
@@ -57,7 +59,7 @@
                                 {
                                     <!-- first image as main -->
                                     <div class="main-image mb-3">
-                                        <img src="~/img/@images[0].Image.ImageUrl"
+                                        <img src="@images[0].Image.ImageUrl"
                                             alt="@Model.Name"
                                             class="img-fluid rounded shadow-sm w-100"
                                             style="max-height:400px;object-fit:cover;"
@@ -68,7 +70,7 @@
                                     <div class="d-flex flex-wrap justify-content-center gap-2">
                                         @foreach (var img in images.Skip(1))
                                         {
-                                            <img src="~/img/@img.Image.ImageUrl"
+                                            <img src="@img.Image.ImageUrl"
                                                 alt="@Model.Name"
                                                 class="img-fluid"
                                                 style="width:100px;height:100px;object-fit:cover;border:1px solid #ddd;border-radius:4px;"
@@ -167,7 +169,7 @@
                     @foreach (var blog in Model.RelatedBlogs)
                     {
                         <li>
-                            <a href="@Url.Action("BlogDetails", "Home", new { id = blog.BlogId, type = "blog" })" class="text-decoration-none">
+                            <a href="@Url.Action("BlogDetails", "Home", new {culture, id = blog.BlogId, type = "blog" })" class="text-decoration-none">
                                 <i style="color: #e79c00;" class="fas fa-arrow-right me-2"></i>@blog.Title
                             </a>
                         </li>
@@ -189,7 +191,7 @@
                         {
                             <div class="col category-card category-item">
                                 <div class="card h-100 shadow-sm position-relative overflow-hidden border-1 rounded-5 shadow-sm" 
-                                    onclick="window.location.href='@Url.Action("Services", "Home", new { category = category.Url })'">
+                                    onclick="window.location.href='@Url.Action("Services", "Home", new { culture, category = category.Url })'">
                                     <img src="~/img/@category.ImageUrl" 
                                         onerror="this.onerror=null; this.src='https://via.placeholder.com/150x150?text=Image+Unavailable';" 
                                         alt="@category.Name" class="card-img-top img-fluid category-img p-2" style="object-fit: cover; border-radius: 8px;" />
@@ -215,15 +217,17 @@
                 {
                     <div class="col-md-4">
                         <div class="card shadow-sm mb-3">
-                            <img src="~/img/@recentProduct.ProductImages.FirstOrDefault()?.Image?.ImageUrl"
+                            <img src="@recentProduct.ProductImages.FirstOrDefault()?.Image?.ImageUrl"
                                  alt="@recentProduct.Name"
                                  class="card-img-top"
                                  style="height: 150px; object-fit: cover;"
                                  onerror="this.onerror=null;this.src='https://via.placeholder.com/150x150?text=Image+Unavailable';" />
                             <div class="card-body">
                                 <h6 class="card-title">@recentProduct.Name</h6>
-                                <a href="@Url.Action("ProductDetail", "Home", new { id = recentProduct.ProductId })"
-                                   class="btn btn-outline-success btn-sm">@ViewBag.BTN</a>
+                                    <a href="@Url.Action("ProductDetail", "Home", new { culture, id = recentProduct.ProductId })"
+                                    class="btn btn-outline-success btn-sm">
+                                        @ViewBag.BTN
+                                    </a>
                             </div>
                         </div>
                     </div>

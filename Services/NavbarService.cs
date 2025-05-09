@@ -23,15 +23,15 @@ namespace Alpha.Services
             var categories = await _categoryRepository.GetAllAsync();
             return new NavbarViewModel
             {
-                Home = _localization.GetKey("Home").Value,
-                About = _localization.GetKey("About").Value,
-                Services = _localization.GetKey("Services").Value,
-                Blog = _localization.GetKey("Blog").Value,
-                Privacy = _localization.GetKey("Privacy").Value,
-                Contact = _localization.GetKey("Contact").Value,
-                NH1 = _localization.GetKey("NH1").Value,
-                NH2 = _localization.GetKey("NH2").Value,
-                NH3 = _localization.GetKey("NH3").Value,
+                Home = _localization.GetKey("Home"),
+                About = _localization.GetKey("About"),
+                Services = _localization.GetKey("Services"),
+                Blog = _localization.GetKey("Blog"),
+                Privacy = _localization.GetKey("Privacy"),
+                Contact = _localization.GetKey("Contact"),
+                NH1 = _localization.GetKey("NH1"),
+                NH2 = _localization.GetKey("NH2"),
+                NH3 = _localization.GetKey("NH3"),
                 Categories = categories
             };
         }

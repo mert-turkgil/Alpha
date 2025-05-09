@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /Admin/
+Disallow: /Identity/
+Disallow: /Account/
+Disallow: /bin/
+Disallow: /obj/
+Allow: /
+
+Sitemap: https://www.alphaayakkabi.com/sitemap.xml

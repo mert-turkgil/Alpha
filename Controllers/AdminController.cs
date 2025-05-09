@@ -18,6 +18,7 @@ using System.Globalization;
 using System.Resources.NetStandard;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using Microsoft.EntityFrameworkCore;
 
 [Authorize(Roles = "Admin,User")]
 public class AdminController : Controller
@@ -35,15 +36,18 @@ public class AdminController : Controller
     private readonly IEmailSender _emailSender;
     private readonly IWebHostEnvironment _env;
     private readonly AliveResourceService _dynamicResourceService;
-    private readonly IManageResourceService _manageResourceService;
     private readonly IFileProvider _fileProvider;
+    private readonly IResxResourceService _resxService;
+    private readonly IBlogResxService _blogResxService;
 
     public AdminController(UserManager<User> userManager, SignInManager<User> signInManager,RoleManager<IdentityRole> roleManager,
                            ICategoryRepository categoryRepository, IProductRepository productRepository,
-                           AliveResourceService dynamicResourceService,IManageResourceService manageResourceService,
+                           AliveResourceService dynamicResourceService,
                            IBlogRepository blogRepository, IImageRepository imageRepository,IEmailSender emailSender,
                            IFileProvider fileProvider,ICarouselRepository carouselRepository,
-                           IWebHostEnvironment env,ShopContext dbContext,ILogger<AdminController> logger)
+                           IWebHostEnvironment env,ShopContext dbContext,ILogger<AdminController> logger,
+                           IBlogResxService blogResxService,
+                           IResxResourceService resxService)
                         {
                             _logger = logger;
                             _dbContext = dbContext;
@@ -57,83 +61,665 @@ public class AdminController : Controller
                             _emailSender = emailSender;
                             _fileProvider = fileProvider;
                             _dynamicResourceService = dynamicResourceService;
-                            _manageResourceService = manageResourceService;
                             _env = env;
                             _carouselRepository = carouselRepository;
+                            _resxService = resxService;
+                            _blogResxService = blogResxService;
                         }
     
     #region Caraousel
-     // List All Carousels
-    [HttpGet("Admin/Carousels")]
-    public async Task<IActionResult> Carousels()
-    {
-        var carousels = await _carouselRepository.GetAllAsync();
-        return View(carousels);
-    }
-
-    [HttpGet("Admin/CarouselCreate")]
-    public IActionResult CarouselCreate()
-    {
-        return View(new CarouselViewModel());
-    }
-
-
-    [HttpPost("Admin/CarouselCreate")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CarouselCreate(CarouselViewModel model, [FromServices] IManageResourceService resourceService)
-    {
-        if (!ModelState.IsValid)
+        [HttpGet("Admin/Carousels")]
+        public async Task<IActionResult> Carousels()
         {
-            Console.WriteLine("[WARN] Model validation failed.");
-            return View(model);
+            var carousels = await _carouselRepository.GetAllAsync();
+            return View(carousels);
         }
 
-        var carousel = new Carousel
+        [HttpGet("Admin/CarouselCreate")]
+        public IActionResult CarouselCreate()
         {
-            CarouselTitle = model.CarouselTitle,
-            CarouselDescription = model.CarouselDescription,
-            CarouselLink = model.CarouselLink,
-            CarouselLinkText = model.CarouselLinkText,
-            DateAdded = DateTime.UtcNow,
-        };
+            return View(new CarouselViewModel());
+        }
 
-        try
+
+        [HttpPost("Admin/CarouselCreate")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CarouselCreate(CarouselViewModel model, [FromServices] IResxResourceService resourceService)
         {
-            // Handle image uploads
-            carousel.CarouselImage = model.CarouselImage != null ? await SaveFile(model.CarouselImage) : string.Empty;
-            carousel.CarouselImage600w = model.CarouselImage600w != null ? await SaveFile(model.CarouselImage600w) : string.Empty;
-            carousel.CarouselImage1200w = model.CarouselImage1200w != null ? await SaveFile(model.CarouselImage1200w) : string.Empty;
-
-            // Save to database and retrieve entity with assigned ID
-            carousel = await _carouselRepository.CreateAndReturn(carousel);
-
-            // Ensure the ID is valid
-            int carouselId = carousel.CarouselId; // Correct ID from DB
-            if (carouselId <= 0)
+            if (!ModelState.IsValid)
             {
-                Console.WriteLine("[ERROR] Failed to generate a valid ID for carousel.");
-                TempData["ErrorMessage"] = "An error occurred while creating the carousel.";
+                Console.WriteLine("[WARN] Model validation failed.");
                 return View(model);
             }
 
-            Console.WriteLine($"[INFO] Carousel created successfully with ID: {carouselId}");
+            var carousel = new Carousel
+            {
+                CarouselTitle = model.CarouselTitle,
+                CarouselDescription = model.CarouselDescription,
+                CarouselLink = model.CarouselLink,
+                CarouselLinkText = model.CarouselLinkText,
+                DateAdded = DateTime.UtcNow,
+            };
 
-            // Save translations using the valid ID
-            SaveAllTranslations(resourceService, carouselId, model);
+            try
+            {
+                // Handle image uploads
+                carousel.CarouselImage = model.CarouselImage != null ? await SaveFile(model.CarouselImage) : string.Empty;
+                carousel.CarouselImage600w = model.CarouselImage600w != null ? await SaveFile(model.CarouselImage600w) : string.Empty;
+                carousel.CarouselImage1200w = model.CarouselImage1200w != null ? await SaveFile(model.CarouselImage1200w) : string.Empty;
 
-            TempData["SuccessMessage"] = "Carousel created successfully!";
-            return RedirectToAction("Carousels");
+                // Save to database and retrieve entity with assigned ID
+                carousel = await _carouselRepository.CreateAndReturn(carousel);
+
+                // Ensure the ID is valid
+                int carouselId = carousel.CarouselId; // Correct ID from DB
+                if (carouselId <= 0)
+                {
+                    Console.WriteLine("[ERROR] Failed to generate a valid ID for carousel.");
+                    TempData["ErrorMessage"] = "An error occurred while creating the carousel.";
+                    return View(model);
+                }
+
+                Console.WriteLine($"[INFO] Carousel created successfully with ID: {carouselId}");
+
+                // Save translations using the valid ID
+                SaveAllTranslations(resourceService, carouselId, model);
+
+                TempData["SuccessMessage"] = "Carousel created successfully!";
+                return RedirectToAction("Carousels");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] Failed to create carousel. Exception: {ex.Message}");
+                TempData["ErrorMessage"] = "An error occurred while creating the carousel.";
+                return View(model);
+            }
         }
-        catch (Exception ex)
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> CarouselEdit(int id)
         {
-            Console.WriteLine($"[ERROR] Failed to create carousel. Exception: {ex.Message}");
-            TempData["ErrorMessage"] = "An error occurred while creating the carousel.";
+            Console.WriteLine($"[INFO] Loading edit view for Carousel ID: {id}");
+
+            // Fetch carousel from the database
+            var carousel = await _carouselRepository.GetByIdAsync(id);
+            if (carousel == null)
+            {
+                Console.WriteLine($"[WARN] Carousel with ID {id} not found.");
+                return NotFound();
+            }
+
+            // Fetch translations with null checks and default values
+            string GetTranslation(string key, string culture, string defaultValue)
+            {
+                var value = _resxService.Read(key, culture);
+                if (string.IsNullOrEmpty(value))
+                {
+                    Console.WriteLine($"[WARN] Resource key '{key}' not found in '{culture}' resource file.");
+                    return defaultValue; // Provide a fallback value if the key is missing
+                }
+                return value;
+            }
+
+            // Create model
+            var model = new CarouselEditModel
+            {
+                CarouselId = carousel.CarouselId,
+                CarouselTitle = carousel.CarouselTitle,
+                CarouselDescription = carousel.CarouselDescription,
+                CarouselLink = carousel.CarouselLink,
+                CarouselLinkText = carousel.CarouselLinkText,
+                DateAdded = carousel.DateAdded,
+                CarouselImagePath = carousel.CarouselImage,
+                CarouselImage1200wPath = carousel.CarouselImage1200w,
+                CarouselImage600wPath = carousel.CarouselImage600w,
+
+                // US Translations
+                CarouselTitleUS = GetTranslation($"Carousel_{carousel.CarouselId}_Title", "en-US", carousel.CarouselTitle),
+                CarouselDescriptionUS = GetTranslation($"Carousel_{carousel.CarouselId}_Description", "en-US", carousel.CarouselDescription),
+                CarouselLinkTextUS = GetTranslation($"Carousel_{carousel.CarouselId}_LinkText", "en-US", carousel.CarouselLinkText),
+
+                // TR Translations
+                CarouselTitleTR = GetTranslation($"Carousel_{carousel.CarouselId}_Title", "tr-TR", carousel.CarouselTitle),
+                CarouselDescriptionTR = GetTranslation($"Carousel_{carousel.CarouselId}_Description", "tr-TR", carousel.CarouselDescription),
+                CarouselLinkTextTR = GetTranslation($"Carousel_{carousel.CarouselId}_LinkText", "tr-TR", carousel.CarouselLinkText),
+
+                // DE Translations
+                CarouselTitleDE = GetTranslation($"Carousel_{carousel.CarouselId}_Title", "de-DE", carousel.CarouselTitle),
+                CarouselDescriptionDE = GetTranslation($"Carousel_{carousel.CarouselId}_Description", "de-DE", carousel.CarouselDescription),
+                CarouselLinkTextDE = GetTranslation($"Carousel_{carousel.CarouselId}_LinkText", "de-DE", carousel.CarouselLinkText),
+
+                // FR Translations
+                CarouselTitleFR = GetTranslation($"Carousel_{carousel.CarouselId}_Title", "fr-FR", carousel.CarouselTitle),
+                CarouselDescriptionFR = GetTranslation($"Carousel_{carousel.CarouselId}_Description", "fr-FR", carousel.CarouselDescription),
+                CarouselLinkTextFR = GetTranslation($"Carousel_{carousel.CarouselId}_LinkText", "fr-FR", carousel.CarouselLinkText),
+
+                // AR Translations
+                CarouselTitleAR = GetTranslation($"Carousel_{id}_Title", "ar-SA", carousel.CarouselTitle),
+                CarouselDescriptionAR = GetTranslation($"Carousel_{id}_Description", "ar-SA", carousel.CarouselDescription),
+                CarouselLinkTextAR = GetTranslation($"Carousel_{id}_LinkText", "ar-SA", carousel.CarouselLinkText),
+            };
+
+            Console.WriteLine("[INFO] Loaded carousel and translations successfully.");
             return View(model);
         }
-    }
 
 
-        private void SaveAllTranslations(IManageResourceService resourceService, int baseKey, CarouselViewModel model)
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CarouselEdit(CarouselEditModel model)
+        {
+            Console.WriteLine($"[INFO] Processing update for Carousel ID: {model.CarouselId}");
+
+            if (!ModelState.IsValid)
+            {
+                Console.WriteLine("[WARN] Model validation failed.");
+                return View(model);
+            }
+
+            var carousel = await _carouselRepository.GetByIdAsync(model.CarouselId);
+            if (carousel == null)
+            {
+                Console.WriteLine($"[WARN] Carousel with ID {model.CarouselId} not found.");
+                return NotFound();
+            }
+
+            // Update carousel properties
+            carousel.CarouselTitle = model.CarouselTitle;
+            carousel.CarouselDescription = model.CarouselDescription;
+            carousel.CarouselLink = model.CarouselLink;
+            carousel.CarouselLinkText = model.CarouselLinkText;
+
+            // Image validation and update
+            carousel.CarouselImage = await ValidateAndSaveImage(model.CarouselImage, carousel.CarouselImage, "CarouselImage");
+            carousel.CarouselImage1200w = await ValidateAndSaveImage(model.CarouselImage1200w, carousel.CarouselImage1200w, "CarouselImage1200w");
+            carousel.CarouselImage600w = await ValidateAndSaveImage(model.CarouselImage600w, carousel.CarouselImage600w, "CarouselImage600w");
+
+            // Update translations
+            UpdateTranslations(carousel.CarouselId, model);
+
+            // Save carousel
+            await _carouselRepository.UpdateAsync(carousel);
+            Console.WriteLine($"[INFO] Carousel with ID {model.CarouselId} updated successfully!");
+            TempData["SuccessMessage"] = "Carousel updated successfully!";
+            return RedirectToAction("Carousels");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CarouselDelete(int id)
+        {
+            Console.WriteLine($"[INFO] Starting deletion process for Carousel ID: {id}");
+
+            // Step 1: Retrieve the carousel
+            var carousel = await _carouselRepository.GetByIdAsync(id);
+            if (carousel == null)
+            {
+                Console.WriteLine($"[WARN] Carousel with ID {id} not found.");
+                TempData["ErrorMessage"] = "Carousel not found.";
+                return RedirectToAction("Carousels");
+            }
+
+            Console.WriteLine($"[INFO] Found Carousel - Title: {carousel.CarouselTitle}");
+
+            try
+            {
+                // Step 2: Delete associated files
+                DeleteFile(carousel.CarouselImage, "CarouselImage");
+                DeleteFile(carousel.CarouselImage600w, "CarouselImage600w");
+                DeleteFile(carousel.CarouselImage1200w, "CarouselImage1200w");
+
+                // Step 3: Delete translations using IResxResourceService
+                var baseKey = $"Carousel_{carousel.CarouselId}";
+
+                // Languages
+                string[] cultures = { "en-US", "tr-TR", "de-DE", "fr-FR", "ar-SA" };
+                string[] keys = { "Title", "Description", "LinkText" };
+
+                foreach (var culture in cultures)
+                {
+                    foreach (var key in keys)
+                    {
+                        string resourceKey = $"{baseKey}_{key}";
+                        var success = _resxService.Delete(resourceKey, culture); // Using IResxResourceService for deletion
+                        if (success)
+                        {
+                            Console.WriteLine($"[INFO] Successfully deleted translation: {resourceKey} in {culture}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"[WARN] Failed to delete translation: {resourceKey} in {culture}");
+                        }
+                    }
+                }
+
+                // Step 4: Delete the carousel from the database
+                await _carouselRepository.DeleteAsync(id);
+                Console.WriteLine($"[INFO] Carousel with ID {id} deleted successfully!");
+
+                TempData["SuccessMessage"] = "Carousel deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] Failed to delete carousel with ID {id}. Exception: {ex.Message}");
+                TempData["ErrorMessage"] = "An error occurred while deleting the carousel.";
+            }
+
+            // Step 5: Redirect to the carousels page
+            Console.WriteLine("[INFO] Redirecting to Carousels page...");
+            return RedirectToAction("Carousels");
+        }
+        
+    #endregion
+
+    #region File Management
+        // Helper method for image validation and saving
+        private async Task<string> ValidateAndSaveImage(IFormFile image, string existingImagePath, string imageType)
+        {
+            if (image == null) return existingImagePath;  // No new image uploaded, return the existing one.
+
+            // Validate image format and size
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var fileExtension = Path.GetExtension(image.FileName).ToLower();
+
+            if (!allowedExtensions.Contains(fileExtension) || image.Length > 2 * 1024 * 1024)
+            {
+                ModelState.AddModelError(imageType, "Invalid image format or size.");
+                return existingImagePath;
+            }
+
+            // Save new image
+            string newImagePath = await SaveFile(image);
+            
+            // Delete old image if it exists
+            if (!string.IsNullOrEmpty(existingImagePath))
+            {
+                var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", existingImagePath);
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                    Console.WriteLine($"[INFO] Deleted old {imageType} image: {oldImagePath}");
+                }
+            }
+            
+            Console.WriteLine($"[INFO] Updated {imageType} image path: {newImagePath}");
+            return newImagePath;
+        }
+        private void DeleteFile(string filePath, string fileType)
+            {
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    var fullPath = Path.Combine(_env.WebRootPath, "img", filePath.TrimStart('/'));
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        try
+                        {
+                            System.IO.File.Delete(fullPath);
+                            Console.WriteLine($"[INFO] Deleted {fileType} file: {fullPath}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[ERROR] Failed to delete {fileType} file: {fullPath}. Exception: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[WARN] {fileType} file not found at: {fullPath}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"[INFO] No {fileType} file associated.");
+                }
+            }
+
+
+        // Helper to save files
+        private async Task<string> SaveFile(IFormFile file)
+        {
+            var uploadsFolder = Path.Combine(_env.WebRootPath, "img");
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            Directory.CreateDirectory(uploadsFolder);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return $"{fileName}";
+        }
+    
+    #endregion
+    
+
+    #region Products
+
+        public async Task<IActionResult> Products()
+            {
+                var products = await _productRepository.GetAllAsync();
+                return View(products);
+            }
+
+        [HttpGet]
+        public async Task<IActionResult> ProductCreate()
+        {
+            var categories = await _categoryRepository.GetAllAsync();
+            ViewBag.Categories = categories.Select(c => new SelectListItem
+                    {
+                        Value = c.CategoryId.ToString(),
+                        Text = c.Name
+                    }).ToList();
+            var availableLanguages = await Task.FromResult(new List<string> { "en-US", "de-DE", "fr-FR", "tr-TR", "ar-SA" });
+            ViewBag.AvailableLanguages = availableLanguages;
+            return View(new ProductCreateModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProductCreate(ProductCreateModel e)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Categories = (await _categoryRepository.GetAllAsync())
+                    .Select(c => new SelectListItem {
+                    Value = c.CategoryId.ToString(),
+                    Text  = c.Name
+                    }).ToList();
+                ViewBag.AvailableLanguages = new List<string> { "en-US", "de-DE", "fr-FR", "tr-TR", "ar-SA" };
+                return View(e);
+            }
+
+            // 1) build your entity
+            var product = new Product {
+                Name        = e.Name,
+                BodyNo      = e.BodyNo,
+                Url         = e.Url,
+                Upper       = e.Upper,
+                Lining      = e.Lining,
+                Protection  = e.Protection,
+                Brand       = e.Brand,
+                Standard    = e.Standard,
+                Midsole     = e.Midsole,
+                Insole      = e.Insole,
+                Certificate = e.Certificate,
+                Size        = e.Size,
+                Model       = e.Model,
+                Sole        = e.Sole,
+                Description = e.Description,
+                DateAdded   = DateTime.UtcNow,
+                CategoryId  = e.CategoryId
+            };
+
+            // 2) save *and* get back the populated ID
+            product = await _productRepository.CreateAsync(product);
+
+            if (product.ProductId <= 0)
+            {
+                TempData["AlertMessage"] = new AlertMessage {
+                    Title     = "Error",
+                    Message   = "Failed to create product. Product ID was not generated.",
+                    AlertType = "danger",
+                    icon      = "fas fa-bug",
+                    icon2     = "fas fa-times"
+                };
+                return View(e);
+            }
+
+            // 3) now that ProductId is rock-solid, write all translations
+            AddProductTranslations(product.ProductId, e);
+
+            TempData["SuccessMessage"] = "Product and translations created successfully!";
+            return RedirectToAction("Products");
+        }
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> ProductEdit(int id)
+        {
+            var product = await _productRepository.GetByIdAsync(id);
+
+            if (product == null)
+            {
+                TempData["ErrorMessage"] = "Product not found.";
+                return RedirectToAction("Products");
+            }
+
+            var cultures = new Dictionary<string, string>
+            {
+                { "fr-FR", "FR" }, { "en-US", "US" },
+                { "de-DE", "DE" }, { "tr-TR", "TR" },
+                { "ar-SA", "AR" }
+            };
+
+            var fields = new[] { "Description", "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
+            var model = new ProductEditModel
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                BodyNo = product.BodyNo,
+                Url = product.Url,
+                Upper = product.Upper,
+                Lining = product.Lining,
+                Protection = product.Protection,
+                Midsole = product.Midsole,
+                Insole = product.Insole,
+                Sole = product.Sole,
+                Description = product.Description,
+                CategoryId = product.CategoryId,
+
+                CategoryIds = product.ProductCategories?.Select(pc => pc.CategoryId).ToList() ?? new(),
+                ImageIds = product.ProductImages?.Select(pi => pi.ImageId).ToList() ?? new(),
+                BlogIds = product.ProductBlogs?.Select(pb => pb.BlogId).ToList() ?? new(),
+
+                AvailableImages = await _imageRepository.GetAllAsync(),
+                AvailableCategories = await _categoryRepository.GetAllAsync(),
+                AvailableBlogs = (await _blogRepository.GetAllAsync())
+                                    .Select(b => new SelectListItem
+                                    {
+                                        Value = b.BlogId.ToString(),
+                                        Text = b.Title
+                                    }).ToList(),
+
+                CurrentImages = product.ProductImages?
+                    .Where(pi => pi.Image != null)
+                    .Select(pi => pi.Image)
+                    .ToList() ?? new()
+            };
+
+            // Dynamically set translations using reflection
+            foreach (var culture in cultures)
+            {
+                foreach (var field in fields)
+                {
+                    var prop = model.GetType().GetProperty($"{field}{culture.Value}");
+                    if (prop != null)
+                    {
+                        var translation = _resxService.Read($"Product_{product.ProductId}_{field}_{culture.Key}", culture.Key);
+                        prop.SetValue(model, translation ?? string.Empty);
+                    }
+                }
+            }
+
+            return View(model);
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProductEdit(ProductEditModel e)
+        {
+            Console.WriteLine($"[START] ProductEdit: Processing product ID {e.ProductId}");
+
+            if (e.ProductId <= 0 || !ModelState.IsValid)
+            {
+                Console.WriteLine("[ERROR] Invalid product ID or invalid model state.");
+                e.CurrentImages = await _imageRepository.GetImagesByProductIdAsync(e.ProductId);
+                e.AvailableImages = await _imageRepository.GetAllAsync();
+                e.AvailableCategories = await _categoryRepository.GetAllAsync();
+                e.AvailableBlogs = (await _blogRepository.GetAllAsync())
+                    .Select(b => new SelectListItem { Value = b.BlogId.ToString(), Text = b.Title })
+                    .ToList();
+                return View(e);
+            }
+
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                var product = await _dbContext.Products
+                    .Include(p => p.ProductCategories)
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.ProductBlogs)
+                    .FirstOrDefaultAsync(p => p.ProductId == e.ProductId);
+
+                if (product == null)
+                {
+                    Console.WriteLine($"[ERROR] Product with ID {e.ProductId} not found.");
+                    TempData["ErrorMessage"] = "Product not found.";
+                    return RedirectToAction("Products");
+                }
+
+                // Update Product Details
+                product.Name = e.Name;
+                product.Description = e.Description;
+                product.Url = e.Url;
+                product.BodyNo = e.BodyNo;
+                product.Upper = e.Upper;
+                product.Lining = e.Lining;
+                product.Protection = e.Protection;
+                product.Midsole = e.Midsole;
+                product.Insole = e.Insole;
+                product.Sole = e.Sole;
+
+                // Update Categories
+                product.ProductCategories = e.CategoryIds?
+                    .Select(id => new ProductCategory { ProductId = product.ProductId, CategoryId = id })
+                    .ToList() ?? new List<ProductCategory>();
+
+                // Update Images
+                product.ProductImages = e.ImageIds?
+                    .Select(id => new ProductImage { ProductId = product.ProductId, ImageId = id })
+                    .ToList() ?? new List<ProductImage>();
+
+                // Update Blogs
+                product.ProductBlogs = e.BlogIds?
+                    .Select(id => new ProductBlog { ProductId = product.ProductId, BlogId = id })
+                    .ToList() ?? new List<ProductBlog>();
+
+                // Update Translations
+                UpdateProductTranslations(e, product.ProductId);
+
+                // Save Changes
+                await _productRepository.UpdateAsync(product);
+
+                // Commit Transaction
+                await transaction.CommitAsync();
+
+                Console.WriteLine($"[SUCCESS] Product ID {e.ProductId} updated successfully.");
+                TempData["SuccessMessage"] = "Product updated successfully!";
+
+                return RedirectToAction("Products");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"[ERROR] Failed updating product: {ex.Message}");
+                TempData["ErrorMessage"] = "An error occurred during the update.";
+
+                return RedirectToAction("Products");
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ProductDelete(int id)
+        {
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                // Step 1: Delete translations
+                DeleteProductTranslations(id); // Using IResxResourceService-based method
+
+                // Step 2: Fetch and validate product
+                var product = await _productRepository.GetByIdAsync(id);
+                if (product == null)
+                {
+                    TempData["ErrorMessage"] = "Product not found.";
+                    return RedirectToAction("Products");
+                }
+
+                // Step 3: Clear associations
+                product.ProductCategories?.Clear();
+                product.ProductImages?.Clear();
+                await _productRepository.UpdateAsync(product);
+
+                // Step 4: Delete product
+                await _productRepository.DeleteAsync(id);
+
+                // Step 5: Commit
+                await transaction.CommitAsync();
+
+                TempData["SuccessMessage"] = "Product and its translations were successfully deleted.";
+                return RedirectToAction("Products");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"[ERROR] Failed to delete product {id}: {ex.Message}");
+
+                TempData["ErrorMessage"] = "Failed to delete product. Please try again.";
+                return RedirectToAction("Products");
+            }
+        }
+
+        #endregion
+
+
+
+        #region Localization Management
+        private void SaveContentToResx(BlogCreateModel model, int id)
+        {
+            string[] cultures = { "en-US", "tr-TR", "de-DE", "fr-FR", "ar-SA" };
+            string[] titles = { model.TitleUS, model.TitleTR, model.TitleDE, model.TitleFR, model.TitleAR };
+            string[] contents = { model.ContentUS, model.ContentTR, model.ContentDE, model.ContentFR, model.ContentAR };
+
+            for (int i = 0; i < cultures.Length; i++)
+            {
+                string culture = cultures[i];
+                string title = titles[i];
+                string content = contents[i];
+
+                content = ProcessContentImagesForEdit(content);
+
+                if (string.IsNullOrWhiteSpace(model.Url))
+                {
+                    throw new InvalidOperationException("Url cannot be null or empty while saving localization.");
+                }
+                string urlSlug = model.Url.Trim().ToLowerInvariant();
+
+                string langCode = new System.Globalization.CultureInfo(culture).TwoLetterISOLanguageName; // e.g., "en"
+
+                _resxService.AddOrUpdate($"Title_{id}_{urlSlug}_{langCode}", title, culture);
+                _resxService.AddOrUpdate($"Content_{id}_{urlSlug}_{langCode}", content, culture);
+
+                Console.WriteLine($"[DEBUG] Translation saved for {culture} with langCode {langCode}");
+            }
+
+            Console.WriteLine("[DEBUG] All translations updated successfully.");
+        }
+
+
+
+        private void SaveAllTranslations(IResxResourceService resourceService, int baseKey, CarouselViewModel model)
         {
             // Validate baseKey
             if (baseKey <= 0)
@@ -173,9 +759,7 @@ public class AdminController : Controller
             }
         }
 
-
-
-        private void SaveTranslation(IManageResourceService resourceService, string key, string value, string culture)
+        private void SaveTranslation(IResxResourceService resourceService, string key, string value, string culture)
         {
             Console.WriteLine($"[DEBUG] Saving translation: Key='{key}', Value='{value}', Culture='{culture}'");
 
@@ -185,868 +769,221 @@ public class AdminController : Controller
                 return;
             }
 
-            resourceService.AddOrUpdateResource(key, value, culture); // Save key-value
+            resourceService.AddOrUpdate(key, value, culture); // Save key-value using IResxResourceService
         }
 
-
-
-    [HttpGet]
-    public async Task<IActionResult> CarouselEdit(int id, [FromServices] IManageResourceService manageResourceService)
-    {
-        Console.WriteLine($"[INFO] Loading edit view for Carousel ID: {id}");
-
-        // Fetch carousel from database
-        var carousel = await _carouselRepository.GetByIdAsync(id);
-        if (carousel == null)
+        private void AddProductTranslations(int productId, ProductCreateModel model)
         {
-            Console.WriteLine($"[WARN] Carousel with ID {id} not found.");
-            return NotFound();
-        }
-
-        // Fetch translations with null checks and default values
-        string GetTranslation(string key, string culture, string defaultValue)
-        {
-            var value = manageResourceService.ReadResourceValue(key, culture);
-            if (string.IsNullOrEmpty(value))
+            // Map each culture code to its model-property suffix
+            var cultures = new Dictionary<string, string>
             {
-                Console.WriteLine($"[WARN] Resource key '{key}' not found in '{culture}' resource file.");
-                return defaultValue; // Provide a fallback value if the key is missing
-            }
-            return value;
-        }
-
-        // Create model
-        var model = new CarouselEditModel
-        {
-            CarouselId = carousel.CarouselId,
-            CarouselTitle = carousel.CarouselTitle,
-            CarouselDescription = carousel.CarouselDescription,
-            CarouselLink = carousel.CarouselLink,
-            CarouselLinkText = carousel.CarouselLinkText,
-            DateAdded = carousel.DateAdded,
-            CarouselImagePath = carousel.CarouselImage,
-            CarouselImage1200wPath = carousel.CarouselImage1200w,
-            CarouselImage600wPath= carousel.CarouselImage600w,
-
-            // US Translations
-            CarouselTitleUS = GetTranslation($"Carousel_{carousel.CarouselId}_Title", "en-US", carousel.CarouselTitle),
-            CarouselDescriptionUS = GetTranslation($"Carousel_{carousel.CarouselId}_Description", "en-US", carousel.CarouselDescription),
-            CarouselLinkTextUS = GetTranslation($"Carousel_{carousel.CarouselId}_LinkText", "en-US", carousel.CarouselLinkText),
-
-            // TR Translations
-            CarouselTitleTR = GetTranslation($"Carousel_{carousel.CarouselId}_Title", "tr-TR", carousel.CarouselTitle),
-            CarouselDescriptionTR = GetTranslation($"Carousel_{carousel.CarouselId}_Description", "tr-TR", carousel.CarouselDescription),
-            CarouselLinkTextTR = GetTranslation($"Carousel_{carousel.CarouselId}_LinkText", "tr-TR", carousel.CarouselLinkText),
-
-            // DE Translations
-            CarouselTitleDE = GetTranslation($"Carousel_{carousel.CarouselId}_Title", "de-DE", carousel.CarouselTitle),
-            CarouselDescriptionDE = GetTranslation($"Carousel_{carousel.CarouselId}_Description", "de-DE", carousel.CarouselDescription),
-            CarouselLinkTextDE = GetTranslation($"Carousel_{carousel.CarouselId}_LinkText", "de-DE", carousel.CarouselLinkText),
-
-            // FR Translations
-            CarouselTitleFR = GetTranslation($"Carousel_{carousel.CarouselId}_Title", "fr-FR", carousel.CarouselTitle),
-            CarouselDescriptionFR = GetTranslation($"Carousel_{carousel.CarouselId}_Description", "fr-FR", carousel.CarouselDescription),
-            CarouselLinkTextFR = GetTranslation($"Carousel_{carousel.CarouselId}_LinkText", "fr-FR", carousel.CarouselLinkText),
-            // in CarouselEdit GET, after FR:
-            CarouselTitleAR        = GetTranslation($"Carousel_{id}_Title",       "ar-SA", carousel.CarouselTitle),
-            CarouselDescriptionAR  = GetTranslation($"Carousel_{id}_Description", "ar-SA", carousel.CarouselDescription),
-            CarouselLinkTextAR     = GetTranslation($"Carousel_{id}_LinkText",    "ar-SA", carousel.CarouselLinkText),
-
-        };
-
-        Console.WriteLine("[INFO] Loaded carousel and translations successfully.");
-        return View(model);
-    }
-
-
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CarouselEdit(CarouselEditModel model, [FromServices] IManageResourceService manageResourceService)
-    {
-        Console.WriteLine($"[INFO] Processing update for Carousel ID: {model.CarouselId}");
-
-        if (!ModelState.IsValid)
-        {
-            Console.WriteLine("[WARN] Model validation failed.");
-            return View(model);
-        }
-
-        var carousel = await _carouselRepository.GetByIdAsync(model.CarouselId);
-        if (carousel == null)
-        {
-            Console.WriteLine($"[WARN] Carousel with ID {model.CarouselId} not found.");
-            return NotFound();
-        }
-
-        // Update properties
-        carousel.CarouselTitle = model.CarouselTitle;
-        carousel.CarouselDescription = model.CarouselDescription;
-        carousel.CarouselLink = model.CarouselLink;
-        carousel.CarouselLinkText = model.CarouselLinkText;
-
-        // Image validation and update
-        if (model.CarouselImage != null)
-        {
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-            var fileExtension = Path.GetExtension(model.CarouselImage.FileName).ToLower();
-
-            if (!allowedExtensions.Contains(fileExtension) || model.CarouselImage.Length > 2 * 1024 * 1024)
-            {
-                ModelState.AddModelError("CarouselImage", "Invalid image format or size.");
-                return View(model);
-            }
-
-            string newImagePath = await SaveFile(model.CarouselImage);
-            if (!string.IsNullOrEmpty(carousel.CarouselImage))
-            {
-                var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", carousel.CarouselImage);
-                if (System.IO.File.Exists(oldImagePath))
-                {
-                    System.IO.File.Delete(oldImagePath);
-                    Console.WriteLine($"[INFO] Deleted old image: {oldImagePath}");
-                }
-            }
-            carousel.CarouselImage = newImagePath;
-            Console.WriteLine($"[INFO] Updated image path: {newImagePath}");
-        }
-
-            // Image validation and update CarouselImage1200w
-        if (model.CarouselImage1200w != null)
-        {
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-            var fileExtension = Path.GetExtension(model.CarouselImage1200w.FileName).ToLower();
-
-            if (!allowedExtensions.Contains(fileExtension) || model.CarouselImage1200w.Length > 2 * 1024 * 1024)
-            {
-                ModelState.AddModelError("CarouselImage1200w", "Invalid image format or size.");
-                return View(model);
-            }
-
-            string newImagePath1200w = await SaveFile(model.CarouselImage1200w);
-            if (!string.IsNullOrEmpty(carousel.CarouselImage1200w))
-            {
-                var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", carousel.CarouselImage1200w);
-                if (System.IO.File.Exists(oldImagePath))
-                {
-                    System.IO.File.Delete(oldImagePath);
-                    Console.WriteLine($"[INFO] Deleted old image: {oldImagePath}");
-                }
-            }
-            carousel.CarouselImage1200w = newImagePath1200w;
-            Console.WriteLine($"[INFO] Updated image path: {newImagePath1200w}");
-        }
-
-        // Image validation and update CarouselImage600w
-        if (model.CarouselImage600w != null)
-        {
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-            var fileExtension = Path.GetExtension(model.CarouselImage600w.FileName).ToLower();
-
-            if (!allowedExtensions.Contains(fileExtension) || model.CarouselImage600w.Length > 2 * 1024 * 1024)
-            {
-                ModelState.AddModelError("CarouselImage600w", "Invalid image format or size.");
-                return View(model);
-            }
-
-            string newImagePath600w = await SaveFile(model.CarouselImage600w);
-            if (!string.IsNullOrEmpty(carousel.CarouselImage600w))
-            {
-                var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", carousel.CarouselImage600w);
-                if (System.IO.File.Exists(oldImagePath))
-                {
-                    System.IO.File.Delete(oldImagePath);
-                    Console.WriteLine($"[INFO] Deleted old image: {oldImagePath}");
-                }
-            }
-            carousel.CarouselImage600w = newImagePath600w;
-            Console.WriteLine($"[INFO] Updated image path: {newImagePath600w}");
-        }
-
-        // Update translations
-        UpdateTranslations(manageResourceService, carousel.CarouselId, model);
-
-        // Save the carousel
-        await _carouselRepository.UpdateAsync(carousel);
-        Console.WriteLine($"[INFO] Carousel with ID {model.CarouselId} updated successfully!");
-        TempData["SuccessMessage"] = "Carousel updated successfully!";
-        return RedirectToAction("Carousels");
-    }
-private void UpdateTranslations(IManageResourceService manageResourceService, int id, CarouselEditModel model)
-{
-    var baseKey = $"Carousel_{id}";
-
-    // US Translations
-    manageResourceService.AddOrUpdateResource($"{baseKey}_Title", model.CarouselTitleUS, "en-US");
-    manageResourceService.AddOrUpdateResource($"{baseKey}_Description", model.CarouselDescriptionUS, "en-US");
-    manageResourceService.AddOrUpdateResource($"{baseKey}_LinkText", model.CarouselLinkTextUS, "en-US");
-
-    // TR Translations
-    manageResourceService.AddOrUpdateResource($"{baseKey}_Title", model.CarouselTitleTR, "tr-TR");
-    manageResourceService.AddOrUpdateResource($"{baseKey}_Description", model.CarouselDescriptionTR, "tr-TR");
-    manageResourceService.AddOrUpdateResource($"{baseKey}_LinkText", model.CarouselLinkTextTR, "tr-TR");
-
-    // DE Translations
-    manageResourceService.AddOrUpdateResource($"{baseKey}_Title", model.CarouselTitleDE, "de-DE");
-    manageResourceService.AddOrUpdateResource($"{baseKey}_Description", model.CarouselDescriptionDE, "de-DE");
-    manageResourceService.AddOrUpdateResource($"{baseKey}_LinkText", model.CarouselLinkTextDE, "de-DE");
-
-    // FR Translations
-    manageResourceService.AddOrUpdateResource($"{baseKey}_Title", model.CarouselTitleFR, "fr-FR");
-    manageResourceService.AddOrUpdateResource($"{baseKey}_Description", model.CarouselDescriptionFR, "fr-FR");
-    manageResourceService.AddOrUpdateResource($"{baseKey}_LinkText", model.CarouselLinkTextFR, "fr-FR");
-
-    // in UpdateTranslations(...)
-    manageResourceService.AddOrUpdateResource($"{baseKey}_Title",       model.CarouselTitleAR,       "ar-SA");
-    manageResourceService.AddOrUpdateResource($"{baseKey}_Description", model.CarouselDescriptionAR, "ar-SA");
-    manageResourceService.AddOrUpdateResource($"{baseKey}_LinkText",    model.CarouselLinkTextAR,    "ar-SA");
-
-
-    Console.WriteLine($"[INFO] Updated translations for Carousel_{id}.");
-}
-
-
-        // POST: Delete Carousel
-        [HttpPost]
-        public async Task<IActionResult> CarouselDelete(int id)
-        {
-            Console.WriteLine($"[INFO] Starting deletion process for Carousel ID: {id}");
-
-            // Step 1: Retrieve the carousel
-            var carousel = await _carouselRepository.GetByIdAsync(id);
-            if (carousel == null)
-            {
-                Console.WriteLine($"[WARN] Carousel with ID {id} not found.");
-                TempData["ErrorMessage"] = "Carousel not found.";
-                return RedirectToAction("Carousels");
-            }
-
-            Console.WriteLine($"[INFO] Found Carousel - Title: {carousel.CarouselTitle}");
-
-            try
-            {
-                // Step 2: Delete associated files
-                DeleteFile(carousel.CarouselImage, "CarouselImage");
-                DeleteFile(carousel.CarouselImage600w, "CarouselImage600w");
-                DeleteFile(carousel.CarouselImage1200w, "CarouselImage1200w");
-
-                // Step 3: Delete translations
-                var baseKey = $"Carousel_{carousel.CarouselId}";
-
-                // Languages
-                string[] cultures = { "en-US", "tr-TR", "de-DE", "fr-FR","ar-SA" };
-                string[] keys = { "Title", "Description", "LinkText" };
-
-                foreach (var culture in cultures)
-                {
-                    foreach (var key in keys)
-                    {
-                        string resourceKey = $"{baseKey}_{key}";
-                        _manageResourceService.DeleteResource(resourceKey, culture);
-                        Console.WriteLine($"[INFO] Deleted translation: {resourceKey} in {culture}");
-                    }
-                }
-
-                // Step 4: Delete the carousel from the database
-                await _carouselRepository.DeleteAsync(id);
-                Console.WriteLine($"[INFO] Carousel with ID {id} deleted successfully!");
-
-                TempData["SuccessMessage"] = "Carousel deleted successfully!";
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ERROR] Failed to delete carousel with ID {id}. Exception: {ex.Message}");
-                TempData["ErrorMessage"] = "An error occurred while deleting the carousel.";
-            }
-
-            // Step 5: Redirect to the carousels page
-            Console.WriteLine("[INFO] Redirecting to Carousels page...");
-            return RedirectToAction("Carousels");
-        }
-
-        private void DeleteFile(string filePath, string fileType)
-        {
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                var fullPath = Path.Combine(_env.WebRootPath, "img", filePath.TrimStart('/'));
-                if (System.IO.File.Exists(fullPath))
-                {
-                    try
-                    {
-                        System.IO.File.Delete(fullPath);
-                        Console.WriteLine($"[INFO] Deleted {fileType} file: {fullPath}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"[ERROR] Failed to delete {fileType} file: {fullPath}. Exception: {ex.Message}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"[WARN] {fileType} file not found at: {fullPath}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"[INFO] No {fileType} file associated.");
-            }
-        }
-
-
-
-    // Helper to save files
-    private async Task<string> SaveFile(IFormFile file)
-    {
-        var uploadsFolder = Path.Combine(_env.WebRootPath, "img");
-        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-        var filePath = Path.Combine(uploadsFolder, fileName);
-
-        Directory.CreateDirectory(uploadsFolder);
-        using (var stream = new FileStream(filePath, FileMode.Create))
-        {
-            await file.CopyToAsync(stream);
-        }
-
-        return $"{fileName}";
-    }
-
-    private void DeleteFile(string fileUrl)
-    {
-        if (!string.IsNullOrEmpty(fileUrl))
-        {
-            var filePath = Path.Combine(_env.WebRootPath, fileUrl.TrimStart('/'));
-            if (System.IO.File.Exists(filePath))
-            {
-                System.IO.File.Delete(filePath);
-            }
-        }
-    }
-
-
-
-    #endregion
-
-    #region Products
-
-    public async Task<IActionResult> Products()
-        {
-            var products = await _productRepository.GetAllAsync();
-            return View(products);
-        }
-
-    [HttpGet]
-    public async Task<IActionResult> ProductCreate()
-    {
-        var categories = await _categoryRepository.GetAllAsync();
-        ViewBag.Categories = categories.Select(c => new SelectListItem
-                {
-                    Value = c.CategoryId.ToString(),
-                    Text = c.Name
-                }).ToList();
-        var availableLanguages = await Task.FromResult(new List<string> { "en-US", "de-DE", "fr-FR", "tr-TR", "ar-SA" });
-        ViewBag.AvailableLanguages = availableLanguages;
-        return View(new ProductCreateModel());
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ProductCreate(ProductCreateModel e)
-    {
-        if (!ModelState.IsValid)
-        {
-            ViewBag.Categories = (await _categoryRepository.GetAllAsync())
-                .Select(c => new SelectListItem {
-                Value = c.CategoryId.ToString(),
-                Text  = c.Name
-                }).ToList();
-            ViewBag.AvailableLanguages = new List<string> { "en-US", "de-DE", "fr-FR", "tr-TR", "ar-SA" };
-            return View(e);
-        }
-
-        // 1) build your entity
-        var product = new Product {
-            Name        = e.Name,
-            BodyNo      = e.BodyNo,
-            Url         = e.Url,
-            Upper       = e.Upper,
-            Lining      = e.Lining,
-            Protection  = e.Protection,
-            Brand       = e.Brand,
-            Standard    = e.Standard,
-            Midsole     = e.Midsole,
-            Insole      = e.Insole,
-            Certificate = e.Certificate,
-            Size        = e.Size,
-            Model       = e.Model,
-            Sole        = e.Sole,
-            Description = e.Description,
-            DateAdded   = DateTime.UtcNow,
-            CategoryId  = e.CategoryId
-        };
-
-        // 2) save *and* get back the populated ID
-        product = await _productRepository.CreateAsync(product);
-
-        if (product.ProductId <= 0)
-        {
-            TempData["AlertMessage"] = new AlertMessage {
-                Title     = "Error",
-                Message   = "Failed to create product. Product ID was not generated.",
-                AlertType = "danger",
-                icon      = "fas fa-bug",
-                icon2     = "fas fa-times"
+                { "fr-FR", "FR" },
+                { "en-US", "US" },
+                { "de-DE", "DE" },
+                { "tr-TR", "TR" },
+                { "ar-SA", "AR" }   // ensure Arabic uses “AR”, not “SA”
             };
-            return View(e);
-        }
 
-        // 3) now that ProductId is rock-solid, write all translations
-        AddProductTranslations(product.ProductId, e);
+            // The set of fields we translate
+            var fields = new[] { "Description", "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
 
-        TempData["SuccessMessage"] = "Product and translations created successfully!";
-        return RedirectToAction("Products");
-    }
-
-private void AddProductTranslations(int productId, ProductCreateModel model)
-{
-    // Map each culture code to its model-property suffix
-    var cultures = new Dictionary<string, string>
-    {
-        { "fr-FR", "FR" },
-        { "en-US", "US" },
-        { "de-DE", "DE" },
-        { "tr-TR", "TR" },
-        { "ar-SA", "AR" }   // ensure Arabic uses “AR”, not “SA”
-    };
-
-    // The set of fields we translate
-    var fields = new[] { "Description", "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
-
-    foreach (var (culture, suffix) in cultures)
-    {
-        foreach (var field in fields)
-        {
-            // e.g. model.DescriptionUS, model.UpperAR, etc.
-            var propName = field + suffix;
-            var prop     = model.GetType().GetProperty(propName);
-            var value    = prop?.GetValue(model) as string;
-
-            if (!string.IsNullOrWhiteSpace(value))
+            foreach (var (culture, suffix) in cultures)
             {
-                var resourceKey = $"Product_{productId}_{field}_{culture}";
-                _manageResourceService.AddOrUpdateResource(resourceKey, value, culture);
+                foreach (var field in fields)
+                {
+                    // e.g. model.DescriptionUS, model.UpperAR, etc.
+                    var propName = field + suffix;
+                    var prop     = model.GetType().GetProperty(propName);
+                    var value    = prop?.GetValue(model) as string;
+
+                    if (!string.IsNullOrWhiteSpace(value))
+                    {
+                        var resourceKey = $"Product_{productId}_{field}_{culture}";
+                        _resxService.AddOrUpdate(resourceKey, value, culture);
+                    }
+                }
             }
         }
-    }
-}
-
-    // Helper Method for Reflection
-    private string GetPropertyValue(object obj, string propName)
-    {
-        var property = obj.GetType().GetProperty(propName);
-        return property?.GetValue(obj)?.ToString() ?? string.Empty; // Ensure non-null return
-    }
 
 
-
-
-[HttpGet]
-public async Task<IActionResult> ProductEdit(int id)
-{
-    // Step 1: Fetch the product by ID with related data (Images, Categories)
-    var product = await _productRepository.GetByIdAsync(id);
-    if (product == null) return NotFound("Product not found.");
-
-    // Step 2: Populate the ProductEditModel with product fields
-    var model = new ProductEditModel
-    {
-        ProductId = product.ProductId,
-        Name = product.Name,
-        BodyNo = product.BodyNo,
-        Url = product.Url,
-        Upper = product.Upper,
-        Lining = product.Lining,
-        Protection = product.Protection,
-        Midsole = product.Midsole,
-        Insole = product.Insole,
-        Sole = product.Sole,
-        Description = product.Description,
-        CategoryId = product.CategoryId,
-
-        // Step 3: Populate Translations for all supported fields and cultures
-        DescriptionFR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Description_fr-FR", "fr-FR"),
-        UpperFR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Upper_fr-FR", "fr-FR"),
-        LiningFR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Lining_fr-FR", "fr-FR"),
-        ProtectionFR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Protection_fr-FR", "fr-FR"),
-        MidsoleFR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Midsole_fr-FR", "fr-FR"),
-        InsoleFR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Insole_fr-FR", "fr-FR"),
-        SoleFR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Sole_fr-FR", "fr-FR"),
-
-        DescriptionUS = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Description_en-US", "en-US"),
-        UpperUS = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Upper_en-US", "en-US"),
-        LiningUS = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Lining_en-US", "en-US"),
-        ProtectionUS = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Protection_en-US", "en-US"),
-        MidsoleUS = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Midsole_en-US", "en-US"),
-        InsoleUS = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Insole_en-US", "en-US"),
-        SoleUS = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Sole_en-US", "en-US"),
-
-        DescriptionDE = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Description_de-DE", "de-DE"),
-        UpperDE = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Upper_de-DE", "de-DE"),
-        LiningDE = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Lining_de-DE", "de-DE"),
-        ProtectionDE = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Protection_de-DE", "de-DE"),
-        MidsoleDE = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Midsole_de-DE", "de-DE"),
-        InsoleDE = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Insole_de-DE", "de-DE"),
-        SoleDE = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Sole_de-DE", "de-DE"),
-
-        DescriptionTR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Description_tr-TR", "tr-TR"),
-        UpperTR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Upper_tr-TR", "tr-TR"),
-        LiningTR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Lining_tr-TR", "tr-TR"),
-        ProtectionTR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Protection_tr-TR", "tr-TR"),
-        MidsoleTR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Midsole_tr-TR", "tr-TR"),
-        InsoleTR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Insole_tr-TR", "tr-TR"),
-        SoleTR = _manageResourceService.ReadResourceValue($"Product_{product.ProductId}_Sole_tr-TR", "tr-TR"),
-
-        DescriptionAR = _manageResourceService.ReadResourceValue($"Product_{id}_Description_ar-SA", "ar-SA"),
-        UpperAR       = _manageResourceService.ReadResourceValue($"Product_{id}_Upper_ar-SA",       "ar-SA"),
-        LiningAR      = _manageResourceService.ReadResourceValue($"Product_{id}_Lining_ar-SA",      "ar-SA"),
-        ProtectionAR  = _manageResourceService.ReadResourceValue($"Product_{id}_Protection_ar-SA",  "ar-SA"),
-        MidsoleAR     = _manageResourceService.ReadResourceValue($"Product_{id}_Midsole_ar-SA",     "ar-SA"),
-        InsoleAR      = _manageResourceService.ReadResourceValue($"Product_{id}_Insole_ar-SA",      "ar-SA"),
-        SoleAR        = _manageResourceService.ReadResourceValue($"Product_{id}_Sole_ar-SA",        "ar-SA"),
-
-        // Step 4: Populate Selected Categories, Images, and Blogs
-        CategoryIds = product.ProductCategories?.Select(pc => pc.CategoryId).ToList() ?? new List<int>(),
-        ImageIds = product.ProductImages?.Select(pi => pi.ImageId).ToList() ?? new List<int>(),
-        BlogIds = product.ProductBlogs?.Select(pb => pb.BlogId).ToList() ?? new List<int>(),
-
-        // Fetch available data
-        AvailableImages = await _imageRepository.GetAllAsync(),
-        AvailableCategories = await _categoryRepository.GetAllAsync(),
-        AvailableBlogs = (await _blogRepository.GetAllAsync())
-                            .Select(b => new SelectListItem
-                            {
-                                Value = b.BlogId.ToString(),
-                                Text = b.Title // Replace 'Title' with the correct property name
-                            }).ToList(),
-
-        // Step 6: Populate Current Images
-        CurrentImages = product.ProductImages?
-              .Where(pi => pi.Image != null)
-              .Select(pi => pi.Image)
-              .ToList() ?? new List<Image>()
-    };
-
-    return View(model);
-}
-
-
-
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> ProductEdit(ProductEditModel e)
-{
-    Console.WriteLine($"[START] ProductEdit: Processing product ID {e.ProductId}");
-
-    if (e.ProductId <= 0 || !ModelState.IsValid)
-    {
-        Console.WriteLine("[ERROR] Invalid product ID or invalid model state.");
-        e.CurrentImages = await _imageRepository.GetImagesByProductIdAsync(e.ProductId);
-        e.AvailableImages = await _imageRepository.GetAllAsync();
-        e.AvailableCategories = await _categoryRepository.GetAllAsync();
-        e.AvailableBlogs = (await _blogRepository.GetAllAsync())
-                            .Select(b => new SelectListItem
-                            {
-                                Value = b.BlogId.ToString(),
-                                Text = b.Title
-                            }).ToList();
-        return View(e);
-    }
-
-    var product = await _productRepository.GetByIdAsync(e.ProductId);
-    if (product == null)
-    {
-        Console.WriteLine($"[ERROR] Product with ID {e.ProductId} not found.");
-        return NotFound();
-    }
-
-    // Update Product Details
-    product.Name = e.Name;
-    product.Description = e.Description;
-    product.Url = e.Url;
-    product.BodyNo = e.BodyNo;
-    product.Upper = e.Upper;
-    product.Lining = e.Lining;
-    product.Protection = e.Protection;
-    product.Midsole = e.Midsole;
-    product.Insole = e.Insole;
-    product.Sole = e.Sole;
-
-    // Update Categories
-    product.ProductCategories.Clear();
-    if (e.CategoryIds != null)
-    {
-        foreach (var categoryId in e.CategoryIds)
+        private void UpdateTranslations(int id, CarouselEditModel model)
         {
-            product.ProductCategories.Add(new ProductCategory
+            var baseKey = $"Carousel_{id}";
+            var translations = new Dictionary<string, (string Title, string Desc, string LinkText)> {
+                { "en-US", (model.CarouselTitleUS, model.CarouselDescriptionUS, model.CarouselLinkTextUS) },
+                { "tr-TR", (model.CarouselTitleTR, model.CarouselDescriptionTR, model.CarouselLinkTextTR) },
+                { "de-DE", (model.CarouselTitleDE, model.CarouselDescriptionDE, model.CarouselLinkTextDE) },
+                { "fr-FR", (model.CarouselTitleFR, model.CarouselDescriptionFR, model.CarouselLinkTextFR) },
+                { "ar-SA", (model.CarouselTitleAR, model.CarouselDescriptionAR, model.CarouselLinkTextAR) },
+            };
+
+            foreach (var kvp in translations)
             {
-                ProductId = product.ProductId,
-                CategoryId = categoryId
-            });
-        }
-    }
+                var culture = kvp.Key;
+                var (title, desc, linkText) = kvp.Value;
 
-    // Update Images
-    product.ProductImages.Clear();
-    if (e.ImageIds != null)
-    {
-        foreach (var imageId in e.ImageIds)
-        {
-            product.ProductImages.Add(new ProductImage
-            {
-                ProductId = product.ProductId,
-                ImageId = imageId
-            });
-        }
-
-    }
-
-    // Update Blogs
-    product.ProductBlogs.Clear();
-    if (e.BlogIds != null)
-    {
-        foreach (var blogId in e.BlogIds)
-        {
-            product.ProductBlogs.Add(new ProductBlog
-            {
-                ProductId = product.ProductId,
-                BlogId = blogId
-            });
-        }
-
-    }
-
-    // Update Translations
-    UpdateProductTranslations(e, product.ProductId);
-
-    // Save Changes
-    await _productRepository.UpdateAsync(product);
-    Console.WriteLine($"[SUCCESS] Product ID {e.ProductId} updated successfully.");
-
-    TempData["SuccessMessage"] = "Product updated successfully!";
-    return RedirectToAction("Products");
-}
-
-    /// <summary>
-    /// Updates translations for the product using dynamic properties.
-    /// </summary>
-private void UpdateProductTranslations(ProductEditModel model, int productId)
-{
-    // Same culture → suffix mapping as above
-    var cultures = new Dictionary<string, string>
-    {
-        { "fr-FR", "FR" },
-        { "en-US", "US" },
-        { "de-DE", "DE" },
-        { "tr-TR", "TR" },
-        { "ar-SA", "AR" }
-    };
-
-    var fields = new[] { "Description", "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
-
-    foreach (var (culture, suffix) in cultures)
-    {
-        foreach (var field in fields)
-        {
-            var propName = field + suffix;
-            var prop     = model.GetType().GetProperty(propName);
-            var value    = prop?.GetValue(model) as string;
-
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                var resourceKey = $"Product_{productId}_{field}_{culture}";
-                _manageResourceService.AddOrUpdateResource(resourceKey, value, culture);
+                if (!string.IsNullOrWhiteSpace(title))
+                    _resxService.AddOrUpdate($"{baseKey}_Title", title, culture);
+                if (!string.IsNullOrWhiteSpace(desc))
+                    _resxService.AddOrUpdate($"{baseKey}_Description", desc, culture);
+                if (!string.IsNullOrWhiteSpace(linkText))
+                    _resxService.AddOrUpdate($"{baseKey}_LinkText", linkText, culture);
             }
         }
-    }
-}
-
-
-
-[HttpPost]
-public async Task<IActionResult> ProductDelete(int id)
-{
-    using var transaction = await _dbContext.Database.BeginTransactionAsync();
-
-    try
-    {
-        // Step 1: Delete translations first
-        DeleteProductTranslations(id); // Ensure translations are removed before the product
-
-        // Step 2: Delete product categories and images
-        var product = await _productRepository.GetByIdAsync(id);
-
-        if (product != null)
+        /// <summary>
+        /// Updates translations for the product using dynamic properties and resx service.
+        /// </summary>
+        private void UpdateProductTranslations(ProductEditModel model, int productId)
         {
-            product.ProductCategories.Clear();
-            product.ProductImages.Clear();
-            await _productRepository.UpdateAsync(product); // Save changes before deleting
+            var cultures = new Dictionary<string, string>
+            {
+                { "fr-FR", "FR" },
+                { "en-US", "US" },
+                { "de-DE", "DE" },
+                { "tr-TR", "TR" },
+                { "ar-SA", "AR" }
+            };
+
+            var fields = new[] { "Description", "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
+
+            foreach (var (culture, suffix) in cultures)
+            {
+                foreach (var field in fields)
+                {
+                    var propName = field + suffix;
+                    var prop     = model.GetType().GetProperty(propName);
+
+                    if (prop == null)
+                    {
+                        Console.WriteLine($"[WARN] Property '{propName}' not found on model.");
+                        continue;
+                    }
+
+                    var value = prop.GetValue(model) as string;
+
+                    if (!string.IsNullOrWhiteSpace(value))
+                    {
+                        var resourceKey = $"Product_{productId}_{field}_{culture}";
+                        _resxService.AddOrUpdate(resourceKey, value, culture);
+                        Console.WriteLine($"[INFO] Updated translation: {resourceKey} => {value}");
+                    }
+                }
+            }
         }
-
-        // Step 3: Delete the product
-        await _productRepository.DeleteAsync(id);
-
-        // Commit transaction if all operations succeed
-        await transaction.CommitAsync();
-
-        TempData["SuccessMessage"] = "Product and its translations were successfully deleted.";
-        return RedirectToAction("Products");
-    }
-    catch (Exception ex)
-    {
-        // Rollback transaction on failure
-        await transaction.RollbackAsync();
-        Console.WriteLine($"Failed to delete product: {ex.Message}");
-
-        TempData["ErrorMessage"] = "Failed to delete product. Please try again.";
-        return RedirectToAction("Products");
-    }
-}
 
 
         /// <summary>
         /// Deletes all translations for a given product based on its ID.
         /// </summary>
         /// <param name="productId">The ID of the product whose translations will be deleted.</param>
-private void DeleteProductTranslations(int productId)
-{
-    var cultures = new[] { "fr-FR", "en-US", "de-DE", "tr-TR","ar-SA" };
-    var fields = new[] { "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
-
-    foreach (var culture in cultures)
-    {
-        foreach (var field in fields)
+        private void DeleteProductTranslations(int productId)
         {
-            var resourceKey = $"Product_{productId}_{field}_{culture}";
-            try
+            var cultures = new[] { "fr-FR", "en-US", "de-DE", "tr-TR", "ar-SA" };
+            var fields = new[] { "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
+
+            foreach (var culture in cultures)
             {
-                // Check if the resource exists before attempting deletion
-                var value = _manageResourceService.ReadResourceValue(resourceKey, culture);
-                if (!string.IsNullOrWhiteSpace(value))
+                foreach (var field in fields)
                 {
-                    _manageResourceService.DeleteResource(resourceKey, culture);
-                    Console.WriteLine($"Deleted translation: {resourceKey}");
+                    var key = $"Product_{productId}_{field}_{culture}";
+                    if (_resxService.Exists(key, culture))
+                    {
+                        try
+                        {
+                            _resxService.Delete(key, culture);
+                            Console.WriteLine($"[INFO] Deleted translation: {key}");
+                        }
+                        catch (IOException ioEx)
+                        {
+                            Console.WriteLine($"[WARN] Could not delete {key} due to file lock: {ioEx.Message}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[ERROR] Failed to delete {key}: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[SKIP] No resource found for {key}");
+                    }
                 }
-                else
-                {
-                    Console.WriteLine($"Skipping deletion: Resource {resourceKey} not found.");
-                }
-            }
-            catch (IOException ioEx)
-            {
-                // Handle file locking issues
-                Console.WriteLine($"File is locked for resource {resourceKey}: {ioEx.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to delete translation for {resourceKey}: {ex.Message}");
             }
         }
-    }
-}
-private void SafeDeleteResource(string key, string culture)
-{
-    int retries = 3;
-
-    while (retries > 0)
-    {
-        try
-        {
-            _manageResourceService.DeleteResource(key, culture);
-            Console.WriteLine($"Deleted resource: {key} in {culture}");
-            break; // Exit loop if successful
-        }
-        catch (IOException ex)
-        {
-            Console.WriteLine($"Retrying deletion for {key}. Attempt {3 - retries + 1}: {ex.Message}");
-            Thread.Sleep(500); // Wait before retrying
-            retries--;
-        }
-    }
-
-    if (retries == 0)
-    {
-        Console.WriteLine($"Failed to delete {key} after 3 attempts.");
-    }
-}
 
 
-        #endregion
-
-
-
-#region Localization Management
         [HttpGet]
         public IActionResult Localization(string lang = "de-DE")
         {
-            var resxPath = GetResxPath(lang);
-            var translations = LoadTranslations(resxPath);
-
+            var translations = _resxService.LoadAll(lang);
             ViewBag.CurrentLanguage = lang;
-            ViewBag.AvailableLanguages = new List<string> { "de-DE", "en-US", "fr-FR", "tr-TR", "ar-SA" };
+            ViewBag.AvailableLanguages = _resxService.GetAvailableLanguages();
             return View(translations);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditTranslation(string name, string value,
-                                            string comment, string lang)
+        public IActionResult EditTranslation(string name, string value, string comment, string lang)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                if (string.IsNullOrEmpty(name))
+                    return Json(new { success = false, message = "Key is missing." });
+
+                var result = _resxService.AddOrUpdate(name, value, lang, comment);
+                if (!result)
+                    return Json(new { success = false, message = "Update failed." });
+
+                return Json(new { success = true, message = "Translation updated successfully." });
+            }
+
+            // Eski yol - form gönderimiyse redirect yap
+            if (string.IsNullOrEmpty(name))
+                return RedirectToAction(nameof(Localization), new { lang, e = "KeyMissing" });
+
+            var success = _resxService.AddOrUpdate(name, value, lang, comment);
+            if (!success)
+                return RedirectToAction(nameof(Localization), new { lang, e = "UpdateFailed" });
+
+            TempData["Success"] = "Translation updated ✔";
+            return RedirectToAction(nameof(Localization), new { lang });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteTranslation(string name, string lang)
         {
             if (string.IsNullOrEmpty(name))
                 return RedirectToAction(nameof(Localization), new { lang, e = "KeyMissing" });
 
-            var resxPath = GetResxPath(lang);
-            if (!System.IO.File.Exists(resxPath))
-                return RedirectToAction(nameof(Localization), new { lang, e = "FileMissing" });
+            var result = _resxService.Delete(name, lang);
+            if (!result)
+                return RedirectToAction(nameof(Localization), new { lang, e = "DeleteFailed" });
 
-            var resx = XDocument.Load(resxPath);
-            var data = resx.Root?
-                    .Elements("data")
-                    .FirstOrDefault(x => x.Attribute("name")?.Value == name);
-
-            if (data is null)
-                return RedirectToAction(nameof(Localization), new { lang, e = "KeyNotFound" });
-
-            data.SetElementValue("value",  value  ?? string.Empty);
-            data.SetElementValue("comment", comment ?? string.Empty);
-            resx.Save(resxPath);
-            _dynamicResourceService.ReloadResources();
-            TempData["Success"] = "Translation updated ✔";     // razor’da gösterin
+            TempData["Success"] = "Translation deleted ✔";
             return RedirectToAction(nameof(Localization), new { lang });
         }
 
-        private string GetResxPath(string lang)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddTranslation(string name, string value, string comment, string lang)
         {
-            var fileName = $"SharedResource.{lang}.resx";
-            return Path.Combine(Directory.GetCurrentDirectory(), "Resources", fileName);
+            if (string.IsNullOrEmpty(name))
+                return RedirectToAction(nameof(Localization), new { lang, e = "KeyMissing" });
+
+            if (_resxService.Exists(name, lang))
+                return RedirectToAction(nameof(Localization), new { lang, e = "KeyExists" });
+
+            var result = _resxService.AddOrUpdate(name, value, lang, comment);
+            if (!result)
+                return RedirectToAction(nameof(Localization), new { lang, e = "AddFailed" });
+
+            TempData["Success"] = "Translation added ✔";
+            return RedirectToAction(nameof(Localization), new { lang });
         }
 
-        private List<LocalizationModel> LoadTranslations(string resxPath)
-        {
-            var resxFile = XDocument.Load(resxPath);
-
-            // Check if root is null
-            if (resxFile.Root == null)
-                return new List<LocalizationModel>();
-
-            return resxFile.Root.Elements("data")
-                .Select(x => new LocalizationModel
-                {
-                    Key = x.Attribute("name")?.Value ?? "N/A",
-                    Value = x.Element("value")?.Value ?? "N/A",
-                    Comment = x.Element("comment")?.Value ?? "N/A"
-                })
-                .ToList();
-        }
         #endregion
+
+
 
 
 #region Users
@@ -1265,74 +1202,95 @@ public async Task<IActionResult> UserEdit(UserEditModel model)
 #region  üyelik şifre değiştirme
 [HttpGet]
 [AllowAnonymous]
-public IActionResult Register(string token, string email, string expiration)
+public async Task<IActionResult> Register(string token, string email, string expiration)
 {
-    if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(expiration))
+    if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(expiration))
     {
-        return BadRequest("Invalid invitation link.");
+        return Forbid(); // Missing required parameters
     }
 
     if (!DateTime.TryParse(expiration, out var expirationDate) || DateTime.UtcNow > expirationDate)
     {
-        return BadRequest("This invitation has expired.");
+        return BadRequest("This invitation link has expired.");
     }
 
-    var model = new RegisterModel { Email = email };
+    var user = await _userManager.FindByEmailAsync(email);
+    if (user == null)
+    {
+        return NotFound("User not found.");
+    }
+
+    var isValid = await _userManager.VerifyUserTokenAsync(user, TokenOptions.DefaultProvider, "InviteUser", token);
+    if (!isValid)
+    {
+        return BadRequest("This invitation token is invalid or has already been used.");
+    }
+
+    // Show the registration form
+    var model = new RegisterModel
+    {
+        Email = email
+    };
+    ViewBag.Token = token;
+    ViewBag.Expiration = expiration;
+
     return View(model);
 }
 
 [HttpPost]
 [AllowAnonymous]
 [ValidateAntiForgeryToken]
-public async Task<IActionResult> Register(RegisterModel model)
+public async Task<IActionResult> Register(RegisterModel model, string token, string expiration)
 {
     if (!ModelState.IsValid)
     {
-        TempData["ErrorMessage"] = "Invalid form data. Please check your inputs.";
         return View(model);
     }
 
-    // Check for existing user
+    if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(expiration))
+    {
+        return Forbid();
+    }
+
+    if (!DateTime.TryParse(expiration, out var expirationDate) || DateTime.UtcNow > expirationDate)
+    {
+        return BadRequest("This invitation link has expired.");
+    }
+
     var user = await _userManager.FindByEmailAsync(model.Email);
     if (user == null)
     {
-        TempData["ErrorMessage"] = "Invalid invitation. User does not exist.";
-        return RedirectToAction("Login", "Admin");
+        return NotFound("User not found.");
     }
 
-    if (user.EmailConfirmed)
+    var isValid = await _userManager.VerifyUserTokenAsync(user, TokenOptions.DefaultProvider, "InviteUser", token);
+    if (!isValid)
     {
-        TempData["ErrorMessage"] = "This invitation has already been used.";
-        return RedirectToAction("Login", "Admin");
+        return BadRequest("Invalid or used invitation token.");
     }
 
-    // Update user details
-    user.UserName = model.UserName;
-    user.FirstName = model.FirstName;
-    user.LastName = model.LastName;
-
-    // Remove any existing password to avoid conflicts
-    var removePasswordResult = await _userManager.RemovePasswordAsync(user);
-    if (!removePasswordResult.Succeeded)
+    // Set the new password
+    var passwordResult = await _userManager.RemovePasswordAsync(user);
+    if (!passwordResult.Succeeded)
     {
-        AddErrors(removePasswordResult);
+        ModelState.AddModelError("", "Failed to reset temporary password.");
         return View(model);
     }
 
-    // Set a new password for the user
-    var addPasswordResult = await _userManager.AddPasswordAsync(user, model.Password);
-    if (!addPasswordResult.Succeeded)
+    var result = await _userManager.AddPasswordAsync(user, model.Password);
+    if (!result.Succeeded)
     {
-        AddErrors(addPasswordResult);
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError("", error.Description);
+        }
         return View(model);
     }
 
-    // Confirm email to finalize registration
-    user.EmailConfirmed = true;
-    await _userManager.UpdateAsync(user);
+    await _signInManager.SignInAsync(user, isPersistent: false);
 
-    TempData["SuccessMessage"] = "Registration completed successfully! You can now log in.";
-    return RedirectToAction("Login", "Admin");
+    TempData["SuccessMessage"] = "Registration completed successfully.";
+    return RedirectToAction("Dashboard", "Admin");
 }
 
 private void AddErrors(IdentityResult result)
@@ -1664,33 +1622,6 @@ private void AddErrors(IdentityResult result)
 
 
 #region Blog Management
-
-
-private void DeleteUnusedImages(Blog blog, List<string> usedImagePaths)
-{
-    // Paths for images
-    string imgPath = Path.Combine(_env.WebRootPath, "blog", "img");
-    string gifPath = Path.Combine(_env.WebRootPath, "blog", "gif");
-
-    // Check for old images not used anymore
-    string[] imgFiles = Directory.GetFiles(imgPath);
-    string[] gifFiles = Directory.GetFiles(gifPath);
-
-    // Merge files
-    var allFiles = imgFiles.Concat(gifFiles).ToList();
-
-    foreach (var file in allFiles)
-    {
-        string relativePath = file.Replace(_env.WebRootPath, "").Replace("\\", "/").TrimStart('/');
-        if (!usedImagePaths.Contains(relativePath))
-        {
-            System.IO.File.Delete(file);
-            Console.WriteLine($"[DEBUG] Deleted unused image: {file}");
-        }
-    }
-}
-
-
 private string ProcessContentImagesForEdit(string content)
 {
     string imgPath = "/blog/img/";
@@ -1832,115 +1763,6 @@ public async Task<IActionResult> UploadFile(IFormFile upload, string blogId)
     return Json(new { uploaded = true, url = tempUrl });
 }
 
-private string MoveImagesAndFixPaths(string content, int blogId)
-{
-    string tempPath = Path.Combine(_env.WebRootPath, "temp");
-    string imgPath = Path.Combine(_env.WebRootPath, "blog", "img");
-    string gifPath = Path.Combine(_env.WebRootPath, "blog", "gif");
-
-    // Ensure directories exist
-    Directory.CreateDirectory(imgPath);
-    Directory.CreateDirectory(gifPath);
-
-    // Find all image src attributes in the content
-    var matches = System.Text.RegularExpressions.Regex.Matches(content, @"src=[""'](?<url>/temp/.*?\.(jpg|jpeg|png|gif))[""']");
-    foreach (System.Text.RegularExpressions.Match match in matches)
-    {
-        string tempUrl = match.Groups["url"].Value; // Example: /temp/image123.gif
-        string tempFilePath = Path.Combine(_env.WebRootPath, tempUrl.TrimStart('/'));
-
-        // Move file if it exists
-        if (System.IO.File.Exists(tempFilePath))
-        {
-            string fileName = Path.GetFileName(tempFilePath);
-            string fileExtension = Path.GetExtension(fileName).ToLower();
-
-            // Determine destination folder based on file extension
-            string targetPath = fileExtension == ".gif"
-                ? Path.Combine(gifPath, fileName)
-                : Path.Combine(imgPath, fileName);
-
-            if (!System.IO.File.Exists(targetPath))
-            {
-                System.IO.File.Move(tempFilePath, targetPath);
-                Console.WriteLine($"[DEBUG] Moved image: {tempFilePath} -> {targetPath}");
-            }
-
-            // Replace temp URL with the final URL in the content
-            string finalUrl = $"/blog/{(fileExtension == ".gif" ? "gif" : "img")}/{fileName}";
-            content = content.Replace(tempUrl, finalUrl);
-        }
-        else
-        {
-            Console.WriteLine($"[WARNING] Temp image not found: {tempFilePath}");
-        }
-    }
-
-    return content; // Return processed content with updated paths
-}
-
-
-
-private void SaveContentToResx(BlogCreateModel model , int id)
-{
-    // Supported languages and their codes
-    string[] cultures = { "en-US", "tr-TR", "de-DE", "fr-FR","ar-SA" };
-    string[] titles = { model.TitleUS, model.TitleTR, model.TitleDE, model.TitleFR,model.TitleAR };
-    string[] contents = { model.ContentUS, model.ContentTR, model.ContentDE, model.ContentFR ,model.ContentAR };
-
-    // Process each translation
-    for (int i = 0; i < cultures.Length; i++)
-    {
-        string culture = cultures[i];  // Language code
-        string title = titles[i];      // Language-specific title
-        string content = contents[i]; // Already processed content
-
-        // Save translations to .resx
-        _manageResourceService.AddOrUpdateResource($"Title_{id}_{model.Url}_{culture.Substring(0, 2).ToLower()}", title, culture);
-        _manageResourceService.AddOrUpdateResource($"Content_{id}_{model.Url}_{culture.Substring(0, 2).ToLower()}", content, culture);
-
-        Console.WriteLine($"[DEBUG] Translation saved for {culture} with updated image paths.");
-    }
-
-    Console.WriteLine("[DEBUG] All translations updated successfully.");
-}
-
-
-private void SaveContentToResxEdit(BlogResultModel model, string updatedContent, int id)
-{
-    // Supported languages and their codes
-    string[] cultures = { "en-US", "tr-TR", "de-DE", "fr-FR", "ar-SA" };
-    string[] langCodes = { "en", "tr", "de", "fr", "ar" };
-    string[] titles = { model.TitleUS, model.TitleTR, model.TitleDE, model.TitleFR, model.TitleAR };
-    string[] contents = { model.ContentUS, model.ContentTR, model.ContentDE, model.ContentFR, model.ContentAR };
-
-    if (cultures.Length != titles.Length || titles.Length != contents.Length)
-    {
-        Console.WriteLine("[ERROR] Mismatched array lengths for cultures, titles, and contents.");
-        return;
-    }
-
-    // Process each translation
-    for (int i = 0; i < cultures.Length; i++)
-    {
-        string culture = cultures[i];
-        string langCode = langCodes[i]; // Language code for key
-        string title = titles[i];
-        string content = contents[i];
-
-        // Process images in translations
-        string processedContent = ProcessContentImagesForEdit(content);
-
-        // Save translations to .resx
-        _manageResourceService.AddOrUpdateResource($"Title_{id}_{model.Url}_{langCode}", title, culture);
-        _manageResourceService.AddOrUpdateResource($"Content_{id}_{model.Url}_{langCode}", processedContent, culture);
-
-        Console.WriteLine($"[DEBUG] Translation saved for {culture} with updated image paths.");
-    }
-
-    Console.WriteLine("[DEBUG] All translations updated successfully.");
-}
-
 private List<string> ExtractImagesFromTranslations(int blogId, string url)
 {
     List<string> imagePaths = new();
@@ -1956,13 +1778,16 @@ private List<string> ExtractImagesFromTranslations(int blogId, string url)
     foreach (var culture in cultures)
     {
         string contentKey = $"Content_{blogId}_{url}_{culture.Value}";
-        string translationContent = _manageResourceService.ReadResourceValue(contentKey, culture.Key);
+        
+        // Fetch the translation content using ResxResourceService
+        string? translationContent = _resxService.Read(contentKey, culture.Key);
 
         if (!string.IsNullOrEmpty(translationContent))
         {
             var matches = System.Text.RegularExpressions.Regex.Matches(
                 translationContent,
                 @"src=[""'](?<url>/blog/(img|gif)/.*?\.(jpg|jpeg|png|gif))[""']");
+
             foreach (System.Text.RegularExpressions.Match match in matches)
             {
                 imagePaths.Add(match.Groups["url"].Value.TrimStart('/'));
@@ -2013,98 +1838,6 @@ private async Task DeleteOrphanedImages()
 }
 
 
-private void DeleteImages(Blog blog)
-{
-    // Paths for image storage
-    string imgPath = Path.Combine(_env.WebRootPath, "blog", "img");
-    string gifPath = Path.Combine(_env.WebRootPath, "blog", "gif");
-    string coverPath = Path.Combine(_env.WebRootPath, "img");
-
-    // 1. Delete Cover Image
-    if (!string.IsNullOrEmpty(blog.Image))
-    {
-        string coverImagePath = Path.Combine(coverPath, blog.Image);
-        if (System.IO.File.Exists(coverImagePath))
-        {
-            System.IO.File.Delete(coverImagePath);
-            Console.WriteLine($"[DEBUG] Deleted cover image: {coverImagePath}");
-        }
-        else
-        {
-            Console.WriteLine($"[WARNING] Cover image not found: {coverImagePath}");
-        }
-    }
-
-    // 2. Delete Embedded Images in Content and Translations
-    // Supported cultures and keys
-    var cultures = new Dictionary<string, string>
-    {
-        { "en-US", "en" },
-        { "tr-TR", "tr" },
-        { "de-DE", "de" },
-        { "fr-FR", "fr" },
-        { "ar-SA", "ar" }
-    };
-
-    // Track deleted images to avoid multiple deletions
-    HashSet<string> deletedImages = new HashSet<string>();
-
-    // Iterate through each translation and process its images
-    foreach (var culture in cultures)
-    {
-        // Generate translation content key
-        string contentKey = $"Content_{blog.BlogId}_{blog.Url}_{culture.Value}";
-
-        // Read the content from .resx
-        string translationContent = _manageResourceService.ReadResourceValue(contentKey, culture.Key);
-
-        if (string.IsNullOrEmpty(translationContent))
-        {
-            Console.WriteLine($"[WARNING] No content found for key {contentKey} in culture {culture.Key}");
-            continue;
-        }
-
-        // Extract all image URLs using Regex
-        var matches = System.Text.RegularExpressions.Regex.Matches(
-            translationContent,
-            @"src=[""'](?<url>/blog/(img|gif)/.*?\.(jpg|jpeg|png|gif))[""']");
-
-        // Process each image
-        foreach (System.Text.RegularExpressions.Match match in matches)
-        {
-            string imageUrl = match.Groups["url"].Value; // e.g., /blog/img/example1.jpg
-            string imagePath = Path.Combine(_env.WebRootPath, imageUrl.TrimStart('/')); // Get full path
-
-            // Skip if already deleted
-            if (deletedImages.Contains(imagePath))
-            {
-                continue; // Avoid duplicate deletions
-            }
-
-            if (System.IO.File.Exists(imagePath))
-            {
-                try
-                {
-                    System.IO.File.Delete(imagePath); // Delete file
-                    deletedImages.Add(imagePath);    // Track deleted image
-                    Console.WriteLine($"[DEBUG] Deleted embedded image: {imagePath}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[ERROR] Failed to delete image {imagePath}: {ex.Message}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"[WARNING] Embedded image not found: {imagePath}");
-            }
-        }
-    }
-
-    Console.WriteLine("[DEBUG] All images related to the blog and translations deleted.");
-}
-
-
 
 private List<string> ExtractImagePathsFromContent(string content)
 {
@@ -2122,56 +1855,6 @@ private List<string> ExtractImagePathsFromContent(string content)
     return imagePaths;
 }
 
-
-private void DeleteTranslations(int id, string url)
-{
-    // Supported languages and their culture codes
-    var cultures = new Dictionary<string, string>
-    {
-        { "en-US", "en" },
-        { "tr-TR", "tr" },
-        { "de-DE", "de" },
-        { "fr-FR", "fr" },
-        { "ar-SA", "ar" }
-    };
-
-    // Loop through each culture and delete its translations
-    foreach (var culture in cultures)
-    {
-        string cultureCode = culture.Value; // 'en', 'tr', etc.
-        string lang = culture.Key;         // 'en-US', 'tr-TR', etc.
-
-        // Construct keys with culture suffix
-        string titleKey = $"Title_{id}_{url}_{cultureCode}";
-        string contentKey = $"Content_{id}_{url}_{cultureCode}";
-
-        // Delete resources for the current language
-        _manageResourceService.DeleteResource(titleKey, lang);
-        _manageResourceService.DeleteResource(contentKey, lang);
-
-        Console.WriteLine($"[DEBUG] Deleted translations for Blog ID {id} in culture {lang}");
-    }
-}
-
-private void DeleteUnusedImages(List<string> unusedImages)
-{
-    foreach (var imgPath in unusedImages)
-    {
-        string fullPath = Path.Combine(_env.WebRootPath, imgPath.TrimStart('/'));
-        if (System.IO.File.Exists(fullPath))
-        {
-            System.IO.File.Delete(fullPath);
-            Console.WriteLine($"[DEBUG] Deleted unused image: {fullPath}");
-        }
-        else
-        {
-            Console.WriteLine($"[WARNING] File not found: {fullPath}");
-        }
-    }
-}
-
-
-
 #endregion
 
 #region Blog
@@ -2186,9 +1869,11 @@ public async Task<IActionResult> BlogCreate(BlogCreateModel model)
 {
     if (!ModelState.IsValid)
     {
+        if (string.IsNullOrWhiteSpace(model.Url))
+            throw new InvalidOperationException("URL boş olamaz. Blog için benzersiz bir URL gerekli.");
+
         Console.WriteLine("[ERROR] BlogCreate model validation failed.");
 
-        // Re-populate ViewBag in case of validation errors
         var categories = await _categoryRepository.GetAllAsync();
         var products = await _productRepository.GetAllAsync();
 
@@ -2207,52 +1892,45 @@ public async Task<IActionResult> BlogCreate(BlogCreateModel model)
         return View(model);
     }
 
-    // Define paths
     string tempPath = Path.Combine(_env.WebRootPath, "temp");
     string imgPath = Path.Combine(_env.WebRootPath, "blog", "img");
     string gifPath = Path.Combine(_env.WebRootPath, "blog", "gif");
     string coverPath = Path.Combine(_env.WebRootPath, "img");
 
-    // Ensure directories exist
     Directory.CreateDirectory(tempPath);
     Directory.CreateDirectory(imgPath);
     Directory.CreateDirectory(gifPath);
     Directory.CreateDirectory(coverPath);
 
-    // Map all files in temp folder
     var fileMappings = new Dictionary<string, string>();
     foreach (string file in Directory.GetFiles(tempPath))
     {
         string fileName = Path.GetFileName(file);
         string fileExtension = Path.GetExtension(file).ToLower();
 
-        // Determine destination folder
         string destination = fileExtension == ".gif"
             ? Path.Combine(gifPath, fileName)
             : Path.Combine(imgPath, fileName);
 
-        // Move file if it doesn't already exist
         if (!System.IO.File.Exists(destination))
         {
             System.IO.File.Move(file, destination);
             Console.WriteLine($"[DEBUG] Moved content image: {fileName}");
         }
 
-        // Map the file for later replacements
         string tempUrl = $"/temp/{fileName}";
         string finalUrl = $"/blog/{(fileExtension == ".gif" ? "gif" : "img")}/{fileName}";
         fileMappings[tempUrl] = finalUrl;
     }
 
-    // Process main content and translations
     string updatedContent = ProcessContentImages(model.Content, fileMappings);
     string updatedContentUS = ProcessContentImages(model.ContentUS, fileMappings);
     string updatedContentTR = ProcessContentImages(model.ContentTR, fileMappings);
     string updatedContentDE = ProcessContentImages(model.ContentDE, fileMappings);
     string updatedContentFR = ProcessContentImages(model.ContentFR, fileMappings);
     string updatedContentAR = ProcessContentImages(model.ContentAR, fileMappings);
-    // Handle Cover Image
-    string coverFileName = null!;
+
+    string coverFileName = string.Empty;
     if (model.ImageFile != null && model.ImageFile.Length > 0)
     {
         coverFileName = $"{model.Url}_cover{Path.GetExtension(model.ImageFile.FileName)}";
@@ -2266,7 +1944,6 @@ public async Task<IActionResult> BlogCreate(BlogCreateModel model)
         Console.WriteLine($"[DEBUG] Saved cover image: {coverFileName}");
     }
 
-    // Create Blog Entity
     var blog = new Blog
     {
         Title = model.Title,
@@ -2276,48 +1953,32 @@ public async Task<IActionResult> BlogCreate(BlogCreateModel model)
         Date = DateTime.Now,
         Author = model.Author,
         RawYT = model.RawYT,
-        RawMaps = model.RawMaps
+        RawMaps = model.RawMaps,
+        CategoryBlogs = model.SelectedCategoryIds.Select(id => new CategoryBlog { CategoryId = id }).ToList(),
+        ProductBlogs = model.SelectedProductIds.Select(id => new ProductBlog { ProductId = id }).ToList()
     };
 
-        // Add selected categories
-        foreach (var categoryId in model.SelectedCategoryIds)
-        {
-            blog.CategoryBlogs.Add(new CategoryBlog
-            {
-                CategoryId = categoryId
-            });
-        }
-
-        // Add selected products
-        foreach (var productId in model.SelectedProductIds)
-        {
-            blog.ProductBlogs.Add(new ProductBlog
-            {
-                ProductId = productId
-            });
-        }
-
-
-    // Save to database using repository
     var result = await _blogRepository.CreateAsync(blog);
 
-    // Save translations with generated BlogId
-    SaveContentToResx(new BlogCreateModel
-    {
-        TitleUS = model.TitleUS,
-        ContentUS = updatedContentUS,
-        TitleTR = model.TitleTR,
-        ContentTR = updatedContentTR,
-        TitleDE = model.TitleDE,
-        ContentDE = updatedContentDE,
-        TitleFR = model.TitleFR,
-        ContentFR = updatedContentFR,
-        TitleAR = model.TitleAR,
-        ContentAR = updatedContentAR,
-        Url = model.Url
-    }, result.BlogId );
+    // Save translations
+    string idKey = result.BlogId.ToString();
+    _blogResxService.AddOrUpdate($"Title_{idKey}_{model.Url}_en", model.TitleUS, "en-US");
+    _blogResxService.AddOrUpdate($"Content_{idKey}_{model.Url}_en", updatedContentUS, "en-US");
+    _blogResxService.AddOrUpdate($"Title_{idKey}_{model.Url}_tr", model.TitleTR, "tr-TR");
+    _blogResxService.AddOrUpdate($"Content_{idKey}_{model.Url}_tr", updatedContentTR, "tr-TR");
+    _blogResxService.AddOrUpdate($"Title_{idKey}_{model.Url}_de", model.TitleDE, "de-DE");
+    _blogResxService.AddOrUpdate($"Content_{idKey}_{model.Url}_de", updatedContentDE, "de-DE");
+    _blogResxService.AddOrUpdate($"Title_{idKey}_{model.Url}_fr", model.TitleFR, "fr-FR");
+    _blogResxService.AddOrUpdate($"Content_{idKey}_{model.Url}_fr", updatedContentFR, "fr-FR");
+    _blogResxService.AddOrUpdate($"Title_{idKey}_{model.Url}_ar", model.TitleAR, "ar-SA");
+    _blogResxService.AddOrUpdate($"Content_{idKey}_{model.Url}_ar", updatedContentAR, "ar-SA");
 
     Console.WriteLine($"[DEBUG] Blog '{result.Title}' saved successfully with ID {result.BlogId}.");
+    foreach (var tempFile in Directory.GetFiles(tempPath))
+    {
+        try { System.IO.File.Delete(tempFile); }
+        catch (Exception ex) { Console.WriteLine($"[WARNING] Could not delete temp file: {tempFile} - {ex.Message}"); }
+    }
     return RedirectToAction("Blogs");
 }
 
@@ -2357,9 +2018,6 @@ public async Task<IActionResult> BlogDelete(int id)
 {
     Console.WriteLine($"[INFO] Blog deletion requested for ID: {id}");
 
-    // -----------------------------
-    // STEP 1: Retrieve the Blog
-    // -----------------------------
     var blog = await _blogRepository.GetByIdAsync(id);
     if (blog == null)
     {
@@ -2369,74 +2027,72 @@ public async Task<IActionResult> BlogDelete(int id)
 
     try
     {
-        // -----------------------------
-        // STEP 2: Delete Associated Images
-        // -----------------------------
-        Console.WriteLine($"[INFO] Deleting associated images for Blog ID {id}...");
-        DeleteImages(blog);
-        Console.WriteLine($"[DEBUG] Images deleted for Blog ID {id}.");
-
-        // -----------------------------
-        // STEP 3: Delete Translations
-        // -----------------------------
-        Console.WriteLine($"[INFO] Deleting translations for Blog ID {id}...");
-        DeleteTranslations(id, blog.Url);
-        Console.WriteLine($"[DEBUG] Translations deleted for Blog ID {id}.");
-
-        // -----------------------------
-        // STEP 4: Remove Related Entities
-        // -----------------------------
-        Console.WriteLine($"[INFO] Removing related entities for Blog ID {id}...");
-        await _blogRepository.RemoveRelatedEntitiesAsync(id);
-        Console.WriteLine($"[DEBUG] Related entities deleted for Blog ID {id}.");
-        // Remove related CategoryBlogs
-        var relatedCategoryBlogs = blog.CategoryBlogs.ToList();
-        foreach (var categoryBlog in relatedCategoryBlogs)
+        // STEP 1: Delete cover image
+        if (!string.IsNullOrEmpty(blog.Image))
         {
-            _dbContext.CategoryBlog.Remove(categoryBlog);
+            string coverPath = Path.Combine(_env.WebRootPath, "img", blog.Image);
+            if (System.IO.File.Exists(coverPath))
+            {
+                System.IO.File.Delete(coverPath);
+                Console.WriteLine($"[DEBUG] Deleted cover image: {coverPath}");
+            }
         }
 
-        // Remove related ProductBlogs
-        var relatedProductBlogs = blog.ProductBlogs.ToList();
-        foreach (var productBlog in relatedProductBlogs)
+        // STEP 2: Delete translated content images
+        var cultures = new Dictionary<string, string>
         {
-            _dbContext.ProductBlog.Remove(productBlog);
+            { "en-US", "en" }, { "tr-TR", "tr" },
+            { "de-DE", "de" }, { "fr-FR", "fr" }, { "ar-SA", "ar" }
+        };
+
+        foreach (var (culture, langCode) in cultures)
+        {
+            string contentKey = $"Content_{id}_{blog.Url}_{langCode}";
+            string? html = _blogResxService.Read(contentKey, culture);
+
+            if (!string.IsNullOrWhiteSpace(html))
+            {
+                var imagePaths = ExtractImagePathsFromContent(html);
+                foreach (var path in imagePaths.Distinct())
+                {
+                    string fullPath = Path.Combine(_env.WebRootPath, path.TrimStart('/'));
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                        Console.WriteLine($"[DEBUG] Deleted embedded image: {fullPath}");
+                    }
+                }
+            }
+
+            // Delete translation keys
+            _blogResxService.Delete($"Title_{id}_{blog.Url}_{langCode}", culture);
+            _blogResxService.Delete($"Content_{id}_{blog.Url}_{langCode}", culture);
         }
+
+        // STEP 3: Remove many-to-many links (Categories & Products)
+        foreach (var cb in blog.CategoryBlogs.ToList())
+            _dbContext.CategoryBlog.Remove(cb);
+
+        foreach (var pb in blog.ProductBlogs.ToList())
+            _dbContext.ProductBlog.Remove(pb);
 
         await _dbContext.SaveChangesAsync();
-        Console.WriteLine($"[DEBUG] Related entities deleted for Blog ID {id}.");
 
-        // -----------------------------
-        // STEP 5: Delete the Blog Entry
-        // -----------------------------
-        Console.WriteLine($"[INFO] Deleting blog entry for Blog ID {id}...");
+        // STEP 4: Delete main blog entry
         await _blogRepository.DeleteAsync(id);
-        Console.WriteLine($"[DEBUG] Blog with ID {id} deleted successfully.");
 
-        // -----------------------------
-        // STEP 6: Clean Up Orphaned Images
-        // -----------------------------
-        Console.WriteLine($"[INFO] Cleaning up orphaned images...");
-        await DeleteOrphanedImages(); // Ensure this is an async method
-        Console.WriteLine($"[DEBUG] Orphaned images cleaned up.");
+        // STEP 5: Cleanup orphaned images
+        await DeleteOrphanedImages();
 
-        // -----------------------------
-        // STEP 7: Return Success Response
-        // -----------------------------
         Console.WriteLine($"[SUCCESS] Blog ID {id} deleted successfully.");
         return RedirectToAction("Blogs");
     }
     catch (Exception ex)
     {
-        // -----------------------------
-        // ERROR HANDLING
-        // -----------------------------
         Console.WriteLine($"[ERROR] Failed to delete Blog ID {id}. Exception: {ex}");
         return StatusCode(500, $"Internal Server Error. Failed to delete Blog ID {id}.");
     }
 }
-
-
 
 
 [HttpGet]
@@ -2451,15 +2107,15 @@ public async Task<IActionResult> BlogEdit(int id)
         return NotFound();
     }
 
-    // Fetch all categories
+    // Fetch all categories and products
     var categories = await _categoryRepository.GetAllAsync();
     var products = await _productRepository.GetAllAsync();
 
-    // Get IDs of selected categories (from many-to-many relationship)
+    // Get IDs of selected items
     var selectedCategoryIds = blog.CategoryBlogs.Select(cb => cb.CategoryId).ToList();
     var selectedProductIds = blog.ProductBlogs.Select(pb => pb.ProductId).ToList();
 
-    // Populate ViewBag for category display
+    // Populate ViewBags
     ViewBag.Categories = categories.Select(c => new SelectListItem
     {
         Value = c.CategoryId.ToString(),
@@ -2471,153 +2127,149 @@ public async Task<IActionResult> BlogEdit(int id)
         Value = p.ProductId.ToString(),
         Text = p.Name
     }).ToList();
-    // Create ViewModel with existing data
+
+    // Setup supported cultures and language codes
+    var cultures = new Dictionary<string, string>
+    {
+        { "en-US", "en" },
+        { "tr-TR", "tr" },
+        { "de-DE", "de" },
+        { "fr-FR", "fr" },
+        { "ar-SA", "ar" }
+    };
+
+    // Create a dictionary to store all translation values
+    var translations = new Dictionary<string, (string Title, string Content)>();
+
+    foreach (var culture in cultures)
+    {
+        string cultureKey = culture.Key;
+        string langCode = culture.Value;
+
+        string titleKey = $"Title_{id}_{blog.Url}_{langCode}";
+        string contentKey = $"Content_{id}_{blog.Url}_{langCode}";
+
+        string title = _blogResxService.Read(titleKey, cultureKey) ?? string.Empty;
+        string contentRaw = _blogResxService.Read(contentKey, cultureKey) ?? string.Empty;
+        string content = ProcessContentImagesForEdit(contentRaw);
+
+        translations[cultureKey] = (title, content);
+    }
+
+    // Build and return the model
     var model = new BlogEditModel
     {
         BlogId = blog.BlogId,
         Title = blog.Title,
-        Content = ProcessContentImagesForEdit(blog.Content), // Process main content
+        Content = ProcessContentImagesForEdit(blog.Content),
         Url = blog.Url,
         Author = blog.Author,
         RawYT = blog.RawYT,
         RawMaps = blog.RawMaps,
-        SelectedCategoryIds = selectedCategoryIds, // Assign selected category IDs
+        SelectedCategoryIds = selectedCategoryIds,
         SelectedProductIds = selectedProductIds,
-        ExistingImage = blog.Image, // Preview current image
+        ExistingImage = blog.Image,
 
-        // Load translations (updated format)
-        TitleUS = _manageResourceService.ReadResourceValue($"Title_{id}_{blog.Url}_en", "en-US") ?? string.Empty,
-        ContentUS = ProcessContentImagesForEdit(
-            _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_en", "en-US")
-        ),
-        TitleTR = _manageResourceService.ReadResourceValue($"Title_{id}_{blog.Url}_tr", "tr-TR") ?? string.Empty,
-        ContentTR = ProcessContentImagesForEdit(
-            _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_tr", "tr-TR")
-        ),
-        TitleDE = _manageResourceService.ReadResourceValue($"Title_{id}_{blog.Url}_de", "de-DE") ?? string.Empty,
-        ContentDE = ProcessContentImagesForEdit(
-            _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_de", "de-DE")
-        ),
-        TitleFR = _manageResourceService.ReadResourceValue($"Title_{id}_{blog.Url}_fr", "fr-FR") ?? string.Empty,
-        ContentFR = ProcessContentImagesForEdit(
-            _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_ar", "ar-SA")
-        ),
-        TitleAR = _manageResourceService
-                    .ReadResourceValue($"Title_{id}_{blog.Url}_ar", "ar-SA")
-                ?? string.Empty,
-        ContentAR = ProcessContentImagesForEdit(
-                    _manageResourceService
-                        .ReadResourceValue($"Content_{id}_{blog.Url}_ar", "ar-SA")
-        )
+        TitleUS = translations["en-US"].Title,
+        ContentUS = translations["en-US"].Content,
+        TitleTR = translations["tr-TR"].Title,
+        ContentTR = translations["tr-TR"].Content,
+        TitleDE = translations["de-DE"].Title,
+        ContentDE = translations["de-DE"].Content,
+        TitleFR = translations["fr-FR"].Title,
+        ContentFR = translations["fr-FR"].Content,
+        TitleAR = translations["ar-SA"].Title,
+        ContentAR = translations["ar-SA"].Content
     };
-     Console.WriteLine($"[DEBUG] BlogEdit page loaded for Blog ID: {id} with SelectedCategoryIds: {string.Join(", ", selectedCategoryIds)} and SelectedProductIds: {string.Join(", ", selectedProductIds)}");
-    Console.WriteLine($"[DEBUG] BlogEdit page loaded for Blog ID: {id} with SelectedCategoryIds: {string.Join(", ", selectedCategoryIds)}");
+
+    Console.WriteLine($"[DEBUG] BlogEdit loaded for Blog ID: {id}");
     return View(model);
 }
 
 
 
-
-// BlogEdit Method
 [HttpPost]
 public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
 {
     if (!ModelState.IsValid)
     {
+        if (string.IsNullOrWhiteSpace(model.Url))
+        {
+            throw new InvalidOperationException("URL boş olamaz. Blog için benzersiz bir URL gerekli.");
+        }
+
+        // Re-populate ViewBag
         var categories = await _categoryRepository.GetAllAsync();
         var products = await _productRepository.GetAllAsync();
+
         ViewBag.Categories = categories.Select(c => new SelectListItem
         {
             Value = c.CategoryId.ToString(),
             Text = c.Name
         }).ToList();
+
         ViewBag.Products = products.Select(p => new SelectListItem
         {
             Value = p.ProductId.ToString(),
             Text = p.Name
         }).ToList();
+
         return View(model);
     }
 
-    // Retrieve the blog
     var blog = await _blogRepository.GetByIdAsync(id);
     if (blog == null)
-    {
         return NotFound();
-    }
 
-     // Update categories (Many-to-Many)
-    var existingCategoryBlogs = blog.CategoryBlogs.ToList();
-    foreach (var categoryBlog in existingCategoryBlogs)
+    // STEP 1: Extract old images from main + translation content
+    List<string> oldImages = new() { blog.Content };
+    var cultures = new Dictionary<string, string>
     {
-        _dbContext.CategoryBlog.Remove(categoryBlog); // Remove old mappings
-    }
+        { "en-US", "en" }, { "tr-TR", "tr" },
+        { "de-DE", "de" }, { "fr-FR", "fr" }, { "ar-SA", "ar" }
+    };
 
-    foreach (var categoryId in model.SelectedCategoryIds)
+    foreach (var (culture, langCode) in cultures)
     {
-        var newCategoryBlog = new CategoryBlog
+        string contentKey = $"Content_{id}_{blog.Url}_{langCode}";
+        string? content = _blogResxService.Read(contentKey, culture);
+        if (!string.IsNullOrEmpty(content))
         {
-            BlogId = blog.BlogId,
-            CategoryId = categoryId
-        };
-        _dbContext.CategoryBlog.Add(newCategoryBlog); // Add new mappings
-    }
-    // Update products (Many-to-Many)
-    var existingProductBlogs = blog.ProductBlogs.ToList();
-    foreach (var productBlog in existingProductBlogs)
-    {
-        _dbContext.ProductBlog.Remove(productBlog);
+            oldImages.Add(content);
+        }
     }
 
-    foreach (var productId in model.SelectedProductIds)
-    {
-        var newProductBlog = new ProductBlog
-        {
-            BlogId = blog.BlogId,
-            ProductId = productId
-        };
-        _dbContext.ProductBlog.Add(newProductBlog);
-    }
+    var allOldImagePaths = oldImages
+        .SelectMany(ExtractImagePathsFromContent)
+        .Distinct()
+        .ToList();
 
-    // Extract old images from content and translations
-    List<string> oldImages = new();
-    oldImages.AddRange(ExtractImagePathsFromContent(blog.Content));
-    oldImages.AddRange(ExtractImagePathsFromContent(
-        _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_en", "en-US")));
-    oldImages.AddRange(ExtractImagePathsFromContent(
-        _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_tr", "tr-TR")));
-    oldImages.AddRange(ExtractImagePathsFromContent(
-        _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_de", "de-DE")));
-    oldImages.AddRange(ExtractImagePathsFromContent(
-        _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_fr", "fr-FR")));
-    oldImages.AddRange(ExtractImagePathsFromContent(
-        _manageResourceService.ReadResourceValue($"Content_{id}_{blog.Url}_ar", "ar-SA")));
-
-    // Generate mappings for temp images
-    Dictionary<string, string> fileMappings = new();
+    // STEP 2: Move files and map temp images
     string tempPath = Path.Combine(_env.WebRootPath, "temp");
     string imgPath = "/blog/img/";
     string gifPath = "/blog/gif/";
+    var fileMappings = Directory.GetFiles(tempPath)
+        .ToDictionary(
+            file => $"/temp/{Path.GetFileName(file)}",
+            file =>
+            {
+                var ext = Path.GetExtension(file).ToLower();
+                return ext == ".gif" ? $"{gifPath}{Path.GetFileName(file)}" : $"{imgPath}{Path.GetFileName(file)}";
+            }
+        );
 
-    foreach (string file in Directory.GetFiles(tempPath))
-    {
-        string fileName = Path.GetFileName(file);
-        string extension = Path.GetExtension(file).ToLower();
-        string finalPath = extension == ".gif"
-            ? $"{gifPath}{fileName}"
-            : $"{imgPath}{fileName}";
-        fileMappings[$"/temp/{fileName}"] = finalPath;
-    }
-
-    // Process content and translations
+    // STEP 3: Process new content
     string updatedContent = ProcessContentImages(model.Content, fileMappings);
-    string updatedContentUS = ProcessContentImages(model.ContentUS, fileMappings);
-    string updatedContentTR = ProcessContentImages(model.ContentTR, fileMappings);
-    string updatedContentDE = ProcessContentImages(model.ContentDE, fileMappings);
-    string updatedContentFR = ProcessContentImages(model.ContentFR, fileMappings);
-    string updatedContentAR = ProcessContentImages(model.ContentAR, fileMappings);
+    var translations = new Dictionary<string, (string Title, string Content)>
+    {
+        { "en-US", (model.TitleUS, ProcessContentImages(model.ContentUS, fileMappings)) },
+        { "tr-TR", (model.TitleTR, ProcessContentImages(model.ContentTR, fileMappings)) },
+        { "de-DE", (model.TitleDE, ProcessContentImages(model.ContentDE, fileMappings)) },
+        { "fr-FR", (model.TitleFR, ProcessContentImages(model.ContentFR, fileMappings)) },
+        { "ar-SA", (model.TitleAR, ProcessContentImages(model.ContentAR, fileMappings)) }
+    };
 
-    // Update blog details
+    // STEP 4: Save blog and translations
     blog.Title = model.Title;
     blog.Content = updatedContent;
     blog.Url = model.Url;
@@ -2625,60 +2277,37 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
     blog.RawYT = model.RawYT;
     blog.RawMaps = model.RawMaps;
 
-    // Handle cover image
     if (model.ImageFile != null)
     {
         string oldCoverPath = Path.Combine(_env.WebRootPath, "img", blog.Image);
         if (System.IO.File.Exists(oldCoverPath))
-        {
             System.IO.File.Delete(oldCoverPath);
-        }
 
         string newImageName = $"{Guid.NewGuid()}{Path.GetExtension(model.ImageFile.FileName)}";
         string newImagePath = Path.Combine(_env.WebRootPath, "img", newImageName);
-
-        using (var stream = new FileStream(newImagePath, FileMode.Create))
-        {
-            await model.ImageFile.CopyToAsync(stream);
-        }
-
+        using var stream = new FileStream(newImagePath, FileMode.Create);
+        await model.ImageFile.CopyToAsync(stream);
         blog.Image = newImageName;
     }
 
-    var updatedBlog = await _blogRepository.UpdateAsync(blog);
+    await _blogRepository.UpdateAsync(blog);
 
-    var resultModel = new BlogResultModel
+    foreach (var (culture, langCode) in cultures)
     {
-        BlogId = updatedBlog.BlogId,
-        Url = updatedBlog.Url,
-        TitleUS = model.TitleUS,
-        ContentUS = updatedContentUS,
-        TitleTR = model.TitleTR,
-        ContentTR = updatedContentTR,
-        TitleDE = model.TitleDE,
-        ContentDE = updatedContentDE,
-        TitleFR = model.TitleFR,
-        ContentFR = updatedContentFR,
-        TitleAR = model.TitleAR,
-        ContentAR = updatedContentAR
-    };
+        var (title, content) = translations[culture];
+        _blogResxService.AddOrUpdate($"Title_{id}_{blog.Url}_{langCode}", title, culture);
+        _blogResxService.AddOrUpdate($"Content_{id}_{blog.Url}_{langCode}", content, culture);
+    }
 
-    SaveContentToResxEdit(resultModel, updatedContent, updatedBlog.BlogId);
-    // Calculate unused images
-    List<string> usedImages = new();
-    usedImages.AddRange(ExtractImagePathsFromContent(updatedContent));
-    usedImages.AddRange(ExtractImagePathsFromContent(updatedContentUS));
-    usedImages.AddRange(ExtractImagePathsFromContent(updatedContentTR));
-    usedImages.AddRange(ExtractImagePathsFromContent(updatedContentDE));
-    usedImages.AddRange(ExtractImagePathsFromContent(updatedContentFR));
-    usedImages.AddRange(ExtractImagePathsFromContent(updatedContentAR));
-    List<string> unusedImages = oldImages.Except(usedImages).ToList();
-    DeleteUnusedImages(unusedImages);
-
+    Console.WriteLine($"[DEBUG] Translations and blog updated for ID {id}");
+    TempData["SuccessMessage"] = "Blog updated successfully!";
+    foreach (var tempFile in Directory.GetFiles(tempPath))
+    {
+        try { System.IO.File.Delete(tempFile); }
+        catch (Exception ex) { Console.WriteLine($"[WARNING] Could not delete temp file: {tempFile} - {ex.Message}"); }
+    }
     return RedirectToAction("Blogs");
 }
-
-
 
 
 #endregion
@@ -2722,14 +2351,15 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
     {
         Console.WriteLine($"[INFO] Processing image edit for ID: {model.ImageId}");
 
-        // Step 1: Validation
+        // ModelState'ten ImageUrl'yi çıkarıyoruz, çünkü formdan ImageUrl gelmemeli (gelse bile dikkate alınmamalı)
+        ModelState.Remove(nameof(model.ImageUrl));
+
         if (!ModelState.IsValid)
         {
             Console.WriteLine("[WARN] Model validation failed.");
             return View(model);
         }
 
-        // Step 2: Retrieve the existing image
         var imageEntity = await _imageRepository.GetByIdAsync(model.ImageId);
         if (imageEntity == null)
         {
@@ -2738,22 +2368,22 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
             return RedirectToAction("Images");
         }
 
-        // Step 3: Update text and ViewPhone properties
+        // Güncellenen alanlar
         imageEntity.Text = model.Text;
         imageEntity.ViewPhone = model.ViewPhone;
 
-        // Step 4: Handle new image file upload (if provided)
         if (newImageFile != null && newImageFile.Length > 0)
         {
             try
             {
-                // Build the image path
                 var uploadsFolder = Path.Combine(_env.WebRootPath, "img");
 
-                // Delete old image file
+                // Eski görsel varsa sil
                 if (!string.IsNullOrEmpty(imageEntity.ImageUrl))
                 {
-                    var oldImagePath = Path.Combine(uploadsFolder, imageEntity.ImageUrl.TrimStart('/'));
+                    var oldFileName = Path.GetFileName(imageEntity.ImageUrl); // Güvenli biçimde dosya adını al
+                    var oldImagePath = Path.Combine(uploadsFolder, oldFileName);
+
                     if (System.IO.File.Exists(oldImagePath))
                     {
                         System.IO.File.Delete(oldImagePath);
@@ -2761,16 +2391,18 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
                     }
                 }
 
-                // Save new file
+                // Yeni dosyayı kaydet
                 var newFileName = $"{Guid.NewGuid()}{Path.GetExtension(newImageFile.FileName)}";
                 var newImagePath = Path.Combine(uploadsFolder, newFileName);
+
                 using (var stream = new FileStream(newImagePath, FileMode.Create))
                 {
                     await newImageFile.CopyToAsync(stream);
                 }
+
                 Console.WriteLine($"[INFO] Saved new image file: {newImagePath}");
 
-                // Update the image URL
+                // Yeni URL'yi kaydet (ön yüzde gösterilecek olan yol)
                 imageEntity.ImageUrl = $"/img/{newFileName}";
             }
             catch (Exception ex)
@@ -2785,7 +2417,6 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
             Console.WriteLine("[INFO] No new image file provided. Skipping image update.");
         }
 
-        // Step 5: Update database
         try
         {
             await _imageRepository.UpdateAsync(imageEntity);
@@ -2800,7 +2431,6 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
             return View(model);
         }
     }
-
 
     [HttpGet("Admin/ImageCreate")]
     public IActionResult ImageCreate()
@@ -2822,33 +2452,35 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
         {
             if (model.File != null && model.File.Length > 0)
             {
-                // File management
+                // 1. Yükleme klasörü belirle
                 var uploadsFolder = Path.Combine(_env.WebRootPath, "img");
+
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                // 2. Dosya ismi oluştur
                 var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(model.File.FileName)}";
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-
+                // 3. Dosyayı diske kaydet
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await model.File.CopyToAsync(stream);
                 }
 
-                // Create Image entity
+                Console.WriteLine($"✅[INFO] Uploaded new image file: {filePath}");
+
+                // 4. Image entity oluştur ve veritabanına kaydet
                 var image = new Image
                 {
-                    ImageUrl = uniqueFileName,
+                    ImageUrl = $"/img/{uniqueFileName}", //  Doğru yol formatı
                     Text = model.Text,
                     DateAdded = DateTime.UtcNow,
                     ViewPhone = model.ViewPhone
                 };
 
-                // Save to database
                 await _imageRepository.CreateAsync(image);
-                TempData["SuccessMessage"] = "Image uploaded successfully!";
+                TempData["SuccessMessage"] = "✅Image uploaded successfully!";
                 return RedirectToAction("Images");
             }
 
@@ -2856,7 +2488,7 @@ public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] {ex.Message}");
+            Console.WriteLine($"[ERROR] Failed to upload image. Exception: {ex.Message}");
             TempData["ErrorMessage"] = "An error occurred while uploading the image.";
         }
 

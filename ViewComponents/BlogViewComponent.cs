@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Alpha.ViewComponents
 {
@@ -14,21 +15,22 @@ namespace Alpha.ViewComponents
     {
         private readonly IBlogRepository _blogRepository;
         private readonly LanguageService _localization;
+        private readonly IBlogResxService _blogResxService;
 
-        public BlogViewComponent(IBlogRepository blogRepository, LanguageService localization)
+        public BlogViewComponent(IBlogRepository blogRepository, LanguageService localization,IBlogResxService blogResxService)
         {
             _blogRepository = blogRepository;
+            _blogResxService = blogResxService;
             _localization = localization;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(int pageIndex = 0, int pageSize = 3)
         {
-            // Get current culture
-            var culture = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName.ToLower();
+            var culture = CultureInfo.CurrentCulture.Name;
 
             // Header translation
-            var head = _localization.GetKey("HomeBlogHead").Value;
-            string message = _localization.GetKey("Recently").Value;
+            var head = _localization.GetKey("HomeBlogHead");
+            string message = _localization.GetKey("Recently");
 
             // Fetch all blogs
             List<Blog> allBlogs = await _blogRepository.GetAllAsync();
@@ -46,17 +48,16 @@ namespace Alpha.ViewComponents
             if (!pagedBlogs.Any())
             {
                 pagedBlogs = sortedBlogs;
-                message = _localization.GetKey("NoRecentBlogs").Value;
+                message = _localization.GetKey("NoRecentBlogs");
             }
 
             // Map to BlogIndexModel with translations
             var blogModels = pagedBlogs.Select(blog => new BlogIndexModel
             {
-                Blogs = new List<Blog> { blog }, // ✅ ONLY THIS blog
-                
-                Title = _localization.GetKey($"Title_{blog.BlogId}_{blog.Url}_{culture}").Value ?? blog.Title,
+                Blogs = new List<Blog> { blog },
+                Title = _blogResxService.Read($"Title_{blog.BlogId}_{blog.Url}_{culture}", culture) ?? blog.Title,
                 Content = ProcessContentImagesForEdit(
-                    _localization.GetKey($"Content_{blog.BlogId}_{blog.Url}_{culture}")?.Value ?? blog.Content
+                    _blogResxService.Read($"Content_{blog.BlogId}_{blog.Url}_{culture}", culture) ?? blog.Content
                 )
             }).ToList();
 

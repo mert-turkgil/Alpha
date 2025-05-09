@@ -3,15 +3,18 @@ C:\Users\mertu\Desktop\publishs\appsettings.Development.json
 C:\Users\mertu\Desktop\publishs\appsettings.json
 C:\Users\mertu\Desktop\publishs\package-lock.json
 C:\Users\mertu\Desktop\publishs\package.json
+C:\Users\mertu\Desktop\publishs\Resources\SharedResource.ar-SA.resx
 C:\Users\mertu\Desktop\publishs\Resources\SharedResource.de-DE.resx
 C:\Users\mertu\Desktop\publishs\Resources\SharedResource.en-US.resx
 C:\Users\mertu\Desktop\publishs\Resources\SharedResource.fr-FR.resx
 C:\Users\mertu\Desktop\publishs\Resources\SharedResource.tr-TR.resx
 C:\Users\mertu\Desktop\publishs\EmailTemplates\AdminNotification.html
+C:\Users\mertu\Desktop\publishs\EmailTemplates\UserConfirm_ar.html
 C:\Users\mertu\Desktop\publishs\EmailTemplates\UserConfirm_de.html
 C:\Users\mertu\Desktop\publishs\EmailTemplates\UserConfirm_en.html
 C:\Users\mertu\Desktop\publishs\EmailTemplates\UserConfirm_fr.html
 C:\Users\mertu\Desktop\publishs\EmailTemplates\UserConfirm_tr.html
+C:\Users\mertu\Desktop\publishs\EmailTemplates\UserNotification_ar.html
 C:\Users\mertu\Desktop\publishs\EmailTemplates\UserNotification_de.html
 C:\Users\mertu\Desktop\publishs\EmailTemplates\UserNotification_en.html
 C:\Users\mertu\Desktop\publishs\EmailTemplates\UserNotification_fr.html
@@ -313,6 +316,7 @@ C:\Users\mertu\Desktop\publishs\Alpha.dll
 C:\Users\mertu\Desktop\publishs\Alpha.deps.json
 C:\Users\mertu\Desktop\publishs\Alpha.runtimeconfig.json
 C:\Users\mertu\Desktop\publishs\Alpha.pdb
+C:\Users\mertu\Desktop\publishs\ar-SA\Alpha.resources.dll
 C:\Users\mertu\Desktop\publishs\de-DE\Alpha.resources.dll
 C:\Users\mertu\Desktop\publishs\en-US\Alpha.resources.dll
 C:\Users\mertu\Desktop\publishs\fr-FR\Alpha.resources.dll

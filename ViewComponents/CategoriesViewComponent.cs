@@ -26,8 +26,8 @@ namespace Alpha.WebUi.ViewComponents
                 ViewBag.SelectedCategory = RouteData.Values["category"];
 
             // 2) Localization examples
-            ViewBag.Message = _localization.GetKey("HomeCategoryBody").Value; 
-            ViewBag.Body = _localization.GetKey("HomeCategoryHead").Value;
+            ViewBag.Message = _localization.GetKey("HomeCategoryBody"); 
+            ViewBag.Body = _localization.GetKey("HomeCategoryHead");
 
             // 3) Get and sort categories
             var categories = await _categoryService.GetAllAsync();

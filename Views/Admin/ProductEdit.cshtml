@@ -100,7 +100,7 @@
                     @foreach (var image in Model.CurrentImages)
                     {
                         <div class="m-2">
-                            <img src="~/img/@image.ImageUrl" alt="Current Image" class="img-thumbnail" style="width: 100px; height: 100px;" />
+                            <img src="@image.ImageUrl" alt="Current Image" class="img-thumbnail" style="width: 100px; height: 100px;" />
                         </div>
                     }
                 </div>
@@ -115,7 +115,7 @@
                             <input type="checkbox" name="ImageIds" value="@image.ImageId"
                                    class="form-check-input" @(isChecked ? "checked" : "") />
                             <label class="form-check-label">
-                                <img src="~/img/@image.ImageUrl" alt="Image" class="img-thumbnail" style="width: 100px; height: 100px;" />
+                                <img src="@image.ImageUrl" alt="Image" class="img-thumbnail" style="width: 100px; height: 100px;" />
                             </label>
                         </div>
                     }
