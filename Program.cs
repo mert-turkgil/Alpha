@@ -225,6 +225,11 @@ app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapControllerRoute(
+    name: "sitemap",
+    pattern: "sitemap.xml",
+    defaults: new { controller = "Sitemap", action = "Index" });
+    
+app.MapControllerRoute(
     name: "localized_product",
     pattern: "{culture}/urun/{id}/{slug?}",
     defaults: new { controller = "Home", action = "ProductDetail" });
