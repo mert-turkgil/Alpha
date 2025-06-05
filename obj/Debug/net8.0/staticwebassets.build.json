@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "lIZtmAO/jYOfASobmHz9UKmsJXybkag1paIgpCRzSoo=",
+  "Hash": "EpwtKQckJqGFKw10cfWqZYua2+RykAXesnDK9UUiwJE=",
   "Source": "Alpha",
   "BasePath": "_content/Alpha",
   "Mode": "Default",
@@ -3758,6 +3758,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\viewerjs\\types\\index.d.ts"
+    },
+    {
+      "Identity": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\robots.txt",
+      "SourceId": "Alpha",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\",
+      "BasePath": "_content/Alpha",
+      "RelativePath": "robots.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\robots.txt"
     },
     {
       "Identity": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\videos\\background.mp4",
