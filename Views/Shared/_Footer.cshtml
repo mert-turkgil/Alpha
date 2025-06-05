@@ -74,7 +74,7 @@
     <!-- Copyright Row -->
     <div class="row mt-4 text-center">
         <div class="col">
-            <p>&copy; 2024 Alpha Company | <a asp-action="Privacy" class="footer-link">@Model.Privacy </a></p>
+            <p>&copy; 2024 Alpha Company | <a asp-action="Privacy" asp-controller="Home"  asp-route-culture="@culture" class="footer-link">@Model.Privacy </a></p>
         </div>
     </div>
 </div>

@@ -58,6 +58,51 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="SEO_Index_Title_fr" xml:space="preserve">
+  <value>Alpha Chaussures – Chaussures de Sécurité</value>
+</data>
+<data name="SEO_Index_Description_fr" xml:space="preserve">
+  <value>Découvrez les meilleures chaussures de sécurité. Découvrez Alpha.</value>
+</data>
+<data name="SEO_Index_Keywords_fr" xml:space="preserve">
+  <value>chaussures de sécurité, bottes alpha, bottes militaires</value>
+</data>
+<data name="SEO_Blog_Title_fr" xml:space="preserve">
+  <value>Blog</value>
+</data>
+<data name="SEO_Blog_Description_fr" xml:space="preserve">
+  <value>Conseils, actualités et guides sur les bottes de sécurité sur le blog d’Alpha.</value>
+</data>
+<data name="SEO_Blog_Keywords_fr" xml:space="preserve">
+  <value>blog sécurité, alpha chaussures, protection au travail</value>
+</data>
+<data name="SEO_About_Title_fr" xml:space="preserve">
+  <value>À propos</value>
+</data>
+<data name="SEO_About_Description_fr" xml:space="preserve">
+  <value>Alpha combine sécurité et confort. Apprenez-en plus sur nous.</value>
+</data>
+<data name="SEO_About_Keywords_fr" xml:space="preserve">
+  <value>à propos d'alpha, chaussures de sécurité, info entreprise</value>
+</data>
+<data name="SEO_Contact_Title_fr" xml:space="preserve">
+  <value>Contact</value>
+</data>
+<data name="SEO_Contact_Description_fr" xml:space="preserve">
+  <value>Contactez Alpha Chaussures.</value>
+</data>
+<data name="SEO_Contact_Keywords_fr" xml:space="preserve">
+  <value>contact, alpha chaussures, nous joindre</value>
+</data>
+<data name="SEO_Services_Title_fr" xml:space="preserve">
+  <value>Nos Produits et Services</value>
+</data>
+<data name="SEO_Services_Description_fr" xml:space="preserve">
+  <value>Découvrez les chaussures et services de sécurité d'Alpha.</value>
+</data>
+<data name="SEO_Services_Keywords_fr" xml:space="preserve">
+  <value>alpha produits, chaussures de sécurité</value>
+</data>
   <data name="ProductDetail_StandardLabel" xml:space="preserve">
     <value>Standard</value>
   </data>
