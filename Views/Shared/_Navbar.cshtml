@@ -49,7 +49,7 @@
           </a>
         </li>
         <li id="orta" class="nav-item">
-          <a asp-controller="Home" asp-action="Privacy" class="nav-link fw-semibold">@Model.Privacy</a>
+          <a asp-controller="Home" asp-action="Privacy" asp-route-culture="@culture" class="nav-link fw-semibold">@Model.Privacy</a>
         </li>
       </ul>
       <a asp-controller="Home" asp-route-culture="@culture" asp-action="Contact" style="border-radius: 0px;" class="btn btn-outline-e79c00  btn-lg fw-semibold ms-3">@Model.Contact</a>
@@ -119,7 +119,10 @@
                 </a>
               </li>
               <li id="ofcanva" class="nav-item">
-                  <a asp-controller="Home" asp-action="Privacy" class="nav-link fw-semibold @(ViewContext.RouteData.Values["action"]?.ToString() == "Privacy" ? "active" : "")">@Model.Privacy</a>
+                  @{
+                    var isActivePriv = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Blog", StringComparison.OrdinalIgnoreCase);
+                }
+                  <a asp-controller="Home" asp-action="Privacy" asp-route-culture="@culture"  class="nav-link fw-semibold @(isActivePriv ? "active" : "")">@Model.Privacy</a>
               </li>
               <li id="ofcanva" class="nav-item">
                 @{var isActiveContact = ViewContext.RouteData.Values["action"]?.ToString() == "Contact";}

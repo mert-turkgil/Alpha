@@ -1,61 +1,98 @@
+using Alpha.Data;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 using System.Xml.Linq;
-using System.Globalization;
+using System.Text;
+using Data.Concrete.EfCore;
 
 namespace Alpha.Controllers
 {
+    [Route("sitemap.xml")]
     public class SitemapController : Controller
     {
-        [HttpGet("sitemap.xml")]
-        public IActionResult Index()
+        private readonly ShopContext _context;
+        private readonly string[] _cultures = new[] { "tr", "en", "de", "ar" };
+
+        public SitemapController(ShopContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-            var cultures = new[] { "tr", "en", "de", "fr", "ar" };
+            var products = await _context.Products.AsNoTracking().ToListAsync();
+            var blogs = await _context.Blogs.AsNoTracking().ToListAsync();
+            var categories = await _context.Categories.AsNoTracking().ToListAsync();
 
-            var urls = new[]
+            XNamespace xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
+            XNamespace xhtml = "http://www.w3.org/1999/xhtml";
+
+            var urlset = new XElement(xmlns + "urlset",
+                new XAttribute(XNamespace.Xmlns + "xhtml", xhtml));
+
+            foreach (var culture in _cultures)
             {
-                "Index",
-                "About",
-                "Contact",
-                "Services",
-                "Blog"
-            };
+                // Static Pages
+                urlset.Add(BuildUrlWithHreflang($"{baseUrl}/{culture}", culture, baseUrl));
+                urlset.Add(BuildUrlWithHreflang($"{baseUrl}/{culture}/privacy", culture, baseUrl));
+                urlset.Add(BuildUrlWithHreflang($"{baseUrl}/{culture}/contact", culture, baseUrl));
+                urlset.Add(BuildUrlWithHreflang($"{baseUrl}/{culture}/about", culture, baseUrl));
+                urlset.Add(BuildUrlWithHreflang($"{baseUrl}/{culture}/blog", culture, baseUrl));
+                urlset.Add(BuildUrlWithHreflang($"{baseUrl}/{culture}/hizmetler", culture, baseUrl));
 
-            var urlset = new XElement("urlset",
-                new XAttribute("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9"),
-                new XAttribute(XNamespace.Xmlns + "xhtml", "http://www.w3.org/1999/xhtml")
-            );
-
-            foreach (var action in urls)
-            {
-                foreach (var culture in cultures)
+                // Products
+                foreach (var p in products)
                 {
-                    var loc = $"{baseUrl}/{culture.ToLower()}/{action.ToLower()}";
+                    var path = $"/{culture}/urun/{p.ProductId}/{p.Url}";
+                    urlset.Add(BuildUrlWithHreflang($"{baseUrl}{path}", culture, baseUrl, $"/urun/{p.ProductId}/{p.Url}"));
+                }
 
-                    var url = new XElement("url",
-                        new XElement("loc", loc),
-                        new XElement("changefreq", "weekly"),
-                        new XElement("priority", action == "Index" ? "1.0" : "0.8")
-                    );
+                // Blogs
+                foreach (var b in blogs)
+                {
+                    var path = $"/{culture}/blog/{b.BlogId}/{b.Url}";
+                    urlset.Add(BuildUrlWithHreflang($"{baseUrl}{path}", culture, baseUrl, $"/blog/{b.BlogId}/{b.Url}"));
+                }
 
-                    foreach (var altCulture in cultures)
-                    {
-                        url.Add(new XElement(XName.Get("link", "http://www.w3.org/1999/xhtml"),
-                            new XAttribute("rel", "alternate"),
-                            new XAttribute("hreflang", altCulture),
-                            new XAttribute("href", $"{baseUrl}/{altCulture}/{action.ToLower()}")
-                        ));
-                    }
-
-                    urlset.Add(url);
+                // Categories
+                foreach (var c in categories)
+                {
+                    var path = $"/{culture}/kategori/{c.CategoryId}/{c.Url}";
+                    urlset.Add(BuildUrlWithHreflang($"{baseUrl}{path}", culture, baseUrl, $"/kategori/{c.CategoryId}/{c.Url}"));
                 }
             }
 
-            var xml = new XDocument(new XDeclaration("1.0", "utf-8", "yes"), urlset);
-            var xmlString = xml.ToString(SaveOptions.DisableFormatting);
-            return Content(xmlString, "application/xml", Encoding.UTF8);
+            var sitemap = new XDocument(urlset);
+            return Content(sitemap.ToString(), "application/xml", Encoding.UTF8);
+        }
+
+        private XElement BuildUrlWithHreflang(string loc, string currentCulture, string baseUrl, string relativePath = "")
+        {
+            XNamespace xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
+            XNamespace xhtml = "http://www.w3.org/1999/xhtml";
+
+            var urlElement = new XElement(xmlns + "url",
+                new XElement(xmlns + "loc", loc),
+                new XElement(xmlns + "lastmod", DateTime.UtcNow.ToString("yyyy-MM-dd")),
+                new XElement(xmlns + "changefreq", "monthly"),
+                new XElement(xmlns + "priority", "0.7")
+            );
+
+            foreach (var culture in _cultures)
+            {
+                var href = $"{baseUrl}/{culture}{relativePath}";
+                urlElement.Add(
+                    new XElement(xhtml + "link",
+                        new XAttribute("rel", "alternate"),
+                        new XAttribute("hreflang", culture),
+                        new XAttribute("href", href))
+                );
+            }
+
+            return urlElement;
         }
     }
 }

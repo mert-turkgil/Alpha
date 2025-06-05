@@ -251,8 +251,13 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "localized_about",
-    pattern: "{culture}/about", // veya: "{culture}/hakkimizda"
+    pattern: "{culture}/about", 
     defaults: new { controller = "Home", action = "About" });
+
+app.MapControllerRoute(
+    name: "localized_privacy",
+    pattern: "{culture}/privacy", 
+    defaults: new { controller = "Home", action = "Privacy" });
 
 app.MapControllerRoute(
     name: "admin",

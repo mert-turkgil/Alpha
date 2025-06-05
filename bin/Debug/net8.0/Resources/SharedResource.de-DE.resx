@@ -58,6 +58,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="SEO_Index_Title_de" xml:space="preserve">
+  <value>Alpha Schuhe – Sicherheitsschuhe für die Arbeit</value>
+</data>
+<data name="SEO_Index_Description_de" xml:space="preserve">
+  <value>Entdecken Sie die besten Sicherheitsschuhe für Ihren Job. Lernen Sie Alpha kennen.</value>
+</data>
+<data name="SEO_Index_Keywords_de" xml:space="preserve">
+  <value>sicherheitsschuhe, alpha stiefel, militärstiefel</value>
+</data>
+<data name="SEO_Blog_Title_de" xml:space="preserve">
+  <value>Blog</value>
+</data>
+<data name="SEO_Blog_Description_de" xml:space="preserve">
+  <value>Tipps, Nachrichten und Ratgeber zu Sicherheitsschuhen und Arbeitsschutz im Alpha-Blog.</value>
+</data>
+<data name="SEO_Blog_Keywords_de" xml:space="preserve">
+  <value>sicherheitsblog, alpha schuhe, arbeitsschutz</value>
+</data>
+<data name="SEO_About_Title_de" xml:space="preserve">
+  <value>Über uns</value>
+</data>
+<data name="SEO_About_Description_de" xml:space="preserve">
+  <value>Bei Alpha kombinieren wir Sicherheit und Komfort. Erfahren Sie mehr über uns.</value>
+</data>
+<data name="SEO_About_Keywords_de" xml:space="preserve">
+  <value>über alpha, sicherheitsschuhe, firmeninfo</value>
+</data>
+<data name="SEO_Contact_Title_de" xml:space="preserve">
+  <value>Kontakt</value>
+</data>
+<data name="SEO_Contact_Description_de" xml:space="preserve">
+  <value>Kontaktieren Sie Alpha Schuhe.</value>
+</data>
+<data name="SEO_Contact_Keywords_de" xml:space="preserve">
+  <value>kontakt, alpha schuhe, kontaktieren</value>
+</data>
+<data name="SEO_Services_Title_de" xml:space="preserve">
+  <value>Unsere Produkte und Dienstleistungen</value>
+</data>
+<data name="SEO_Services_Description_de" xml:space="preserve">
+  <value>Entdecken Sie die Sicherheitsschuhe und Services von Alpha.</value>
+</data>
+<data name="SEO_Services_Keywords_de" xml:space="preserve">
+  <value>alpha produkte, sicherheitsschuhe</value>
+</data>
+
   <data name="ProductDetail_StandardLabel" xml:space="preserve">
     <value>Standarte</value>
   </data>

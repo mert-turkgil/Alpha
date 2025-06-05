@@ -751,8 +751,11 @@ private async Task<bool> VerifyCaptchaAsync(string token)
 #endregion
 
 #region Privacy
-public IActionResult Privacy()
+[HttpGet("{culture}/privacy")]
+public IActionResult Privacy(string culture)
 {
+    CultureInfo.CurrentUICulture = new CultureInfo(culture);
+    CultureInfo.CurrentCulture = new CultureInfo(culture);
     ViewBag.Title = _localization.GetKey("Privacy_SEOTitle") 
                 ?? "Gizlilik Politikası | Alpha İş Güvenliği Ayakkabıları";
     ViewBag.MetaDescription = _localization.GetKey("Privacy_SEODescription") 

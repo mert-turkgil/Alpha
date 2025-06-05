@@ -58,6 +58,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="SEO_Index_Title_en" xml:space="preserve">
+  <value>Alpha Shoes - Safety Work Boots</value>
+</data>
+<data name="SEO_Index_Description_en" xml:space="preserve">
+  <value>Discover the best safety shoes for work. Meet Alpha.</value>
+</data>
+<data name="SEO_Index_Keywords_en" xml:space="preserve">
+  <value>safety shoes, alpha boots, military boots</value>
+</data>
+<data name="SEO_Blog_Title_en" xml:space="preserve">
+  <value>Blog</value>
+</data>
+<data name="SEO_Blog_Description_en" xml:space="preserve">
+  <value>Tips, news, and guides about safety boots and work protection on the Alpha Blog.</value>
+</data>
+<data name="SEO_Blog_Keywords_en" xml:space="preserve">
+  <value>safety blog, alpha shoes, work protection</value>
+</data>
+<data name="SEO_About_Title_en" xml:space="preserve">
+  <value>About Us</value>
+</data>
+<data name="SEO_About_Description_en" xml:space="preserve">
+  <value>At Alpha Shoes, we combine safety and comfort. Learn more about us.</value>
+</data>
+<data name="SEO_About_Keywords_en" xml:space="preserve">
+  <value>about alpha, safety shoes, company info</value>
+</data>
+<data name="SEO_Contact_Title_en" xml:space="preserve">
+  <value>Contact</value>
+</data>
+<data name="SEO_Contact_Description_en" xml:space="preserve">
+  <value>Get in touch with Alpha Shoes.</value>
+</data>
+<data name="SEO_Contact_Keywords_en" xml:space="preserve">
+  <value>contact, alpha shoes, reach us</value>
+</data>
+<data name="SEO_Services_Title_en" xml:space="preserve">
+  <value>Our Products and Services</value>
+</data>
+<data name="SEO_Services_Description_en" xml:space="preserve">
+  <value>Explore Alpha's safety shoes and services.</value>
+</data>
+<data name="SEO_Services_Keywords_en" xml:space="preserve">
+  <value>alpha products, safety shoes</value>
+</data>
+
   <data name="ProductDetail_CertificateLabel" xml:space="preserve">
     <value>Certificate</value>
   </data>

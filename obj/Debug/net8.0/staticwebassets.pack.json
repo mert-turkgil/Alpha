@@ -545,6 +545,10 @@
       "PackagePath": "staticwebassets\\lib\\viewerjs\\types\\index.d.ts"
     },
     {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\robots.txt",
+      "PackagePath": "staticwebassets\\robots.txt"
+    },
+    {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\videos\\SplashVid.mp4",
       "PackagePath": "staticwebassets\\videos\\SplashVid.mp4"
     },

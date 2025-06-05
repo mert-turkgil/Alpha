@@ -58,6 +58,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="SEO_Index_Title_tr" xml:space="preserve">
+  <value>Alpha Ayakkabı - Güvenlikli İş Ayakkabıları</value>
+</data>
+<data name="SEO_Index_Description_tr" xml:space="preserve">
+  <value>İş güvenliği için en kaliteli ayakkabılar. Alpha ile tanışın.</value>
+</data>
+<data name="SEO_Index_Keywords_tr" xml:space="preserve">
+  <value>iş güvenliği ayakkabısı, alpha bot, askeri bot</value>
+</data>
+<data name="SEO_Blog_Title_tr" xml:space="preserve">
+  <value>Blog</value>
+</data>
+<data name="SEO_Blog_Description_tr" xml:space="preserve">
+  <value>İş güvenliği, askeri botlar ve koruyucu ekipmanlar hakkında ipuçları, haberler ve rehber içerikler Alpha Blog’da.</value>
+</data>
+<data name="SEO_Blog_Keywords_tr" xml:space="preserve">
+  <value>iş güvenliği blogu, askeri botlar, alpha ayakkabı, güvenlik ayakkabısı</value>
+</data>
+<data name="SEO_About_Title_tr" xml:space="preserve">
+  <value>Hakkımızda</value>
+</data>
+<data name="SEO_About_Description_tr" xml:space="preserve">
+  <value>Alpha Ayakkabı olarak iş güvenliği ve konforu bir araya getiriyoruz. Bizi yakından tanıyın.</value>
+</data>
+<data name="SEO_About_Keywords_tr" xml:space="preserve">
+  <value>alpha hakkında, iş güvenliği, güvenlikli ayakkabı</value>
+</data>
+<data name="SEO_Contact_Title_tr" xml:space="preserve">
+  <value>İletişim</value>
+</data>
+<data name="SEO_Contact_Description_tr" xml:space="preserve">
+  <value>Bize ulaşın. Alpha Ayakkabı ile iletişime geçin.</value>
+</data>
+<data name="SEO_Contact_Keywords_tr" xml:space="preserve">
+  <value>iletişim, alpha ayakkabı, ulaşım</value>
+</data>
+<data name="SEO_Services_Title_tr" xml:space="preserve">
+  <value>Ürünlerimiz ve Hizmetlerimiz</value>
+</data>
+<data name="SEO_Services_Description_tr" xml:space="preserve">
+  <value>Alpha Ayakkabı’nın iş güvenliği ürünlerini ve hizmetlerini keşfedin.</value>
+</data>
+<data name="SEO_Services_Keywords_tr" xml:space="preserve">
+  <value>alpha ürünleri, iş güvenliği ayakkabısı</value>
+</data>
+
   <data name="ViewButton" xml:space="preserve">
     <value>Detayları Görüntüle</value>
   </data>

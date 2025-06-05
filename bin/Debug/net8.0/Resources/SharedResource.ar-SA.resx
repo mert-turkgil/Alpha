@@ -58,6 +58,51 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="SEO_Index_Title_ar" xml:space="preserve">
+  <value>أحذية ألفا - أحذية السلامة المهنية</value>
+</data>
+<data name="SEO_Index_Description_ar" xml:space="preserve">
+  <value>اكتشف أفضل أحذية السلامة للعمل. تعرف على ألفا.</value>
+</data>
+<data name="SEO_Index_Keywords_ar" xml:space="preserve">
+  <value>أحذية السلامة، أحذية ألفا، أحذية عسكرية</value>
+</data>
+<data name="SEO_Blog_Title_ar" xml:space="preserve">
+  <value>المدونة</value>
+</data>
+<data name="SEO_Blog_Description_ar" xml:space="preserve">
+  <value>نصائح وأخبار ودلائل حول أحذية السلامة في مدونة ألفا.</value>
+</data>
+<data name="SEO_Blog_Keywords_ar" xml:space="preserve">
+  <value>مدونة السلامة، أحذية ألفا، حماية العمل</value>
+</data>
+<data name="SEO_About_Title_ar" xml:space="preserve">
+  <value>من نحن</value>
+</data>
+<data name="SEO_About_Description_ar" xml:space="preserve">
+  <value>تجمع ألفا بين الأمان والراحة. تعرّف علينا أكثر.</value>
+</data>
+<data name="SEO_About_Keywords_ar" xml:space="preserve">
+  <value>من نحن ألفا، أحذية السلامة، معلومات الشركة</value>
+</data>
+<data name="SEO_Contact_Title_ar" xml:space="preserve">
+  <value>اتصل بنا</value>
+</data>
+<data name="SEO_Contact_Description_ar" xml:space="preserve">
+  <value>تواصل مع أحذية ألفا.</value>
+</data>
+<data name="SEO_Contact_Keywords_ar" xml:space="preserve">
+  <value>اتصل، أحذية ألفا، التواصل معنا</value>
+</data>
+<data name="SEO_Services_Title_ar" xml:space="preserve">
+  <value>منتجاتنا وخدماتنا</value>
+</data>
+<data name="SEO_Services_Description_ar" xml:space="preserve">
+  <value>اكتشف منتجات وخدمات ألفا لأحذية السلامة.</value>
+</data>
+<data name="SEO_Services_Keywords_ar" xml:space="preserve">
+  <value>منتجات ألفا، أحذية السلامة</value>
+</data>
   <data name="ProductDetail_CertificateLabel" xml:space="preserve">
     <value>شهادة</value>
   </data>
