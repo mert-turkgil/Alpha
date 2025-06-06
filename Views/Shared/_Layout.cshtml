@@ -1,4 +1,7 @@
 ﻿@using System.Globalization
+@{
+    var licenseKey = Context.Items["CKLicenseKey"]?.ToString();
+}
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
@@ -7,6 +10,7 @@
 
     <!-- 🌍 SEO Meta Tags -->
     <title>@(ViewBag.Title ?? "Alpha Ayakkabı - Güvenlikli İş Ayakkabıları")</title>
+    <meta name="ck-license-key" content="@licenseKey" />
     <meta name="description" content="@(ViewBag.MetaDescription ?? "Alpha Ayakkabı iş güvenliği ayakkabıları ve askeri botlarda liderdir.")" />
     <meta name="keywords" content="@(ViewBag.MetaKeywords ?? "iş güvenliği ayakkabısı, güvenlikli ayakkabı, alpha bot, askeri bot")" />
     <meta name="author" content="Alpha Ayakkabı" />
