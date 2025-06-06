@@ -22,3 +22,6 @@ logs/
 node_modules/
 package-lock.json
 yarn.lock
+# Security clean-up files
+passwords.txt
+.cache_ggshield
