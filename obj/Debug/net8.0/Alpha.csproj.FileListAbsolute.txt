@@ -503,3 +503,4 @@ C:\Users\mertu\Desktop\Alpha\bin\Debug\net8.0\BlogResources\SharedResource.de-DE
 C:\Users\mertu\Desktop\Alpha\bin\Debug\net8.0\BlogResources\SharedResource.en-US.resx
 C:\Users\mertu\Desktop\Alpha\bin\Debug\net8.0\BlogResources\SharedResource.fr-FR.resx
 C:\Users\mertu\Desktop\Alpha\bin\Debug\net8.0\BlogResources\SharedResource.tr-TR.resx
+C:\Users\mertu\Desktop\Alpha\bin\Debug\net8.0\appsettings.Production.json
