@@ -1,0 +1,24 @@
+# ❌ Şifreli ayarlar
+appsettings.Production.json
+secrets.json
+
+# 🔧 Build dosyaları
+bin/
+obj/
+*.db
+
+# ⚙️ Kullanıcıya özel ayarlar
+.vscode/
+*.user
+*.suo
+*.swp
+.DS_Store
+
+# 📝 Log dosyaları
+*.log
+logs/
+
+# ♻️ Paket yönetimi
+node_modules/
+package-lock.json
+yarn.lock
