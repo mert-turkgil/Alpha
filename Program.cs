@@ -39,18 +39,19 @@ var enableSsl = emailSection.GetValue<bool?>("EnableSsl") ?? true;
 
 #region ConnectionStrings
 //"Server=localhost\\SQLEXPRESS;Database=AlphaDb;User Id=sa;Password=*.;TrustServerCertificate=True;"
-var shopConnection = config.GetConnectionString("ShopContext")
-    ?? throw new InvalidOperationException("Connection string 'ShopContext' not found.");
+var shopConnection = Environment.GetEnvironmentVariable("SHOP_DB")
+    ?? config.GetConnectionString("ShopContext")
+    ?? throw new InvalidOperationException("SHOP_DB not found.");
 
-var identityConnection = config.GetConnectionString("ApplicationContext")
-    ?? throw new InvalidOperationException("Connection string 'ApplicationContext' not found.");
+var identityConnection = Environment.GetEnvironmentVariable("APP_DB")
+    ?? config.GetConnectionString("ApplicationContext")
+    ?? throw new InvalidOperationException("APP_DB not found.");
 
 builder.Services.AddDbContext<ShopContext>(options =>
     options.UseSqlServer(shopConnection));
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlServer(identityConnection));
-
 #endregion
 
 #region IdentityConfiguration
@@ -213,6 +214,13 @@ app.Use(async (context, next) =>
         return;
     }
 
+    await next();
+});
+var ckLicenseKey = builder.Configuration["CKEditor:LicenseKey"];
+
+app.Use(async (context, next) =>
+{
+    context.Items["CKLicenseKey"] = ckLicenseKey;
     await next();
 });
 
