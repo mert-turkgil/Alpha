@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "EpwtKQckJqGFKw10cfWqZYua2+RykAXesnDK9UUiwJE=",
+  "Hash": "ThoB0MEPJTmuwr+bKas+5feAEFfskJhW33653wYyBgY=",
   "Source": "Alpha",
   "BasePath": "_content/Alpha",
   "Mode": "Default",
@@ -3777,6 +3777,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\robots.txt"
+    },
+    {
+      "Identity": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\sitemap.xml",
+      "SourceId": "Alpha",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\",
+      "BasePath": "_content/Alpha",
+      "RelativePath": "sitemap.xml",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\sitemap.xml"
     },
     {
       "Identity": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\videos\\background.mp4",
