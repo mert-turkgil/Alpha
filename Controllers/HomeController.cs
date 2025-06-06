@@ -469,7 +469,7 @@ public class HomeController : Controller
     
 private async Task<bool> VerifyCaptchaAsync(string token)
 {
-    var secretKey = "***REMOVED***";
+    var secretKey = "6Lf2jDArAAAAAKikhVxW00T3Ep6AXt-SNwpcGpdE";
     using var client = new HttpClient();
     var response = await client.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={token}", null);
     var json = await response.Content.ReadAsStringAsync();
