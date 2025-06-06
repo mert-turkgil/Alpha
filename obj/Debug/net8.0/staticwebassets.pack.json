@@ -549,6 +549,10 @@
       "PackagePath": "staticwebassets\\robots.txt"
     },
     {
+      "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\sitemap.xml",
+      "PackagePath": "staticwebassets\\sitemap.xml"
+    },
+    {
       "Id": "C:\\Users\\mertu\\Desktop\\Alpha\\wwwroot\\videos\\SplashVid.mp4",
       "PackagePath": "staticwebassets\\videos\\SplashVid.mp4"
     },
