@@ -69,8 +69,7 @@ const {
 	WordCount
 } = window.CKEDITOR;
 
-const LICENSE_KEY =
-	'***REMOVED***';
+const LICENSE_KEY = document.querySelector('meta[name="ck-license-key"]').getAttribute('content');
 
 const editorConfig = {
 	toolbar: {
