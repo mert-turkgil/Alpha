@@ -3,6 +3,7 @@
 # https://www.alphaayakkabi.com/
 
 # Alpha
+![Ekran görüntüsü 2025-06-07 044145](https://github.com/user-attachments/assets/bcd87c0f-dd6d-462a-be28-3f681faef619)
 
 Welcome to Alpha, gonna update soon its up to my employer! This project is structured as follows:
 
