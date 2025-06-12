@@ -395,7 +395,7 @@ public class HomeController : Controller
                             ?? "Bize ulaşın. Alpha Ayakkabı ile iletişime geçin ve iş güvenliği çözümlerimizi keşfedin.";
             ViewBag.MetaKeywords = _localization.GetKey("SEO_Contact_Keywords") 
                             ?? "iletişim, alpha ayakkabı, iş güvenliği, güvenlikli ayakkabı, ulaşım";
-            var _recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"] ?? throw new InvalidOperationException("SiteKey not set!");
+            var _recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"];
             var model = new ContactViewModel();
             model.RecaptchaSiteKey = _recaptchaSiteKey;
             PopulateContactViewModel(model);
@@ -410,7 +410,7 @@ public class HomeController : Controller
         [ActionName("Contact")]
         public async Task<IActionResult> ContactPost(ContactViewModel model)
         {
-            var _recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"] ?? throw new InvalidOperationException("SiteKey not set!");
+            var _recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"];
             model.RecaptchaSiteKey = _recaptchaSiteKey;
             PopulateContactViewModel(model);
 
@@ -499,7 +499,7 @@ public class HomeController : Controller
             
         private async Task<bool> VerifyCaptchaAsync(string token)
         {
-            var _recaptchaSecret = _configuration["reCAPTCHA:SecretKey"] ?? throw new InvalidOperationException("SecretKey not set!");
+            var _recaptchaSecret = _configuration["reCAPTCHA:SecretKey"];
 
             using var client = new HttpClient();
             var response = await client.PostAsync(
