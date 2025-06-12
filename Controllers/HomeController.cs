@@ -501,15 +501,23 @@ public class HomeController : Controller
             return View(model);
         }
             
-private async Task<bool> VerifyCaptchaAsync(string token)
-{
-    using var client = new HttpClient();
-    var response = await client.PostAsync(
-        $"https://www.google.com/recaptcha/api/siteverify?secret={_recaptchaSecret}&response={token}",
-        null);
-    var json = await response.Content.ReadAsStringAsync();
-    return json.Contains("\"success\": true");
-}
+        private async Task<bool> VerifyCaptchaAsync(string token)
+        {
+            using var client = new HttpClient();
+            var response = await client.PostAsync(
+                $"https://www.google.com/recaptcha/api/siteverify?secret={_recaptchaSecret}&response={token}",
+                null);
+            var json = await response.Content.ReadAsStringAsync();
+
+            dynamic? result = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+
+            bool success = result?.success == true;
+            double score = (result?.score != null) ? (double)result.score : 0.0;
+
+            return success && score > 0.5;
+        }
+
+
 
 #endregion
 
