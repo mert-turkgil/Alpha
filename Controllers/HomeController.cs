@@ -15,9 +15,6 @@ namespace Alpha.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly string? _recaptchaSiteKey;
-    private readonly string? _recaptchaSecret;
-
     // Rate limit için (en üste veya class’ın başına):
     private static Dictionary<string, DateTime> _contactRateLimit = new();
     private static readonly object _rateLimitLock = new();
@@ -44,9 +41,6 @@ public class HomeController : Controller
     )
     {
         _configuration = configuration;
-        _recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"] ?? throw new InvalidOperationException("SiteKey not set!");
-        _recaptchaSecret = _configuration["reCAPTCHA:SecretKey"] ?? throw new InvalidOperationException("SecretKey not set!");
-
         _logger = logger;
         _productRepository = productRepository;
         _localization = localization;
@@ -401,7 +395,7 @@ public class HomeController : Controller
                             ?? "Bize ulaşın. Alpha Ayakkabı ile iletişime geçin ve iş güvenliği çözümlerimizi keşfedin.";
             ViewBag.MetaKeywords = _localization.GetKey("SEO_Contact_Keywords") 
                             ?? "iletişim, alpha ayakkabı, iş güvenliği, güvenlikli ayakkabı, ulaşım";
-
+            var _recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"] ?? throw new InvalidOperationException("SiteKey not set!");
             ViewBag.RecaptchaSiteKey = _recaptchaSiteKey!;
             var model = new ContactViewModel();
             PopulateContactViewModel(model);
@@ -503,6 +497,8 @@ public class HomeController : Controller
             
         private async Task<bool> VerifyCaptchaAsync(string token)
         {
+            var _recaptchaSecret = _configuration["reCAPTCHA:SecretKey"] ?? throw new InvalidOperationException("SecretKey not set!");
+
             using var client = new HttpClient();
             var response = await client.PostAsync(
                 $"https://www.google.com/recaptcha/api/siteverify?secret={_recaptchaSecret}&response={token}",
