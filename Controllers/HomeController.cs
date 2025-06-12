@@ -15,6 +15,13 @@ namespace Alpha.Controllers;
 
 public class HomeController : Controller
 {
+    private readonly string? _recaptchaSiteKey;
+    private readonly string? _recaptchaSecret;
+
+    // Rate limit için (en üste veya class’ın başına):
+    private static Dictionary<string, DateTime> _contactRateLimit = new();
+    private static readonly object _rateLimitLock = new();
+
     private readonly ILogger<HomeController> _logger;
     private ICategoryRepository _categoryRepository;
     private ICarouselRepository _carouselRepository;
@@ -36,6 +43,10 @@ public class HomeController : Controller
     , IBlogResxService blogResxService
     )
     {
+        _configuration = configuration;
+        _recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"] ?? throw new InvalidOperationException("SiteKey not set!");
+        _recaptchaSecret = _configuration["reCAPTCHA:SecretKey"] ?? throw new InvalidOperationException("SecretKey not set!");
+
         _logger = logger;
         _productRepository = productRepository;
         _localization = localization;
@@ -43,7 +54,6 @@ public class HomeController : Controller
         _categoryRepository = categoryRepository;
         _carouselRepository = carouselRepository;
         _emailSender = emailSender;
-        _configuration = configuration;
         _blogResxService = blogResxService;
     }
 
@@ -392,7 +402,7 @@ public class HomeController : Controller
             ViewBag.MetaKeywords = _localization.GetKey("SEO_Contact_Keywords") 
                             ?? "iletişim, alpha ayakkabı, iş güvenliği, güvenlikli ayakkabı, ulaşım";
 
-
+            ViewBag.RecaptchaSiteKey = _recaptchaSiteKey!;
             var model = new ContactViewModel();
             PopulateContactViewModel(model);
             return View(model);
@@ -406,13 +416,39 @@ public class HomeController : Controller
         [ActionName("Contact")]
         public async Task<IActionResult> ContactPost(ContactViewModel model)
         {
-            // UI metinlerinin eksiksiz gelmesi için POST'ta da doldur:
             PopulateContactViewModel(model);
-            if (!Request.Form.TryGetValue("g-recaptcha-response", out var token) || string.IsNullOrWhiteSpace(token.ToString()) || !await VerifyCaptchaAsync(token.ToString()))
+
+            // 1) HoneyPot kontrolü
+            if (!string.IsNullOrEmpty(model.Honey))
+            {
+                ModelState.AddModelError("", "Bot activity detected.");
+                return View(model);
+            }
+
+            // 2) Rate Limit kontrolü
+            string userIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+            lock (_rateLimitLock)
+            {
+                if (_contactRateLimit.TryGetValue(userIp, out var lastSubmit))
+                {
+                    if (DateTime.UtcNow - lastSubmit < TimeSpan.FromSeconds(30))
+                    {
+                        ModelState.AddModelError("", "Çok sık deneme yaptınız. Lütfen biraz bekleyin.");
+                        return View(model);
+                    }
+                }
+                _contactRateLimit[userIp] = DateTime.UtcNow;
+            }
+
+            // 3) reCAPTCHA kontrolü
+            if (!Request.Form.TryGetValue("g-recaptcha-response", out var token)
+                || string.IsNullOrWhiteSpace(token.ToString())
+                || !await VerifyCaptchaAsync(token.ToString()))
             {
                 ModelState.AddModelError(string.Empty, "Lütfen robot olmadığınızı doğrulayın.");
                 return View(model);
             }
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -440,7 +476,6 @@ public class HomeController : Controller
                     _    => "Mesajınız İçin Teşekkürler"
                 };
 
-                // EmailTemplates klasöründe UserNotification_tr.html gibi dosyalarınız var:
                 var templatePath = Path.Combine(
                     Directory.GetCurrentDirectory(),
                     "EmailTemplates",
@@ -454,24 +489,24 @@ public class HomeController : Controller
                 await _emailSender.SendEmailAsync(model.Email, userSubject, userBody);
 
                 TempData["SuccessMessage"] = _localization.GetKey("ContactSuccessMessage")
-                                             ?? "Your message has been sent!";
+                                            ?? "Your message has been sent!";
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Contact form error");
                 TempData["ErrorMessage"] = _localization.GetKey("ContactErrorMessage")
-                                           ?? "There was an error sending your message.";
+                                        ?? "There was an error sending your message.";
             }
 
-            // Her durumda aynı view’a, dolu model ile dönüyoruz:
             return View(model);
         }
-    
+            
 private async Task<bool> VerifyCaptchaAsync(string token)
 {
-    var secretKey = "***REMOVED***";
     using var client = new HttpClient();
-    var response = await client.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={token}", null);
+    var response = await client.PostAsync(
+        $"https://www.google.com/recaptcha/api/siteverify?secret={_recaptchaSecret}&response={token}",
+        null);
     var json = await response.Content.ReadAsStringAsync();
     return json.Contains("\"success\": true");
 }
