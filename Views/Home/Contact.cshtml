@@ -57,6 +57,8 @@
         <div class="col-md-7 mb-4 animate__animated animate__slideInLeft">
             <h4 class="fw-bold mb-3">@Model.Contact_SendUsMessage</h4>
                 <form asp-action="Contact" asp-controller="Home" method="post">
+                    <input type="text" name="Honey" style="display:none" autocomplete="off" tabindex="-1" />
+
                     @Html.AntiForgeryToken()
 
                     @if (!ViewData.ModelState.IsValid)
@@ -97,7 +99,7 @@
 
 
                     <div class="mb-3">
-                        <div class="g-recaptcha" data-sitekey="***REMOVED***"></div>
+                        <div class="g-recaptcha" data-sitekey="@ViewBag.RecaptchaSiteKey"></div>
                     </div>
 
                     <button type="submit" class="btn btn-primary">@Model.Contact_SendMessageButton</button>

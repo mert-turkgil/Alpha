@@ -8,7 +8,7 @@ namespace Alpha.Models
 {
     public class ContactViewModel
     {
-        #nullable disable
+#nullable disable
         // Localized text properties for "Contact" page
         public string Contact_Title { get; set; }
         public string Contact_HeroDescription { get; set; }
@@ -45,5 +45,7 @@ namespace Alpha.Models
 
         [Required]
         public string Message { get; set; }
+        public string Honey { get; set; }
+
     }
 }
