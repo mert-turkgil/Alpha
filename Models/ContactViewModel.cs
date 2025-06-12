@@ -47,5 +47,7 @@ namespace Alpha.Models
         public string Message { get; set; }
         public string Honey { get; set; }
 
+        public string RecaptchaSiteKey { get; set; }
+
     }
 }

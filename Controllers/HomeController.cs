@@ -396,8 +396,8 @@ public class HomeController : Controller
             ViewBag.MetaKeywords = _localization.GetKey("SEO_Contact_Keywords") 
                             ?? "iletişim, alpha ayakkabı, iş güvenliği, güvenlikli ayakkabı, ulaşım";
             var _recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"] ?? throw new InvalidOperationException("SiteKey not set!");
-            ViewBag.RecaptchaSiteKey = _recaptchaSiteKey!;
             var model = new ContactViewModel();
+            model.RecaptchaSiteKey = _recaptchaSiteKey;
             PopulateContactViewModel(model);
             return View(model);
         }
@@ -410,6 +410,8 @@ public class HomeController : Controller
         [ActionName("Contact")]
         public async Task<IActionResult> ContactPost(ContactViewModel model)
         {
+            var _recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"] ?? throw new InvalidOperationException("SiteKey not set!");
+            model.RecaptchaSiteKey = _recaptchaSiteKey;
             PopulateContactViewModel(model);
 
             // 1) HoneyPot kontrolü
