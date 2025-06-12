@@ -511,11 +511,11 @@ public class HomeController : Controller
 
             dynamic? result = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
 
+            // v2'de sadece success kontrolü yeterli
             bool success = result?.success == true;
-            double score = (result?.score != null) ? (double)result.score : 0.0;
-
-            return success && score > 0.5;
+            return success;
         }
+
 
 
 

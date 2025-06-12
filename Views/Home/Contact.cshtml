@@ -96,8 +96,7 @@
 
                         <span asp-validation-for="Message" class="text-danger"></span>
                     </div>
-
-                    <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
+                    <div class="g-recaptcha w-100" data-sitekey="@ViewBag.RecaptchaSiteKey"></div>
                     <button type="submit" class="btn btn-primary">@Model.Contact_SendMessageButton</button>
                 </form>
 
@@ -128,7 +127,12 @@
 </div>
 @section Scripts {
     <script src="https://cdn.ckeditor.com/ckeditor5/45.0.0/ckeditor5.umd.js" crossorigin></script>
-    <script src="https://www.google.com/recaptcha/api.js?render=@ViewBag.RecaptchaSiteKey"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- jQuery ve validation scriptlerini burada bırakabilirsin -->
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.6/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/main.js"></script>
     <script>
         let editor;
         ClassicEditor
@@ -136,23 +140,11 @@
             .then(newEditor => { editor = newEditor; })
             .catch(error => { console.error('CKEditor init error:', error); });
 
-        document.getElementById('ContactForm').addEventListener('submit', function (e) {
-            e.preventDefault(); // Formu durdur, recaptcha token al
-            // CKEditor içeriğini textarea'ya aktar
+        // Submit olmadan önce CKEditor datasını textarea'ya ata (Bunu formun submit event'ine ekle.)
+        document.getElementById('ContactForm').addEventListener('submit', function () {
             document.querySelector('#editor').value = editor.getData().trim();
-
-            grecaptcha.ready(function() {
-                grecaptcha.execute('@ViewBag.RecaptchaSiteKey', {action: 'submit'}).then(function(token) {
-                    document.getElementById('g-recaptcha-response').value = token;
-                    e.target.submit(); // Şimdi gerçek submit yap!
-                });
-            });
         });
     </script>
-    <!-- Diğer validation ve main.js scriptlerini burada bırakabilirsin -->
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.min.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.3/jquery.validate.min.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.6/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/js/main.js"></script>
 }
+
 
