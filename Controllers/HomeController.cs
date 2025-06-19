@@ -99,6 +99,7 @@ public class HomeController : Controller
         //     - a dedicated Brand table (if you have one), OR
         //     - your products in the DB. 
         //     If you only have brand info inside blogs → products, you can do it like this:
+        
         var brandsList = allBlogs
             .SelectMany(b => b.ProductBlogs)
             .Select(pb => pb.Product.Brand)
