@@ -137,16 +137,16 @@ public class HomeController : Controller
         }
             var cultureName = CultureInfo.CurrentCulture.Name;
             // Fallback to some default if the localization is missing:
-            var blogListTitle = _blogResxService.Read("BlogList_Title", cultureName) ?? "Our Blog";
-            var blogListDescription = _blogResxService.Read("BlogList_Description", cultureName) ?? "Explore the latest news...";
-            var blogListSearchLabel = _blogResxService.Read("BlogList_SearchLabel", cultureName) ?? "Search";
-            var blogListCategoryLabel = _blogResxService.Read("BlogList_CategoryLabel", cultureName) ?? "Category";
-            var blogListAllCategories = _blogResxService.Read("BlogList_AllCategories", cultureName) ?? "All Categories";
-            var blogListBrandLabel = _blogResxService.Read("BlogList_BrandLabel", cultureName) ?? "Brand";
-            var blogListBrandPlaceholder = _blogResxService.Read("BlogList_BrandPlaceholder", cultureName) ?? "Enter brand name";
-            var blogListApplyFiltersButton = _blogResxService.Read("BlogList_ApplyFiltersButton", cultureName) ?? "Apply Filters";
-            var blogListNoPostsMessage = _blogResxService.Read("BlogList_NoPostsMessage", cultureName) ?? "No blog posts available at this time. Check back soon!";
-            var bloglistreadmore = _blogResxService.Read("BlogList_ReadMoreButton", cultureName) ?? "Read More!";
+            var blogListTitle = _localization.GetKey("BlogList_Title") ?? "Our Blog";
+            var blogListDescription = _localization.GetKey("BlogList_Description") ?? "Explore the latest news...";
+            var blogListSearchLabel = _localization.GetKey("BlogList_SearchLabel") ?? "Search";
+            var blogListCategoryLabel = _localization.GetKey("BlogList_CategoryLabel") ?? "Category";
+            var blogListAllCategories = _localization.GetKey("BlogList_AllCategories") ?? "All Categories";
+            var blogListBrandLabel = _localization.GetKey("BlogList_BrandLabel") ?? "Brand";
+            var blogListBrandPlaceholder = _localization.GetKey("BlogList_BrandPlaceholder") ?? "Enter brand name";
+            var blogListApplyFiltersButton = _localization.GetKey("BlogList_ApplyFiltersButton") ?? "Apply Filters";
+            var blogListNoPostsMessage = _localization.GetKey("BlogList_NoPostsMessage") ?? "No blog posts available at this time. Check back soon!";
+            var bloglistreadmore = _localization.GetKey("BlogList_ReadMoreButton") ?? "Read More!";
 
         // 5. Construct your ViewModel
         var model = new BlogFilterViewModel
