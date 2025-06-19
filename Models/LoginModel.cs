@@ -8,7 +8,7 @@ using Alpha.Entity;
 namespace Alpha.Models
 {
     public class LoginModel
-    {   
+    {
         #nullable disable
         [Required(ErrorMessage = "Email alanı gereklidir.")]
         [EmailAddress(ErrorMessage = "Geçerli bir Email adresi girin.")]
@@ -18,13 +18,16 @@ namespace Alpha.Models
         [Required(ErrorMessage = "Şifre alanı gereklidir.")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        
+
         public string ReturnUrl { get; set; }
 
         public IEnumerable<Category> Categories { get; set; }
 
         public IEnumerable<Product> Products { get; set; }
         public string Culture { get; set; }
+
+        public string RecaptchaSiteKey { get; set; }
+        public string Honey { get; set; }
     }
 }
 

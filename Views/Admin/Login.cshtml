@@ -181,6 +181,9 @@
         <h2>Alpha Employee Login</h2>
         <form method="post" asp-action="Login" asp-controller="Admin">
             <input asp-for="Email" class="form-control" placeholder="Email adresinizi girin" />
+            <div style="display:none;">
+                <input type="text" name="Honey" autocomplete="off" tabindex="-1" />
+            </div>
             <span asp-validation-for="Email" class="text-danger"></span>
 
             <input asp-for="Password" class="form-control" placeholder="Şifrenizi girin" />
@@ -195,6 +198,9 @@
             {
                 <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
             }
+            <div class="form-group mt-3">
+                <div class="g-recaptcha" data-sitekey="@((Model?.RecaptchaSiteKey) ?? "")"></div>
+            </div>
 
             <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
         </form>
@@ -244,4 +250,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://www.google.com/recaptcha/api.js"></script>
 }
