@@ -4,7 +4,7 @@
 
 # Alpha
 ![Ekran görüntüsü 2025-06-07 044145](https://github.com/user-attachments/assets/bcd87c0f-dd6d-462a-be28-3f681faef619)
-<img width="777" height="2228" alt="image" src="https://github.com/user-attachments/assets/6bfdfd76-6d8c-4744-b886-c6a0cb2e1dda" />
+
 
 Welcome to Alpha, gonna update soon its up to my employer! This project is structured as follows:
 
@@ -59,6 +59,8 @@ To get started with this project:
 ![image](https://github.com/user-attachments/assets/ba9c4676-14e9-45ef-8993-d9a9076554f8)
 ![image](https://github.com/user-attachments/assets/b351e5c0-4299-4ac1-af50-be76e73f1397)
 ![image](https://github.com/user-attachments/assets/131436ad-fc4f-4e54-a5fe-93d4b63b87a5)
+
+<img width="777" height="2228" alt="image" src="https://github.com/user-attachments/assets/6bfdfd76-6d8c-4744-b886-c6a0cb2e1dda" />
 
 
 
