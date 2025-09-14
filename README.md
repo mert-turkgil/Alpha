@@ -59,8 +59,9 @@ To get started with this project:
 ![image](https://github.com/user-attachments/assets/ba9c4676-14e9-45ef-8993-d9a9076554f8)
 ![image](https://github.com/user-attachments/assets/b351e5c0-4299-4ac1-af50-be76e73f1397)
 ![image](https://github.com/user-attachments/assets/131436ad-fc4f-4e54-a5fe-93d4b63b87a5)
+## NEW STATS
+<img width="710" height="1831" alt="image" src="https://github.com/user-attachments/assets/784c00b8-9523-4f53-989f-8aba4fe2ed74" />
 
-<img width="777" height="2228" alt="image" src="https://github.com/user-attachments/assets/6bfdfd76-6d8c-4744-b886-c6a0cb2e1dda" />
 
 
 
