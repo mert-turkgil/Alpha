@@ -452,7 +452,7 @@ public class HomeController : Controller
             try
             {
                 // --- Admin bildirim e-postası ---
-                var adminEmail = "support@alphaayakkabi.com";
+                var adminEmail = "info@alphaayakkabi.com";
                 var adminSubject = "Yeni İletişim Formu Mesajı";
                 var adminBody = $@"
                     <p><strong>From:</strong> {model.Name} ({model.Email})</p>
