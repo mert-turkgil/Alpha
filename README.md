@@ -60,7 +60,8 @@ To get started with this project:
 ![image](https://github.com/user-attachments/assets/b351e5c0-4299-4ac1-af50-be76e73f1397)
 ![image](https://github.com/user-attachments/assets/131436ad-fc4f-4e54-a5fe-93d4b63b87a5)
 ## NEW STATS
-<img width="710" height="1831" alt="image" src="https://github.com/user-attachments/assets/784c00b8-9523-4f53-989f-8aba4fe2ed74" />
+<img width="1376" height="679" alt="image" src="https://github.com/user-attachments/assets/645a5bb1-daa4-4b2d-a29f-c6db9f805c22" />
+
 
 
 
