@@ -310,7 +310,7 @@
 </section>
 
 @* Hero kısmı *@
-<section class="py-5 bg-light text-center" data-aos="zoom-in">
+<section class="py-5 text-center" style="background-color: #d7dfec;" data-aos="zoom-in">
     <div class="container">
         <h1 style="color: #e79c00;" class="display-4 fw-bold" data-aos="fade-down">@Model.HeroTitle</h1>
         <p class="lead text-muted" data-aos="fade-up">
@@ -329,21 +329,21 @@
 </section>
 
 <!-- Categories Section -->
-<section class="text-center bg-white my-3">
+<section class="text-center" style="background-color: white;">
         @await Component.InvokeAsync("Categories")
 </section>
 
 <!-- Recent Products Section -->
-<section class="bg-light my-3">
+<section style="background-color: #f8f9fa;">
     @await Component.InvokeAsync("Product")
 </section>
 
 <!-- Blog Section -->
-<section class="bg-white my-3" data-aos="slide-up">
+<section style="background-color: white;" data-aos="slide-up">
         @await Component.InvokeAsync("Blog")
 </section>
 
-<section class="bg-light py-5">
+<section style="background-color: #d7dfec;" class="py-5">
   <div class="container">
     <!-- Section Title -->
     <h2 class="section-title text-center mb-4">@Model.CountryQuote</h2>

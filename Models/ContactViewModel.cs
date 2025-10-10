@@ -48,6 +48,7 @@ namespace Alpha.Models
         public string Honey { get; set; }
 
         public string RecaptchaSiteKey { get; set; }
+        public string CloudflareTurnstileSiteKey { get; set; }
 
     }
 }

@@ -11,6 +11,7 @@ using Alpha.EmailServices;
 using Data.Abstract;
 using Alpha.Data;
 using Alpha.Extensions;
+using Alpha;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,10 +49,10 @@ var identityConnection = Environment.GetEnvironmentVariable("APP_DB")
     ?? throw new InvalidOperationException("APP_DB not found.");
 
 builder.Services.AddDbContext<ShopContext>(options =>
-    options.UseSqlServer(shopConnection));
+    options.UseSqlServer("Server=DESKTOP-3I419VG;Database=AlphaDb;Trusted_Connection=True;Encrypt=False;"));
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
-    options.UseSqlServer(identityConnection));
+    options.UseSqlServer("Server=DESKTOP-3I419VG;Database=AlphaDb;Trusted_Connection=True;Encrypt=False;"));
 #endregion
 
 #region IdentityConfiguration
@@ -85,8 +86,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     {
         HttpOnly = true,
         Name = ".Alpha.Security.Cookie",
-        SameSite = SameSiteMode.None,
-        SecurePolicy = CookieSecurePolicy.Always
+        SameSite = SameSiteMode.Lax, // Changed from None to Lax for better Plesk compatibility
+        SecurePolicy = CookieSecurePolicy.SameAsRequest, // Changed to SameAsRequest for Plesk reverse proxy
+        IsEssential = true // Mark as essential for GDPR compliance
     };
 });
 
@@ -98,6 +100,9 @@ builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN";
     options.Cookie.Name = ".Alpha.AntiForgery";
+    options.Cookie.SameSite = SameSiteMode.Lax; // Plesk compatibility
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // Support both HTTP/HTTPS
+    options.Cookie.IsEssential = true; // Essential for functionality
 });
 
 #endregion
@@ -108,10 +113,11 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    var supportedCultures = new[] { "fr-FR", "de-DE", "en-US", "tr-TR", "ar-SA" }
+    // Use centralized culture configuration
+    var supportedCultures = CultureConfig.GetCultureCodes()
         .Select(c => new CultureInfo(c)).ToList();
 
-    options.DefaultRequestCulture = new RequestCulture("tr-TR");
+    options.DefaultRequestCulture = new RequestCulture(CultureConfig.DefaultCulture);
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
     options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
@@ -122,11 +128,27 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 #region Services
 
 string resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
+string blogResourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "BlogResources");
 
 builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(resourcesPath));
-builder.Services.AddSingleton<AliveResourceService>(sp => new AliveResourceService(resourcesPath));
+
+// Add AliveResourceService for main Resources folder (used by LanguageService)
+var mainResourceService = new AliveResourceService(resourcesPath);
+builder.Services.AddSingleton<AliveResourceService>(mainResourceService);
+Console.WriteLine($"[Program] Main Resources watcher initialized at startup.");
+
 builder.Services.AddSingleton<IResxResourceService, ResxResourceService>();
 builder.Services.AddSingleton<IBlogResxService, BlogResxService>();
+
+// Create a separate watcher for BlogResources folder (standalone, not in DI)
+// This just watches for file changes but doesn't serve resources via LanguageService
+if (Directory.Exists(blogResourcesPath))
+{
+    var blogWatcher = new AliveResourceService(blogResourcesPath);
+    Console.WriteLine($"[Program] BlogResources watcher initialized at startup.");
+    // Note: This is a standalone watcher, not added to DI to avoid overriding the main one
+    // BlogResxService handles reading from BlogResources directly
+}
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<LanguageService>();

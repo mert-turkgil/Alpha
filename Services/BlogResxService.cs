@@ -22,67 +22,104 @@ namespace Alpha.Services
             string filePath = GetResxFilePath(culture);
             XDocument doc;
 
-            if (!File.Exists(filePath))
+            try
             {
-                // Create new resx document
-                doc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"),
-                    new XElement("root"));
-            }
-            else
-            {
-                doc = XDocument.Load(filePath, LoadOptions.PreserveWhitespace);
-            }
-
-            var existing = doc.Root?.Elements("data")
-                .FirstOrDefault(e => e.Attribute("name")?.Value == key);
-
-
-            if (existing != null)
-            {
-                existing.Element("value")!.Value = value;
-                if (comment != null)
-                    existing.Element("comment")!.Value = comment;
-            }
-            else
-            {
-                
-                var data = new XElement("data",
-                    new XAttribute("name", key),
-                    new XAttribute(XNamespace.Xml + "space", "preserve"),
-                    new XElement("value", value));
-
-                if (comment != null)
-                    data.Add(new XElement("comment", comment));
-                if (doc.Root == null)
+                if (!File.Exists(filePath))
                 {
-                    var root = new XElement("root");
-                    doc.Add(root);
+                    // Create new resx document
+                    doc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"),
+                        new XElement("root"));
                 }
-                doc.Root!.Add(data);
+                else
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        doc = XDocument.Load(stream, LoadOptions.PreserveWhitespace);
+                    }
+                }
+
+                var existing = doc.Root?.Elements("data")
+                    .FirstOrDefault(e => e.Attribute("name")?.Value == key);
+
+                if (existing != null)
+                {
+                    existing.Element("value")!.Value = value;
+                    if (comment != null)
+                        existing.Element("comment")!.Value = comment;
+                }
+                else
+                {
+                    var data = new XElement("data",
+                        new XAttribute("name", key),
+                        new XAttribute(XNamespace.Xml + "space", "preserve"),
+                        new XElement("value", value));
+
+                    if (comment != null)
+                        data.Add(new XElement("comment", comment));
+                    if (doc.Root == null)
+                    {
+                        var root = new XElement("root");
+                        doc.Add(root);
+                    }
+                    doc.Root!.Add(data);
+                }
+                
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+                
+                using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    doc.Save(stream);
+                }
+                
+                System.Threading.Thread.Sleep(10);
+                
+                Console.WriteLine($"[BLOG RESX] Updated: {key} for {culture}");
+                return true;
             }
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
-            doc.Save(filePath);
-            Console.WriteLine($"[BLOG RESX] Updated: {key} for {culture}");
-            return true;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[BLOG RESX] Error updating resource: {ex.Message}");
+                return false;
+            }
         }
         public bool Delete(string key, string culture)
         {
             string filePath = GetResxFilePath(culture);
             if (!File.Exists(filePath)) return false;
 
-            var doc = XDocument.Load(filePath);
-            var element = doc.Root?.Elements("data")
-                .FirstOrDefault(e => e.Attribute("name")?.Value == key);
-
-            if (element != null)
+            try
             {
-                element.Remove();
-                doc.Save(filePath);
-                Console.WriteLine($"[BLOG RESX] Deleted: {key} for {culture}");
-                return true;
-            }
+                XDocument doc;
+                using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    doc = XDocument.Load(stream);
+                }
 
-            return false;
+                var element = doc.Root?.Elements("data")
+                    .FirstOrDefault(e => e.Attribute("name")?.Value == key);
+
+                if (element != null)
+                {
+                    element.Remove();
+                    
+                    using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        doc.Save(stream);
+                    }
+                    
+                    System.Threading.Thread.Sleep(10);
+                    
+                    Console.WriteLine($"[BLOG RESX] Deleted: {key} for {culture}");
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[BLOG RESX] Error deleting resource: {ex.Message}");
+                return false;
+            }
         }
 
 
@@ -91,11 +128,21 @@ namespace Alpha.Services
             string filePath = GetResxFilePath(culture);
             if (!File.Exists(filePath)) return null;
 
-            var doc = XDocument.Load(filePath);
-            return doc.Root?.Elements("data")
-                .FirstOrDefault(e => e.Attribute("name")?.Value == key)?
-                .Element("value")?.Value;
-
+            try
+            {
+                using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    var doc = XDocument.Load(stream);
+                    return doc.Root?.Elements("data")
+                        .FirstOrDefault(e => e.Attribute("name")?.Value == key)?
+                        .Element("value")?.Value;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[BLOG RESX] Error reading resource: {ex.Message}");
+                return null;
+            }
         }
 
         public bool Exists(string key, string culture)
@@ -110,19 +157,30 @@ namespace Alpha.Services
 
             if (!File.Exists(filePath)) return result;
 
-            var doc = XDocument.Load(filePath);
-            foreach (var data in doc.Root?.Elements("data") ?? Enumerable.Empty<XElement>())
+            try
             {
-                result.Add(new LocalizationModel
+                using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    Key = data.Attribute("name")?.Value ?? "",
-                    Value = data.Element("value")?.Value ?? "",
-                    Comment = data.Element("comment")?.Value ?? "",
-                    Culture = culture
-                });
-            }
+                    var doc = XDocument.Load(stream);
+                    foreach (var data in doc.Root?.Elements("data") ?? Enumerable.Empty<XElement>())
+                    {
+                        result.Add(new LocalizationModel
+                        {
+                            Key = data.Attribute("name")?.Value ?? "",
+                            Value = data.Element("value")?.Value ?? "",
+                            Comment = data.Element("comment")?.Value ?? "",
+                            Culture = culture
+                        });
+                    }
 
-            return result;
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[BLOG RESX] Error loading all resources: {ex.Message}");
+                return result;
+            }
         }
 
         public List<string> ExtractImagePaths(string keyPrefix, string culture)

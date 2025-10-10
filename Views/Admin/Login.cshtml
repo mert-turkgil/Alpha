@@ -2,253 +2,562 @@
 
 @{
     ViewData["Title"] = "Alpha Login Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section Css {
-<style>
-    /* Section Titles */
-.section-title {
-    text-align: center;
-    font-size: 2rem;
-    margin: 30px 0 20px 0;
-    color: #ff7b00; /* Alpha Highlight Color */
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-/* Section Container */
-.section-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 50px;
-}
-
-/* Individual Cards */
-.card-item {
-    background: rgba(0, 0, 0, 0.7); /* Dark background with transparency */
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    width: 250px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card-item h4 {
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-    color: #ff9c3f; /* Slightly lighter highlight */
-}
-
-.card-item p {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: #ddd;
-}
-
-.card-item:hover {
-    transform: scale(1.05); /* Slight zoom effect */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
-}
-
-/* Error Message */
-.error-message {
-    text-align: center;
-    color: #ff4c4c;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-</style>
-<style>
-    /* Video background styling */
-    .video-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        z-index: -1;
-    }
-
-    #bgVideo {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Ensures the video fully covers the screen */
-    }
-
-    /* Dark overlay to improve readability */
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.6);
-    }
-
-    /* Login container styling */
-    .login-container {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh; /* Full screen height */
-        text-align: center;
-    }
-
-    .login-card {
-        background: rgba(0, 0, 0, 0.85);
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-        max-width: 400px;
-        width: 100%;
-        color: #fff;
-        animation: fadeIn 1.2s ease-in-out;
-    }
-
-    .login-card h2 {
-        margin-bottom: 20px;
-        font-size: 1.8rem;
-        color: #ff7b00;
-    }
-
-    .form-control {
-        margin-bottom: 20px;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-    }
-
-    .btn-primary {
-        background-color: #ff7b00;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1rem;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-primary:hover {
-        background-color: #ff9c3f;
-    }
-
-    .category, .product {
-        display: inline-block;
-        margin: 15px;
-        padding: 15px;
-        border-radius: 8px;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: #fff;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-        transition: transform 0.3s ease;
-    }
-
-    .category:hover, .product:hover {
-        transform: scale(1.05);
-    }
-
-    /* Fade-in animation */
-    @@keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+    <style>
+        /* Admin Login Page - Professional Design */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>
-}
 
-<!-- Video Background -->
-<div class="video-container">
-    <video autoplay muted loop id="bgVideo">
-        <source src="/videos/background.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Video Background */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -2;
+        }
+
+        #bgVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dark Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.85) 0%, rgba(45, 45, 45, 0.9) 100%);
+            z-index: -1;
+        }
+
+        /* Login Container */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Login Card */
+        .login-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 50px 40px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(231, 156, 0, 0.3);
+            position: relative;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            border-radius: 24px 24px 0 0;
+        }
+
+        /* Logo/Icon */
+        .login-logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #e79c00, #ff9900);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            box-shadow: 0 8px 24px rgba(231, 156, 0, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .login-logo i {
+            color: white;
+            font-size: 3rem;
+        }
+
+        /* Title */
+        .login-title {
+            color: #1a1a1a;
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .login-subtitle {
+            color: #666;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-label {
+            color: #1a1a1a;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label i {
+            color: #e79c00;
+        }
+
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 14px 18px 14px 50px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            border-color: #e79c00;
+            box-shadow: 0 0 0 0.2rem rgba(231, 156, 0, 0.15);
+            outline: none;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .form-control:focus ~ .input-icon {
+            color: #e79c00;
+        }
+
+        /* Submit Button */
+        .btn-login {
+            background: linear-gradient(135deg, #e79c00, #ff9900);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(231, 156, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(135deg, #ff9900, #e79c00);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(231, 156, 0, 0.5);
+        }
+
+        /* Alert Messages */
+        .alert {
+            border-radius: 12px;
+            border: none;
+            padding: 15px 20px;
+            font-weight: 600;
+            margin-top: 20px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+            color: white;
+        }
+
+        /* Public Section */
+        .public-section {
+            padding: 80px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: white;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-shadow: 0 4px 20px rgba(231, 156, 0, 0.5);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 120px;
+            height: 5px;
+            background: linear-gradient(90deg, #e79c00, #ff9900);
+            margin: 20px auto 0;
+            border-radius: 3px;
+        }
+
+        .section-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto 80px;
+        }
+
+        /* Card Items */
+        .card-item {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px 25px;
+            width: 280px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(231, 156, 0, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .card-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #e79c00, #ff9900);
+            border-radius: 16px 16px 0 0;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .card-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(231, 156, 0, 0.4);
+            border-color: #e79c00;
+        }
+
+        .card-item h4 {
+            color: #1a1a1a;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-item p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .error-message {
+            text-align: center;
+            color: #ff4c4c;
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: rgba(255, 76, 76, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        /* reCAPTCHA */
+        .g-recaptcha {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        /* Animations */
+        @@keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @@keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 8px 24px rgba(231, 156, 0, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 12px 32px rgba(231, 156, 0, 0.6);
+            }
+        }
+
+        @@keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .login-card {
+                padding: 40px 30px;
+            }
+
+            .login-title {
+                font-size: 1.6rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .card-item {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Video Background -->
+    <div class="video-container">
+        <video autoplay muted loop id="bgVideo">
+            <source src="/videos/background.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
     <div class="overlay"></div>
-</div>
 
-<!-- Login Section -->
-<div class="login-container">
-    <div class="login-card">
-        <h2>Alpha Employee Login</h2>
-        <form method="post" asp-action="Login" asp-controller="Admin">
-            <input asp-for="Email" class="form-control" placeholder="Email adresinizi girin" />
-            <div style="display:none;">
-                <input type="text" name="Honey" autocomplete="off" tabindex="-1" />
-            </div>
-            <span asp-validation-for="Email" class="text-danger"></span>
-
-            <input asp-for="Password" class="form-control" placeholder="Şifrenizi girin" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-
-            @if (!string.IsNullOrEmpty(Model?.ReturnUrl))
-            {
-                <input type="hidden" asp-for="ReturnUrl" />
-            }
-
-            @if (ViewBag.ErrorMessage != null)
-            {
-                <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
-            }
-            <div class="form-group mt-3">
-                <div class="g-recaptcha" data-sitekey="@((Model?.RecaptchaSiteKey) ?? "")"></div>
+    <!-- Login Section -->
+    <div class="login-container" data-aos="fade-up">
+        <div class="login-card">
+            <!-- Logo -->
+            <div class="login-logo">
+                <i class="fas fa-shield-alt"></i>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
-        </form>
-    </div>
-</div>
+            <!-- Title -->
+            <h1 class="login-title">Alpha Safety</h1>
+            <p class="login-subtitle">Employee Login Portal</p>
 
-<!-- Public Section: Categories and Products -->
-<div class="public-section">
-    <!-- Categories -->
-    <h3 class="section-title">Popüler Kategoriler</h3>
-    <div class="section-container">
-        @if (Model?.Categories != null && Model.Categories.Any())
-        {
-            @foreach (var category in Model.Categories)
-            {
-                <div class="card-item">
-                    <h4>@category.Name</h4>
+            <!-- Login Form -->
+            <form method="post" asp-action="Login" asp-controller="Admin">
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <div class="position-relative">
+                        <input asp-for="Email" 
+                               class="form-control" 
+                               type="email"
+                               placeholder="Enter your email address"
+                               required />
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger small"></span>
                 </div>
-            }
-        }
-        else
-        {
-            <p class="error-message">Kategoriler yüklenemedi.</p>
-        }
-    </div>
 
-    <!-- Products -->
-    <h3 class="section-title">Popüler Ürünler</h3>
-    <div class="section-container">
-        @if (Model?.Products != null && Model.Products.Any())
-        {
-            @foreach (var product in Model.Products)
-            {
-                <div class="card-item">
-                    <h4>@product.Name</h4>
-                    <p>@product.Description</p>
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <div class="position-relative">
+                        <input asp-for="Password" 
+                               class="form-control" 
+                               type="password"
+                               placeholder="Enter your password"
+                               required />
+                        <i class="fas fa-key input-icon"></i>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger small"></span>
                 </div>
-            }
-        }
-        else
-        {
-            <p class="error-message">Ürünler yüklenemedi.</p>
-        }
+
+                <!-- Honeypot (Hidden) -->
+                <div style="display:none;">
+                    <input type="text" name="Honey" autocomplete="off" tabindex="-1" />
+                </div>
+
+                <!-- Return URL (Hidden) -->
+                @if (!string.IsNullOrEmpty(Model?.ReturnUrl))
+                {
+                    <input type="hidden" asp-for="ReturnUrl" />
+                }
+
+                <!-- reCAPTCHA -->
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="@((Model?.RecaptchaSiteKey) ?? "")"></div>
+                </div>
+
+                <!-- Error Message -->
+                @if (ViewBag.ErrorMessage != null)
+                {
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        @ViewBag.ErrorMessage
+                    </div>
+                }
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </button>
+            </form>
+        </div>
     </div>
-</div>
 
+    <!-- Public Section: Categories and Products -->
+    <div class="public-section">
+        <div class="container">
+            <!-- Categories -->
+            <h3 class="section-title" data-aos="fade-up">
+                <i class="fas fa-th-large me-3"></i>Popular Categories
+            </h3>
+            <div class="section-container">
+                @if (Model?.Categories != null && Model.Categories.Any())
+                {
+                    @foreach (var category in Model.Categories)
+                    {
+                        <div class="card-item" data-aos="zoom-in" data-aos-delay="100">
+                            <h4>
+                                <i class="fas fa-shield-alt me-2" style="color: #e79c00;"></i>
+                                @category.Name
+                            </h4>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Categories could not be loaded.
+                    </div>
+                }
+            </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+            <!-- Products -->
+            <h3 class="section-title" data-aos="fade-up">
+                <i class="fas fa-boxes me-3"></i>Popular Products
+            </h3>
+            <div class="section-container">
+                @if (Model?.Products != null && Model.Products.Any())
+                {
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="card-item" data-aos="zoom-in" data-aos-delay="100">
+                            <h4>
+                                <i class="fas fa-shoe-prints me-2" style="color: #e79c00;"></i>
+                                @product.Name
+                            </h4>
+                            <p>@product.Description</p>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Products could not be loaded.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script src="https://www.google.com/recaptcha/api.js"></script>
-}
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.6/jquery.validate.unobtrusive.min.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Reset reCAPTCHA on page load (needed for failed login attempts)
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof grecaptcha !== 'undefined') {
+                setTimeout(function() {
+                    grecaptcha.reset();
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>

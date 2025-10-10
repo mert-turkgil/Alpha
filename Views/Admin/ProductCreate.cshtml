@@ -104,6 +104,15 @@
 
     <form asp-action="ProductCreate" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
+        
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                <h4>Please correct the following errors:</h4>
+                <div asp-validation-summary="All"></div>
+            </div>
+        }
+        
         <div class="form-container">
             <div class="row">
                 <!-- Product Information -->
@@ -202,7 +211,9 @@
 
                     <div class="mb-3">
                         <label class="form-label">Category</label>
-                        <select asp-for="CategoryId" asp-items="@ViewBag.Categories" class="form-control"></select>
+                        <select asp-for="CategoryId" asp-items="@ViewBag.Categories" class="form-control">
+                            <option value="">-- Select Category --</option>
+                        </select>
                         <span asp-validation-for="CategoryId" class="text-danger"></span>
                     </div>
 
@@ -385,23 +396,37 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
 
     <script>
-        document.querySelector('form').addEventListener('submit', function (e) {
-            let inputs = document.querySelectorAll('input');
-            let hasEmptyField = false;
-
-            inputs.forEach(input => {
-                if (input.value.trim() === "") {
-                    input.style.borderColor = "red";
-                    hasEmptyField = true;
-                } else {
-                    input.style.borderColor = "";
+        $(document).ready(function() {
+            // Add form submission logging
+            $('form').on('submit', function(e) {
+                console.log('Form submission triggered');
+                
+                // Check if form is valid using jQuery validation
+                var isValid = $(this).valid();
+                console.log('Form is valid:', isValid);
+                
+                if (!isValid) {
+                    console.log('Form validation failed - stopping submission');
+                    e.preventDefault();
+                    
+                    // Scroll to first error
+                    var firstError = $('.field-validation-error:first');
+                    if (firstError.length > 0) {
+                        $('html, body').animate({
+                            scrollTop: firstError.offset().top - 100
+                        }, 500);
+                    }
+                    return false;
                 }
+                
+                console.log('Form is valid - submitting...');
+                return true;
             });
-
-            if (hasEmptyField) {
-                e.preventDefault();
-                alert("Please fill in all fields before submitting!");
-            }
+            
+            // Log validation errors
+            $('form').on('invalid-form.validate', function(event, validator) {
+                console.log('Validation errors:', validator.errorList);
+            });
         });
     </script>
 }

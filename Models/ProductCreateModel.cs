@@ -60,115 +60,55 @@ namespace Alpha.Models
         public string Sole { get; set; }
 
         [Required(ErrorMessage = "The 'Category' field is required.")]
-        public int CategoryId { get; set; } = new();
+        public int CategoryId { get; set; }
 
 
-        // Translations per language
+        // Translations per language (optional - will fall back to main field values if not provided)
     public List<string> AvailableLanguages { get; set; } = new();
-    [Required(ErrorMessage = "UpperFR is required.")]
+    
+    //FR - French translations
     public string UpperFR { get; set; }
-    //FR
-
-    [Required(ErrorMessage = "DescriptionFR is required.")]
     public string DescriptionFR { get; set; }
-
-    [Required(ErrorMessage = "LiningFR is required.")]
     public string LiningFR { get; set; }
-
-    [Required(ErrorMessage = "ProtectionFR is required.")]
     public string ProtectionFR { get; set; }
-
-    [Required(ErrorMessage = "MidsoleFR is required.")]
     public string MidsoleFR { get; set; }
-
-    [Required(ErrorMessage = "InsoleFR is required.")]
     public string InsoleFR { get; set; }
-
-    [Required(ErrorMessage = "SoleFR is required.")]
     public string SoleFR { get; set; }
-    //US
-    [Required(ErrorMessage = "DescriptionUS is required.")]
+    
+    //US - English translations
     public string DescriptionUS { get; set; }
-
-    [Required(ErrorMessage = "UpperUS is required.")]
     public string UpperUS { get; set; }
-
-    [Required(ErrorMessage = "LiningUS is required.")]
     public string LiningUS { get; set; }
-
-    [Required(ErrorMessage = "ProtectionUS is required.")]
     public string ProtectionUS { get; set; }
-
-    [Required(ErrorMessage = "MidsoleUS is required.")]
     public string MidsoleUS { get; set; }
-
-    [Required(ErrorMessage = "InsoleUS is required.")]
     public string InsoleUS { get; set; }
-
-    [Required(ErrorMessage = "SoleUS is required.")]
     public string SoleUS { get; set; }
-    //DE
-    [Required(ErrorMessage = "DescriptionDE is required.")]
+    
+    //DE - German translations
     public string DescriptionDE { get; set; }
-
-    [Required(ErrorMessage = "UpperDE is required.")]
     public string UpperDE { get; set; }
-
-    [Required(ErrorMessage = "LiningDE is required.")]
     public string LiningDE { get; set; }
-
-    [Required(ErrorMessage = "ProtectionDE is required.")]
     public string ProtectionDE { get; set; }
-
-    [Required(ErrorMessage = "MidsoleDE is required.")]
     public string MidsoleDE { get; set; }
-
-    [Required(ErrorMessage = "InsoleDE is required.")]
     public string InsoleDE { get; set; }
-
-    [Required(ErrorMessage = "SoleDE is required.")]
     public string SoleDE { get; set; }
-    //TR
-    [Required(ErrorMessage = "DescriptionTR is required.")]
+    
+    //TR - Turkish translations
     public string DescriptionTR { get; set; }
-
-    [Required(ErrorMessage = "UpperTR is required.")]
     public string UpperTR { get; set; }
-
-    [Required(ErrorMessage = "LiningTR is required.")]
     public string LiningTR { get; set; }
-
-    [Required(ErrorMessage = "ProtectionTR is required.")]
     public string ProtectionTR { get; set; }
-
-    [Required(ErrorMessage = "MidsoleTR is required.")]
     public string MidsoleTR { get; set; }
-
-    [Required(ErrorMessage = "InsoleTR is required.")]
     public string InsoleTR { get; set; }
-
-    [Required(ErrorMessage = "SoleTR is required.")]
     public string SoleTR { get; set; }
-    //AR
-    [Required(ErrorMessage = "DescriptionAR is required.")]
+    
+    //AR - Arabic translations
     public string DescriptionAR { get; set; }
-
-    [Required(ErrorMessage = "UpperAR is required.")]
     public string UpperAR { get; set; }
-
-    [Required(ErrorMessage = "LiningAR is required.")]
     public string LiningAR { get; set; }
-
-    [Required(ErrorMessage = "ProtectionAR is required.")]
     public string ProtectionAR { get; set; }
-
-    [Required(ErrorMessage = "MidsoleAR is required.")]
     public string MidsoleAR { get; set; }
-
-    [Required(ErrorMessage = "InsoleAR is required.")]
     public string InsoleAR { get; set; }
-
-    [Required(ErrorMessage = "SoleAR is required.")]
     public string SoleAR { get; set; }
     }
 }

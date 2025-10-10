@@ -28,6 +28,7 @@ public class HomeController : Controller
     private readonly IEmailSender _emailSender;
     private readonly IConfiguration _configuration;
     private readonly IBlogResxService _blogResxService;
+    private readonly IResxResourceService _resxService;
 
     public HomeController(ILogger<HomeController> logger
     ,LanguageService localization
@@ -38,6 +39,7 @@ public class HomeController : Controller
     ,IEmailSender emailSender
     ,IConfiguration configuration
     , IBlogResxService blogResxService
+    , IResxResourceService resxService
     )
     {
         _configuration = configuration;
@@ -49,6 +51,7 @@ public class HomeController : Controller
         _carouselRepository = carouselRepository;
         _emailSender = emailSender;
         _blogResxService = blogResxService;
+        _resxService = resxService;
     }
 
     #region SetLanguage
@@ -116,19 +119,19 @@ public class HomeController : Controller
             .Take(pageSize)
             .ToList();
 
-        // 3) Get current language code (like "en", "tr", "de", "fr"...) 
-        var currentCulture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+        // 3) Get current culture name (e.g., "en-US", "tr-TR") 
+        var cultureName = CultureInfo.CurrentCulture.Name;
 
-        // 4) For each blog in the final list, fetch translations from .resx
+        // 4) For each blog in the final list, fetch translations from BlogResources
         foreach (var blog in paginatedBlogs)
         {
-            // Build your resource keys
-            var titleKey = $"Title_{blog.BlogId}_{blog.Url}_{currentCulture}";
-            var contentKey = $"Content_{blog.BlogId}_{blog.Url}_{currentCulture}";
+            // Build resource keys WITHOUT culture suffix
+            var titleKey = $"Title_{blog.BlogId}_{blog.Url}";
+            var contentKey = $"Content_{blog.BlogId}_{blog.Url}";
 
-            // Attempt to retrieve translation from .resx
-            var translatedTitle = _localization.GetKey(titleKey);    // or .GetValue() depending on your service
-            var translatedContent = _localization.GetKey(contentKey);
+            // Retrieve translation from BlogResources (culture determined by current culture)
+            var translatedTitle = _blogResxService.Read(titleKey, cultureName);
+            var translatedContent = _blogResxService.Read(contentKey, cultureName);
 
             // If found, override the default
             if (!string.IsNullOrEmpty(translatedTitle))
@@ -136,7 +139,6 @@ public class HomeController : Controller
             if (!string.IsNullOrEmpty(translatedContent))
                 blog.Content = translatedContent;
         }
-            var cultureName = CultureInfo.CurrentCulture.Name;
             // Fallback to some default if the localization is missing:
             var blogListTitle = _localization.GetKey("BlogList_Title") ?? "Our Blog";
             var blogListDescription = _localization.GetKey("BlogList_Description") ?? "Explore the latest news...";
@@ -202,9 +204,9 @@ public class HomeController : Controller
             return RedirectToAction("BlogDetails", new { culture = culture, id = blog.BlogId, slug = expectedSlug });
         }
 
-        // Localization
-        var titleKey = $"Title_{blog.BlogId}_{blog.Url}_{culture}";
-        var contentKey = $"Content_{blog.BlogId}_{blog.Url}_{culture}";
+        // Localization - keys WITHOUT culture suffix
+        var titleKey = $"Title_{blog.BlogId}_{blog.Url}";
+        var contentKey = $"Content_{blog.BlogId}_{blog.Url}";
 
         var translatedTitle = _blogResxService.Read(titleKey, culture);
         var translatedContent = _blogResxService.Read(contentKey, culture);
@@ -396,9 +398,11 @@ public class HomeController : Controller
                             ?? "Bize ulaşın. Alpha Ayakkabı ile iletişime geçin ve iş güvenliği çözümlerimizi keşfedin.";
             ViewBag.MetaKeywords = _localization.GetKey("SEO_Contact_Keywords") 
                             ?? "iletişim, alpha ayakkabı, iş güvenliği, güvenlikli ayakkabı, ulaşım";
-            var _recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"];
-            var model = new ContactViewModel();
-            model.RecaptchaSiteKey = _recaptchaSiteKey;
+            var model = new ContactViewModel
+            {
+                RecaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"] ?? "",
+                CloudflareTurnstileSiteKey = _configuration["Cloudflare:TurnstileSiteKey"] ?? ""
+            };
             PopulateContactViewModel(model);
             return View(model);
         }
@@ -422,27 +426,37 @@ public class HomeController : Controller
                 return View(model);
             }
 
-            // 2) Rate Limit kontrolü
+            // 2) Rate Limit kontrolü - Increased to 2 minutes
             string userIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
             lock (_rateLimitLock)
             {
                 if (_contactRateLimit.TryGetValue(userIp, out var lastSubmit))
                 {
-                    if (DateTime.UtcNow - lastSubmit < TimeSpan.FromSeconds(30))
+                    if (DateTime.UtcNow - lastSubmit < TimeSpan.FromMinutes(2))
                     {
-                        ModelState.AddModelError("", "Çok sık deneme yaptınız. Lütfen biraz bekleyin.");
+                        PopulateContactViewModel(model);
+                        ModelState.AddModelError("", "Çok sık deneme yaptınız. Lütfen 2 dakika bekleyin.");
                         return View(model);
                     }
                 }
                 _contactRateLimit[userIp] = DateTime.UtcNow;
             }
 
-            // 3) reCAPTCHA kontrolü
-            if (!Request.Form.TryGetValue("g-recaptcha-response", out var token)
+            // 3) Cloudflare Turnstile kontrolü (replaces reCAPTCHA)
+            if (!Request.Form.TryGetValue("cf-turnstile-response", out var token)
                 || string.IsNullOrWhiteSpace(token.ToString())
-                || !await VerifyCaptchaAsync(token.ToString()))
+                || !await VerifyTurnstileAsync(token.ToString(), userIp))
             {
-                ModelState.AddModelError(string.Empty, "Lütfen robot olmadığınızı doğrulayın.");
+                PopulateContactViewModel(model);
+                ModelState.AddModelError(string.Empty, "Bot doğrulama başarısız. Lütfen tekrar deneyin.");
+                return View(model);
+            }
+
+            // 4) Email format validation
+            if (!IsValidEmail(model.Email))
+            {
+                PopulateContactViewModel(model);
+                ModelState.AddModelError("Email", "Geçersiz e-posta formatı. Lütfen geçerli bir e-posta adresi girin.");
                 return View(model);
             }
 
@@ -451,14 +465,14 @@ public class HomeController : Controller
 
             try
             {
-                // --- Admin bildirim e-postası ---
+                // --- Admin bildirim e-postası (with HTML sanitization) ---
                 var adminEmail = "info@alphaayakkabi.com";
                 var adminSubject = "Yeni İletişim Formu Mesajı";
                 var adminBody = $@"
-                    <p><strong>From:</strong> {model.Name} ({model.Email})</p>
-                    <p><strong>Subject:</strong> {model.Subject}</p>
+                    <p><strong>From:</strong> {System.Net.WebUtility.HtmlEncode(model.Name)} ({System.Net.WebUtility.HtmlEncode(model.Email)})</p>
+                    <p><strong>Subject:</strong> {System.Net.WebUtility.HtmlEncode(model.Subject)}</p>
                     <hr/>
-                    <p>{model.Message}</p>";
+                    <p>{System.Net.WebUtility.HtmlEncode(model.Message).Replace("\n", "<br/>")}</p>";
 
                 await _emailSender.SendEmailAsync(adminEmail, adminSubject, adminBody);
 
@@ -513,6 +527,48 @@ public class HomeController : Controller
             // v2'de sadece success kontrolü yeterli
             bool success = result?.success == true;
             return success;
+        }
+
+        /// <summary>
+        /// Verifies Cloudflare Turnstile token
+        /// </summary>
+        private async Task<bool> VerifyTurnstileAsync(string token, string userIp)
+        {
+            try
+            {
+                var secretKey = _configuration["Cloudflare:TurnstileSecretKey"];
+                if (string.IsNullOrEmpty(secretKey))
+                {
+                    _logger.LogError("Cloudflare Turnstile secret key is not configured.");
+                    return false;
+                }
+
+                using var client = new HttpClient();
+                var content = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("secret", secretKey),
+                    new KeyValuePair<string, string>("response", token),
+                    new KeyValuePair<string, string>("remoteip", userIp)
+                });
+
+                var response = await client.PostAsync("https://challenges.cloudflare.com/turnstile/v0/siteverify", content);
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                var result = System.Text.Json.JsonDocument.Parse(jsonResponse);
+
+                if (result.RootElement.TryGetProperty("success", out var successProp) && successProp.GetBoolean())
+                {
+                    _logger.LogInformation("Turnstile verification successful for IP: {IP}", userIp);
+                    return true;
+                }
+
+                _logger.LogWarning("Turnstile verification failed for IP: {IP}", userIp);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Turnstile verification exception for IP: {IP}", userIp);
+                return false;
+            }
         }
 
 
@@ -666,10 +722,14 @@ public class HomeController : Controller
         ViewBag.Message = _localization.GetKey("ProductDetail_CategoryLabel") ?? "Categories";
         ViewBag.BTN = _localization.GetKey("ViewButton") ?? "Details";
 
-        // 🌐 Dinamik içerik çevirileri (aynen kalabilir)
-        var currentLang = CultureInfo.CurrentUICulture.Name;
-        string? TryLocalize(string field) =>
-            _localization.GetKey($"Product_{product.ProductId}_{field}_{currentLang}") ?? null;
+        // 🌐 Dynamic content translations - Read directly from RESX files
+        string? TryLocalize(string field)
+        {
+            var key = $"Product_{product.ProductId}_{field}";
+            var translated = _resxService.Read(key, culture);
+            Console.WriteLine($"[ProductDetail] Trying to translate '{key}' for culture '{culture}': '{translated}'");
+            return !string.IsNullOrWhiteSpace(translated) ? translated : null;
+        }
 
         product.Description = TryLocalize("Description") ?? product.Description;
         product.Upper = TryLocalize("Upper") ?? product.Upper;
@@ -861,5 +921,24 @@ public IActionResult Privacy(string culture)
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    /// <summary>
+    /// Validates email address format
+    /// </summary>
+    private bool IsValidEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

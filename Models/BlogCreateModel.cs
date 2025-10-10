@@ -35,10 +35,10 @@ namespace Alpha.Models
         public string RawYT { get; set; } = string.Empty;
         public string RawMaps { get; set; } = string.Empty;
 
-        [RequiredNonEmptyList(ErrorMessage = "At least one category must be selected.")]
-        public List<int> SelectedCategoryIds { get; set; }
-        //Products
-        [RequiredNonEmptyList(ErrorMessage = "At least one product must be selected.")]
+        // Optional: Categories can be empty
+        public List<int> SelectedCategoryIds { get; set; } = new();
+        
+        // Optional: Products can be empty
         public List<int> SelectedProductIds { get; set; } = new(); 
 
         // Translations

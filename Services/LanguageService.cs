@@ -20,7 +20,11 @@ namespace Alpha.Services
             var culture = _httpContextAccessor.HttpContext?.Features
                 .Get<IRequestCultureFeature>()?.RequestCulture.Culture.Name ?? "tr-TR";
 
-            return _aliveResourceService.GetResource(key, culture);
+            Console.WriteLine($"[LanguageService] GetKey('{key}') with culture: '{culture}'");
+            var result = _aliveResourceService.GetResource(key, culture);
+            Console.WriteLine($"[LanguageService] GetKey('{key}') returned: '{result}'");
+            
+            return result;
         }
     }
 }

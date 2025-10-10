@@ -14,11 +14,13 @@ namespace Alpha.ViewComponents
     {
         private readonly IProductRepository _productRepository;
         private readonly LanguageService _localization;
+        private readonly IResxResourceService _resxService;
 
-        public ProductViewComponent(IProductRepository productRepository, LanguageService localization)
+        public ProductViewComponent(IProductRepository productRepository, LanguageService localization, IResxResourceService resxService)
         {
             _productRepository = productRepository;
             _localization = localization;
+            _resxService = resxService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
@@ -42,18 +44,18 @@ namespace Alpha.ViewComponents
                     Name =  p.Name,
                     BodyNo = p.BodyNo,
                     Url = p.Url,
-                    Upper = _localization.GetKey($"Product_{p.ProductId}_Upper_{culture}") ?? p.Upper,
-                    Lining = _localization.GetKey($"Product_{p.ProductId}_Lining_{culture}") ?? p.Lining,
-                    Protection = _localization.GetKey($"Product_{p.ProductId}_Protection_{culture}") ?? p.Protection,
+                    Upper = _resxService.Read($"Product_{p.ProductId}_Upper", culture) ?? p.Upper,
+                    Lining = _resxService.Read($"Product_{p.ProductId}_Lining", culture) ?? p.Lining,
+                    Protection = _resxService.Read($"Product_{p.ProductId}_Protection", culture) ?? p.Protection,
                     Brand = p.Brand,
-                    Standard = _localization.GetKey($"Product_{p.ProductId}_Standard_{culture}") ?? p.Standard,
-                    Midsole = _localization.GetKey($"Product_{p.ProductId}_Midsole_{culture}") ?? p.Midsole,
-                    Insole = _localization.GetKey($"Product_{p.ProductId}_Insole_{culture}") ?? p.Insole,
+                    Standard = p.Standard,
+                    Midsole = _resxService.Read($"Product_{p.ProductId}_Midsole", culture) ?? p.Midsole,
+                    Insole = _resxService.Read($"Product_{p.ProductId}_Insole", culture) ?? p.Insole,
                     Certificate = p.Certificate,
-                    Size = _localization.GetKey($"Product_{p.ProductId}_Size_{culture}") ?? p.Size,
-                    Model = _localization.GetKey($"Product_{p.ProductId}_Model_{culture}") ?? p.Model,
-                    Sole = _localization.GetKey($"Product_{p.ProductId}_Sole_{culture}") ?? p.Sole,
-                    Description =_localization.GetKey($"Product_{p.ProductId}_Description_{culture}") ?? p.Description,
+                    Size = p.Size,
+                    Model = p.Model,
+                    Sole = _resxService.Read($"Product_{p.ProductId}_Sole", culture) ?? p.Sole,
+                    Description = _resxService.Read($"Product_{p.ProductId}_Description", culture) ?? p.Description,
                     DateAdded = p.DateAdded,
                     CategoryId = p.CategoryId,
                     ProductImages = p.ProductImages?.ToList() ?? new List<ProductImage>(),

@@ -61,49 +61,48 @@
   <data name="SEO_Index_Title_de" xml:space="preserve">
   <value>Alpha Schuhe – Sicherheitsschuhe für die Arbeit</value>
 </data>
-<data name="SEO_Index_Description_de" xml:space="preserve">
+  <data name="SEO_Index_Description_de" xml:space="preserve">
   <value>Entdecken Sie die besten Sicherheitsschuhe für Ihren Job. Lernen Sie Alpha kennen.</value>
 </data>
-<data name="SEO_Index_Keywords_de" xml:space="preserve">
+  <data name="SEO_Index_Keywords_de" xml:space="preserve">
   <value>sicherheitsschuhe, alpha stiefel, militärstiefel</value>
 </data>
-<data name="SEO_Blog_Title_de" xml:space="preserve">
+  <data name="SEO_Blog_Title_de" xml:space="preserve">
   <value>Blog</value>
 </data>
-<data name="SEO_Blog_Description_de" xml:space="preserve">
+  <data name="SEO_Blog_Description_de" xml:space="preserve">
   <value>Tipps, Nachrichten und Ratgeber zu Sicherheitsschuhen und Arbeitsschutz im Alpha-Blog.</value>
 </data>
-<data name="SEO_Blog_Keywords_de" xml:space="preserve">
+  <data name="SEO_Blog_Keywords_de" xml:space="preserve">
   <value>sicherheitsblog, alpha schuhe, arbeitsschutz</value>
 </data>
-<data name="SEO_About_Title_de" xml:space="preserve">
+  <data name="SEO_About_Title_de" xml:space="preserve">
   <value>Über uns</value>
 </data>
-<data name="SEO_About_Description_de" xml:space="preserve">
+  <data name="SEO_About_Description_de" xml:space="preserve">
   <value>Bei Alpha kombinieren wir Sicherheit und Komfort. Erfahren Sie mehr über uns.</value>
 </data>
-<data name="SEO_About_Keywords_de" xml:space="preserve">
+  <data name="SEO_About_Keywords_de" xml:space="preserve">
   <value>über alpha, sicherheitsschuhe, firmeninfo</value>
 </data>
-<data name="SEO_Contact_Title_de" xml:space="preserve">
+  <data name="SEO_Contact_Title_de" xml:space="preserve">
   <value>Kontakt</value>
 </data>
-<data name="SEO_Contact_Description_de" xml:space="preserve">
+  <data name="SEO_Contact_Description_de" xml:space="preserve">
   <value>Kontaktieren Sie Alpha Schuhe.</value>
 </data>
-<data name="SEO_Contact_Keywords_de" xml:space="preserve">
+  <data name="SEO_Contact_Keywords_de" xml:space="preserve">
   <value>kontakt, alpha schuhe, kontaktieren</value>
 </data>
-<data name="SEO_Services_Title_de" xml:space="preserve">
+  <data name="SEO_Services_Title_de" xml:space="preserve">
   <value>Unsere Produkte und Dienstleistungen</value>
 </data>
-<data name="SEO_Services_Description_de" xml:space="preserve">
+  <data name="SEO_Services_Description_de" xml:space="preserve">
   <value>Entdecken Sie die Sicherheitsschuhe und Services von Alpha.</value>
 </data>
-<data name="SEO_Services_Keywords_de" xml:space="preserve">
+  <data name="SEO_Services_Keywords_de" xml:space="preserve">
   <value>alpha produkte, sicherheitsschuhe</value>
 </data>
-
   <data name="ProductDetail_StandardLabel" xml:space="preserve">
     <value>Standarte</value>
   </data>
@@ -611,15 +610,6 @@
   <data name="ContactErrorMessage" xml:space="preserve">
     <value>Beim Senden Ihrer Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.</value>
   </data>
-  <data name="Carousel_3_Title" xml:space="preserve">
-    <value>Entdecken Sie die Natur</value>
-  </data>
-  <data name="Carousel_3_Description" xml:space="preserve">
-    <value>Erkunden Sie die unberührte Schönheit der Natur mit unseren exklusiven Reisepaketen.</value>
-  </data>
-  <data name="Carousel_3_LinkText" xml:space="preserve">
-    <value>Mehr Erfahren</value>
-  </data>
   <data name="Carousel_4_Title" xml:space="preserve">
     <value>Stahlkappen-Arbeitsstiefel</value>
   </data>
@@ -762,6 +752,34 @@
   <data name="Content_1_default_de" xml:space="preserve">
     <value>&lt;p&gt;degsges&lt;/p&gt;
 </value>
+    <comment></comment>
+  </data>
+  <data name="Product_3_Description" xml:space="preserve">
+    <value>a</value>
+    <comment></comment>
+  </data>
+  <data name="Product_3_Upper" xml:space="preserve">
+    <value>a</value>
+    <comment></comment>
+  </data>
+  <data name="Product_3_Lining" xml:space="preserve">
+    <value>a</value>
+    <comment></comment>
+  </data>
+  <data name="Product_3_Protection" xml:space="preserve">
+    <value>a</value>
+    <comment></comment>
+  </data>
+  <data name="Product_3_Midsole" xml:space="preserve">
+    <value>a</value>
+    <comment></comment>
+  </data>
+  <data name="Product_3_Insole" xml:space="preserve">
+    <value>a</value>
+    <comment></comment>
+  </data>
+  <data name="Product_3_Sole" xml:space="preserve">
+    <value>a</value>
     <comment></comment>
   </data>
 </root>

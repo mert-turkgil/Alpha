@@ -8,20 +8,649 @@
 @section Css{
     <link rel="stylesheet" href="~/css/Category.css" />
     <link rel="stylesheet" href="~/lib/viewerjs/dist/viewer.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+    <style>
+        /* Product Detail Page - Professional Safety Footwear Design */
+        body {
+            background: #f8f9fa;
+        }
+
+        /* Hero Section */
+        .product-detail-hero {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 100px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-detail-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #e79c00 0%, #ff9900 50%, #e79c00 100%);
+            z-index: 10;
+        }
+
+        .product-detail-hero::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(231, 156, 0, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .product-detail-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            text-shadow: 0 4px 20px rgba(231, 156, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-detail-hero h1::after {
+            content: '';
+            display: block;
+            width: 150px;
+            height: 5px;
+            background: linear-gradient(90deg, #e79c00, #ff9900);
+            margin: 25px auto 0;
+            border-radius: 3px;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-meta-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 2px solid rgba(231, 156, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .hero-meta-item:hover {
+            background: rgba(231, 156, 0, 0.2);
+            border-color: #e79c00;
+            transform: translateY(-2px);
+        }
+
+        .hero-meta-label {
+            color: #e79c00;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .hero-meta-value {
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .hero-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #e79c00, #ff9900);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 6px 20px rgba(231, 156, 0, 0.4);
+            margin-top: 20px;
+        }
+
+        /* Main Content Cards */
+        .detail-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            border: 3px solid #f0f0f0;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #e79c00, #ff9900);
+            z-index: 1;
+        }
+
+        .detail-card:hover {
+            box-shadow: 0 20px 50px rgba(231, 156, 0, 0.2);
+            border-color: #e79c00;
+            transform: translateY(-5px);
+        }
+
+        .detail-card-header {
+            background: linear-gradient(135deg, #e79c00, #ff9900);
+            color: white;
+            padding: 20px 30px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 4px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-card-header i {
+            font-size: 1.5rem;
+        }
+
+        .detail-card-body {
+            padding: 35px;
+        }
+
+        /* Image Gallery Styling */
+        .gallery-main-image {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-main-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 32px rgba(231, 156, 0, 0.3);
+        }
+
+        .gallery-main-image img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-main-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+            z-index: 2;
+        }
+
+        .gallery-thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .gallery-thumb {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-thumb:hover {
+            border-color: #e79c00;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(231, 156, 0, 0.3);
+        }
+
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-thumb:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Product Info Table */
+        .info-table {
+            margin: 0;
+            border: none;
+        }
+
+        .info-table tbody tr {
+            border-bottom: 2px solid #f0f0f0;
+            transition: background 0.3s ease;
+        }
+
+        .info-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .info-table tbody tr:hover {
+            background: linear-gradient(to right, #fff8e6, white);
+        }
+
+        .info-table th {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: #1a1a1a;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 18px 25px;
+            width: 35%;
+            border-right: 3px solid #e79c00;
+            position: relative;
+        }
+
+        .info-table th::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #e79c00, #ff9900);
+        }
+
+        .info-table td {
+            color: #666;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 18px 25px;
+            line-height: 1.6;
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 60px 0 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #e79c00, #ff9900);
+            border-radius: 3px;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 90px;
+            width: 30px;
+            height: 5px;
+            background: #e79c00;
+            border-radius: 3px;
+            opacity: 0.5;
+        }
+
+        /* Related Blogs List */
+        .blog-list {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border: 2px solid #f0f0f0;
+        }
+
+        .blog-list-item {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: #f8f9fa;
+            border-left: 4px solid #e79c00;
+            transition: all 0.3s ease;
+        }
+
+        .blog-list-item:hover {
+            background: white;
+            border-left-width: 6px;
+            transform: translateX(8px);
+            box-shadow: 0 4px 12px rgba(231, 156, 0, 0.15);
+        }
+
+        .blog-list-item a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .blog-list-item:hover a {
+            color: #e79c00;
+        }
+
+        .blog-list-item i {
+            color: #e79c00;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .blog-list-item:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Category Cards */
+        .category-card {
+            margin-bottom: 25px;
+        }
+
+        .category-card .card {
+            border: 3px solid #f0f0f0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            background: white;
+        }
+
+        .category-card .card:hover {
+            border-color: #e79c00;
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(231, 156, 0, 0.25);
+        }
+
+        .category-card .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #e79c00, #ff9900);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+            z-index: 1;
+        }
+
+        .category-card .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .category-img {
+            height: 180px;
+            object-fit: contain !important;
+            padding: 15px;
+            transition: transform 0.4s ease;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .category-card .card:hover .category-img {
+            transform: scale(1.1);
+        }
+
+        .category-card .card-footer {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-top: 3px solid #e79c00;
+            padding: 15px;
+        }
+
+        .category-card .card-title {
+            color: #1a1a1a;
+            font-weight: 800;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* Recent Products Grid */
+        .recent-product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            border: 2px solid #f0f0f0;
+            transition: all 0.4s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recent-product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e79c00, #ff9900);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+            z-index: 1;
+        }
+
+        .recent-product-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .recent-product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(231, 156, 0, 0.25);
+            border-color: #e79c00;
+        }
+
+        .recent-product-img-wrapper {
+            height: 200px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            position: relative;
+        }
+
+        .recent-product-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 15px;
+            transition: transform 0.4s ease;
+        }
+
+        .recent-product-card:hover .recent-product-img-wrapper img {
+            transform: scale(1.15);
+        }
+
+        .recent-product-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recent-product-title {
+            color: #1a1a1a;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            flex-grow: 1;
+        }
+
+        .btn-view-product {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-view-product:hover {
+            background: linear-gradient(135deg, #20c997, #28a745);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .product-detail-hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-meta {
+                gap: 15px;
+            }
+
+            .hero-meta-item {
+                padding: 10px 16px;
+            }
+
+            .section-header {
+                font-size: 1.5rem;
+            }
+
+            .detail-card-header {
+                font-size: 1.1rem;
+                padding: 18px 20px;
+            }
+
+            .detail-card-body {
+                padding: 25px 20px;
+            }
+
+            .info-table th,
+            .info-table td {
+                padding: 12px 15px;
+                font-size: 0.85rem;
+            }
+
+            .gallery-thumb {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        /* Animation */
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .detail-card,
+        .recent-product-card,
+        .category-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* No Data Message */
+        .no-data-message {
+            background: white;
+            border-radius: 16px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border: 2px solid #f0f0f0;
+        }
+
+        .no-data-message i {
+            font-size: 4rem;
+            color: #e79c00;
+            margin-bottom: 20px;
+        }
+
+        .no-data-message p {
+            color: #666;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+    </style>
 }
 
 <!-- Hero Section -->
-<section class="py-5 bg-light text-center">
+<section class="product-detail-hero text-center" data-aos="fade-down">
     <div class="container">
-        <h1 style="color: #e79c00;" class="fw-bold text-uppercase">@Model.Name</h1>
-        <p class="text-muted">
-            <span class="fw-bold">@ViewBag.BodyNoLabel:</span> @Model.BodyNo |
-            <span class="fw-bold">@ViewBag.BrandLabel:</span> @Model.Brand |
-            <span class="fw-bold">@ViewBag.DateAddedLabel:</span> @Model.DateAdded.ToString("MMMM dd, yyyy")
-        </p>
-        <p class="text-muted">
-            <span class="fw-bold">@ViewBag.CategoryLabel:</span> @Model.CategoryName
-        </p>
+        <h1>@Model.Name</h1>
+        <div class="hero-meta">
+            <div class="hero-meta-item" data-aos="zoom-in" data-aos-delay="100">
+                <span class="hero-meta-label">@ViewBag.BodyNoLabel</span>
+                <span class="hero-meta-value">@Model.BodyNo</span>
+            </div>
+            <div class="hero-meta-item" data-aos="zoom-in" data-aos-delay="200">
+                <span class="hero-meta-label">@ViewBag.BrandLabel</span>
+                <span class="hero-meta-value">@Model.Brand</span>
+            </div>
+            <div class="hero-meta-item" data-aos="zoom-in" data-aos-delay="300">
+                <span class="hero-meta-label">@ViewBag.DateAddedLabel</span>
+                <span class="hero-meta-value">@Model.DateAdded.ToString("MMM dd, yyyy")</span>
+            </div>
+        </div>
+        <div class="hero-category" data-aos="fade-up" data-aos-delay="400">
+            <i class="fas fa-shield-alt me-2"></i>@Model.CategoryName
+        </div>
     </div>
 </section>
 
@@ -29,77 +658,91 @@
 <div class="container my-5">
     <div class="row">
         <!-- Left Column: Image Gallery -->
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm">
-                <div style="background-color: #e79c00;" class="card-header text-white">
-                    <i class="fas fa-images me-2"></i>@ViewBag.ImagesLabel
+        <div class="col-lg-6 mb-4" data-aos="fade-right">
+            <div class="detail-card">
+                <div class="detail-card-header">
+                    <i class="fas fa-images"></i>
+                    @ViewBag.ImagesLabel
                 </div>
-                <div class="card-body">
+                <div class="detail-card-body">
                     @if (Model.ProductImages != null && Model.ProductImages.Any())
                     {
                         @if(Model.ProductImages.Count == 1)
                         {
-                            var mainImgUrl = Model.ProductImages.First().Image?.ImageUrl ?? "default-image.jpg";
-                            <div id="productImageGallery" class="text-center mb-3">
-                                <div class="main-image">
-                                <img src="@mainImgUrl"
-                                    alt="@Model.Name"
-                                    class="img-fluid rounded shadow-sm"
-                                    style="max-height: 400px; object-fit: cover;"
-                                    onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Unavailable';" />
-                                    </div>
+                            var mainImgUrl = Model.ProductImages.First().Image?.ImageUrl ?? "/img/default-image.jpg";
+                            <div id="productImageGallery">
+                                <div class="gallery-main-image">
+                                    <img src="@($"{mainImgUrl}?v={DateTime.UtcNow.Ticks}")"
+                                        alt="@Model.Name"
+                                        loading="lazy"
+                                        onerror="this.onerror=null;this.src='/img/default-image.jpg';" />
+                                    <span class="gallery-badge">
+                                        <i class="fas fa-shield-alt me-2"></i>SAFETY
+                                    </span>
+                                </div>
                             </div>
                         }
-                        <!-- Thumbnails -->
                         @if (Model.ProductImages.Count > 1)
                         {
                             var images = Model.ProductImages ?? new List<ProductImage>();
                             
-                                @if (images.Any())
-                                {
-                                    <!-- first image as main -->
-                                    <div class="main-image mb-3">
-                                        <img src="@images[0].Image.ImageUrl"
+                            @if (images.Any())
+                            {
+                                <!-- first image as main -->
+                                <div id="productImageGallery">
+                                    <div class="gallery-main-image">
+                                        <img src="@($"{images[0].Image.ImageUrl}?v={DateTime.UtcNow.Ticks}")"
                                             alt="@Model.Name"
-                                            class="img-fluid rounded shadow-sm w-100"
-                                            style="max-height:400px;object-fit:cover;"
-                                            onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Unavailable';" />
+                                            loading="lazy"
+                                            onerror="this.onerror=null;this.src='/img/default-image.jpg';" />
+                                        <span class="gallery-badge">
+                                            <i class="fas fa-shield-alt me-2"></i>SAFETY
+                                        </span>
                                     </div>
 
                                     <!-- the rest as normal thumbs -->
-                                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                                    <div class="gallery-thumbnails">
                                         @foreach (var img in images.Skip(1))
                                         {
-                                            <img src="@img.Image.ImageUrl"
-                                                alt="@Model.Name"
-                                                class="img-fluid"
-                                                style="width:100px;height:100px;object-fit:cover;border:1px solid #ddd;border-radius:4px;"
-                                                onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=Image+Unavailable';" />
+                                            <div class="gallery-thumb">
+                                                <img src="@($"{img.Image.ImageUrl}?v={DateTime.UtcNow.Ticks}")"
+                                                    alt="@Model.Name"
+                                                    loading="lazy"
+                                                    onerror="this.onerror=null;this.src='/img/default-image.jpg';" />
+                                            </div>
                                         }
                                     </div>
-                                }
-                                else
-                                {
-                                    <p class="text-muted">No images available for this product.</p>
-                                }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="no-data-message">
+                                    <i class="fas fa-image"></i>
+                                    <p>No images available for this product.</p>
+                                </div>
+                            }
                         }
                     }
                     else
                     {
-                        <p class="text-muted">No images available for this product.</p>
+                        <div class="no-data-message">
+                            <i class="fas fa-image"></i>
+                            <p>No images available for this product.</p>
+                        </div>
                     }
                 </div>
             </div>
         </div>
 
         <!-- Right Column: Product Details Table -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm">
-                <div style="background-color: #e79c00;" class="card-header text-white">
-                    <i class="fas fa-info-circle me-2"></i>Product Information
+        <div class="col-lg-6" data-aos="fade-left">
+            <div class="detail-card">
+                <div class="detail-card-header">
+                    <i class="fas fa-info-circle"></i>
+                    Product Information
                 </div>
-                <div class="card-body p-0">
-                    <table class="table table-bordered mb-0">
+                <div class="detail-card-body p-0">
+                    <table class="table info-table mb-0">
                         <tbody>
                             <tr>
                                 <th>@ViewBag.DescriptionLabel</th>
@@ -159,91 +802,103 @@
             </div>
         </div>
     </div>
-    <section>
-        <!-- Related Blogs -->
-        @if (Model.RelatedBlogs != null && Model.RelatedBlogs.Any())
-        {
-            <div class="mt-5">
-                <h4 style="color: #e79c00;" class="fw-bold">Related Blogs</h4>
-                <ul class="list-unstyled">
-                    @foreach (var blog in Model.RelatedBlogs)
-                    {
-                        <li>
-                            <a href="@Url.Action("BlogDetails", "Home", new {culture, id = blog.BlogId, type = "blog" })" class="text-decoration-none">
-                                <i style="color: #e79c00;" class="fas fa-arrow-right me-2"></i>@blog.Title
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </div>
-        }
-    </section>
-    <section>
-        <h4 style="color: #e79c00;" class="fw-bold">@ViewBag.Message</h4>
-        <div class="container-xxl">
-            <hr>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 justify-content-center">
-            <!-- Related Categories -->
-            @if (Model.RelatedCategories != null && Model.RelatedCategories.Any())
-            {
-
-                        @foreach (var category in Model.RelatedCategories)
-                        {
-                            <div class="col category-card category-item">
-                                <div class="card h-100 shadow-sm position-relative overflow-hidden border-1 rounded-5 shadow-sm" 
-                                    onclick="window.location.href='@Url.Action("Services", "Home", new { culture, category = category.Url })'">
-                                    <img src="~/img/@category.ImageUrl" 
-                                        onerror="this.onerror=null; this.src='https://via.placeholder.com/150x150?text=Image+Unavailable';" 
-                                        alt="@category.Name" class="card-img-top img-fluid category-img p-2" style="object-fit: cover; border-radius: 8px;" />
-                                    <div class="card-footer text-center p-2 bg-light">
-                                        <h6 class="card-title fw-bold m-0 text-truncate">@category.Name</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-            }
-                </div>
-            </div>
-    </section>
-    <section>
-    <!-- Recent Products -->
-    @if (Model.RecentProducts != null && Model.RecentProducts.Any())
+    <!-- Related Blogs Section -->
+    @if (Model.RelatedBlogs != null && Model.RelatedBlogs.Any())
     {
-        <div class="mt-5">
-            <h4 style="color: #e79c00;" class="fw-bold">Recent Products</h4>
-            <div class="row">
-                @foreach (var recentProduct in Model.RecentProducts)
+        <section data-aos="fade-up">
+            <h4 class="section-header">
+                <i class="fas fa-newspaper me-3"></i>Related Blogs
+            </h4>
+            <div class="blog-list">
+                @foreach (var blog in Model.RelatedBlogs)
                 {
-                    <div class="col-md-4">
-                        <div class="card shadow-sm mb-3">
-                            <img src="@recentProduct.ProductImages.FirstOrDefault()?.Image?.ImageUrl"
-                                 alt="@recentProduct.Name"
-                                 class="card-img-top"
-                                 style="height: 150px; object-fit: cover;"
-                                 onerror="this.onerror=null;this.src='https://via.placeholder.com/150x150?text=Image+Unavailable';" />
-                            <div class="card-body">
-                                <h6 class="card-title">@recentProduct.Name</h6>
-                                    <a href="@Url.Action("ProductDetail", "Home", new { culture, id = recentProduct.ProductId })"
-                                    class="btn btn-outline-success btn-sm">
-                                        @ViewBag.BTN
-                                    </a>
+                    <div class="blog-list-item">
+                        <a href="@Url.Action("BlogDetails", "Home", new {culture, id = blog.BlogId, type = "blog" })">
+                            <i class="fas fa-arrow-right"></i>
+                            <span>@blog.Title</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+    <!-- Related Categories Section -->
+    @if (Model.RelatedCategories != null && Model.RelatedCategories.Any())
+    {
+        <section data-aos="fade-up">
+            <h4 class="section-header">
+                <i class="fas fa-th-large me-3"></i>@ViewBag.Message
+            </h4>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 justify-content-center">
+                @foreach (var category in Model.RelatedCategories)
+                {
+                    <div class="col category-card">
+                        <div class="card h-100 position-relative" 
+                            onclick="window.location.href='@Url.Action("Services", "Home", new { culture, category = category.Url })'">
+                            <img src="@Url.Content($"~/img/{category.ImageUrl}?v={DateTime.UtcNow.Ticks}")" 
+                                onerror="this.onerror=null; this.src='/img/default-image.jpg';" 
+                                alt="@category.Name" 
+                                class="card-img-top img-fluid category-img"
+                                loading="lazy" />
+                            <div class="card-footer text-center">
+                                <h6 class="card-title text-truncate">@category.Name</h6>
                             </div>
                         </div>
                     </div>
                 }
             </div>
-        </div>
+        </section>
     }
-    </section>
+    <!-- Recent Products Section -->
+    @if (Model.RecentProducts != null && Model.RecentProducts.Any())
+    {
+        <section data-aos="fade-up">
+            <h4 class="section-header">
+                <i class="fas fa-clock me-3"></i>Recent Products
+            </h4>
+            <div class="row">
+                @foreach (var recentProduct in Model.RecentProducts)
+                {
+                    var recentImageUrl = recentProduct.ProductImages?.FirstOrDefault()?.Image?.ImageUrl ?? "/img/default-image.jpg";
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="recent-product-card position-relative">
+                            <div class="recent-product-img-wrapper">
+                                <img src="@($"{recentImageUrl}?v={DateTime.UtcNow.Ticks}")"
+                                     alt="@recentProduct.Name"
+                                     loading="lazy"
+                                     onerror="this.onerror=null;this.src='/img/default-image.jpg';" />
+                            </div>
+                            <div class="recent-product-body">
+                                <h6 class="recent-product-title">@recentProduct.Name</h6>
+                                <a href="@Url.Action("ProductDetail", "Home", new { culture, id = recentProduct.ProductId })"
+                                   class="btn-view-product w-100 text-center">
+                                    <i class="fas fa-eye"></i>
+                                    @ViewBag.BTN
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+    }
 </div>
 
 @section Scripts {
   <script src="~/lib/viewerjs/dist/viewer.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
   <script>
+    // Initialize AOS Animations
+    AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100
+    });
+
+    // Initialize Viewer.js for image gallery
     document.addEventListener('DOMContentLoaded', function() {
-      // Find the left‐column card-body that holds both main + thumbs
-      var galleryContainer = document.querySelector('.col-lg-6.mb-4 .card-body');
+      // Find the gallery container (detail-card-body that holds both main + thumbs)
+      var galleryContainer = document.querySelector('#productImageGallery');
       if (!galleryContainer) return;
 
       // Initialize Viewer.js on that container
@@ -257,7 +912,9 @@
         zoomable:   true,
         movable:    true,
         keyboard:   true,
-        loop:       true
+        loop:       true,
+        transition: true,
+        backdrop:   true
       });
     });
   </script>

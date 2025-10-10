@@ -404,6 +404,7 @@ public class AdminController : Controller
 
     #region Products
 
+    [HttpGet("Admin/Products")]
     public async Task<IActionResult> Products()
     {
         var products = await _productRepository.GetAllAsync();
@@ -428,8 +429,16 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ProductCreate(ProductCreateModel e)
     {
+        Console.WriteLine($"[INFO] ProductCreate POST called for product: {e.Name}");
+        
         if (!ModelState.IsValid)
         {
+            Console.WriteLine("[WARN] ModelState is invalid:");
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine($"  - {error.ErrorMessage}");
+            }
+            
             ViewBag.Categories = (await _categoryRepository.GetAllAsync())
                 .Select(c => new SelectListItem
                 {
@@ -463,10 +472,36 @@ public class AdminController : Controller
         };
 
         // 2) save *and* get back the populated ID
-        product = await _productRepository.CreateAsync(product);
+        try
+        {
+            product = await _productRepository.CreateAsync(product);
+            Console.WriteLine($"[INFO] Product saved to database with ID: {product.ProductId}");
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] Failed to save product: {ex.Message}");
+            TempData["AlertMessage"] = new AlertMessage
+            {
+                Title = "Error",
+                Message = $"Failed to create product: {ex.Message}",
+                AlertType = "danger",
+                icon = "fas fa-bug",
+                icon2 = "fas fa-times"
+            };
+            ViewBag.Categories = (await _categoryRepository.GetAllAsync())
+                .Select(c => new SelectListItem
+                {
+                    Value = c.CategoryId.ToString(),
+                    Text = c.Name
+                }).ToList();
+            ViewBag.AvailableLanguages = new List<string> { "en-US", "de-DE", "fr-FR", "tr-TR", "ar-SA" };
+            return View(e);
+        }
 
         if (product.ProductId <= 0)
         {
+            Console.WriteLine("[ERROR] Product ID was not generated after save");
             TempData["AlertMessage"] = new AlertMessage
             {
                 Title = "Error",
@@ -475,20 +510,39 @@ public class AdminController : Controller
                 icon = "fas fa-bug",
                 icon2 = "fas fa-times"
             };
+            ViewBag.Categories = (await _categoryRepository.GetAllAsync())
+                .Select(c => new SelectListItem
+                {
+                    Value = c.CategoryId.ToString(),
+                    Text = c.Name
+                }).ToList();
+            ViewBag.AvailableLanguages = new List<string> { "en-US", "de-DE", "fr-FR", "tr-TR", "ar-SA" };
             return View(e);
         }
 
         // 3) now that ProductId is rock-solid, write all translations
-        AddProductTranslations(product.ProductId, e);
+        try
+        {
+            Console.WriteLine($"[INFO] Adding translations for product ID: {product.ProductId}");
+            AddProductTranslations(product.ProductId, e);
+            Console.WriteLine("[INFO] Translations added successfully");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] Failed to add translations: {ex.Message}");
+            // Continue anyway - product is saved, translations can be added later
+        }
 
+        Console.WriteLine($"[INFO] Product created successfully with ID: {product.ProductId}. Redirecting to Products page.");
         TempData["SuccessMessage"] = "Product and translations created successfully!";
-        return RedirectToAction("Products");
+        return RedirectToAction("Products", "Admin");
     }
 
 
 
 
     [HttpGet]
+    [Route("Admin/ProductEdit/{id:int}")]
     public async Task<IActionResult> ProductEdit(int id)
     {
         var product = await _productRepository.GetByIdAsync(id);
@@ -549,7 +603,8 @@ public class AdminController : Controller
                 var prop = model.GetType().GetProperty($"{field}{culture.Value}");
                 if (prop != null)
                 {
-                    var translation = _resxService.Read($"Product_{product.ProductId}_{field}_{culture.Key}", culture.Key);
+                    // Key WITHOUT culture suffix - culture is in the filename!
+                    var translation = _resxService.Read($"Product_{product.ProductId}_{field}", culture.Key);
                     prop.SetValue(model, translation ?? string.Empty);
                 }
             }
@@ -561,6 +616,7 @@ public class AdminController : Controller
 
 
     [HttpPost]
+    [Route("Admin/ProductEdit")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ProductEdit(ProductEditModel e)
     {
@@ -606,27 +662,55 @@ public class AdminController : Controller
             product.Midsole = e.Midsole;
             product.Insole = e.Insole;
             product.Sole = e.Sole;
+            product.CategoryId = e.CategoryId; // Update primary category
 
-            // Update Categories
-            product.ProductCategories = e.CategoryIds?
-                .Select(id => new ProductCategory { ProductId = product.ProductId, CategoryId = id })
-                .ToList() ?? new List<ProductCategory>();
+            // Update Categories - Clear and Add
+            product.ProductCategories.Clear();
+            if (e.CategoryIds != null && e.CategoryIds.Any())
+            {
+                foreach (var categoryId in e.CategoryIds)
+                {
+                    product.ProductCategories.Add(new ProductCategory 
+                    { 
+                        ProductId = product.ProductId, 
+                        CategoryId = categoryId 
+                    });
+                }
+            }
 
-            // Update Images
-            product.ProductImages = e.ImageIds?
-                .Select(id => new ProductImage { ProductId = product.ProductId, ImageId = id })
-                .ToList() ?? new List<ProductImage>();
+            // Update Images - Clear and Add
+            product.ProductImages.Clear();
+            if (e.ImageIds != null && e.ImageIds.Any())
+            {
+                foreach (var imageId in e.ImageIds)
+                {
+                    product.ProductImages.Add(new ProductImage 
+                    { 
+                        ProductId = product.ProductId, 
+                        ImageId = imageId 
+                    });
+                }
+            }
 
-            // Update Blogs
-            product.ProductBlogs = e.BlogIds?
-                .Select(id => new ProductBlog { ProductId = product.ProductId, BlogId = id })
-                .ToList() ?? new List<ProductBlog>();
+            // Update Blogs - Clear and Add
+            product.ProductBlogs.Clear();
+            if (e.BlogIds != null && e.BlogIds.Any())
+            {
+                foreach (var blogId in e.BlogIds)
+                {
+                    product.ProductBlogs.Add(new ProductBlog 
+                    { 
+                        ProductId = product.ProductId, 
+                        BlogId = blogId 
+                    });
+                }
+            }
 
             // Update Translations
             UpdateProductTranslations(e, product.ProductId);
 
-            // Save Changes
-            await _productRepository.UpdateAsync(product);
+            // Save Changes to DbContext first
+            await _dbContext.SaveChangesAsync();
 
             // Commit Transaction
             await transaction.CommitAsync();
@@ -665,9 +749,10 @@ public class AdminController : Controller
                 return RedirectToAction("Products");
             }
 
-            // Step 3: Clear associations
+            // Step 3: Clear ALL associations (including ProductBlogs)
             product.ProductCategories?.Clear();
             product.ProductImages?.Clear();
+            product.ProductBlogs?.Clear();
             await _productRepository.UpdateAsync(product);
 
             // Step 4: Delete product
@@ -714,12 +799,11 @@ public class AdminController : Controller
             }
             string urlSlug = model.Url.Trim().ToLowerInvariant();
 
-            string langCode = new System.Globalization.CultureInfo(culture).TwoLetterISOLanguageName; // e.g., "en"
+            // Keys WITHOUT language/culture suffix - culture is in the filename!
+            _blogResxService.AddOrUpdate($"Title_{id}_{urlSlug}", title, culture);
+            _blogResxService.AddOrUpdate($"Content_{id}_{urlSlug}", content, culture);
 
-            _resxService.AddOrUpdate($"Title_{id}_{urlSlug}_{langCode}", title, culture);
-            _resxService.AddOrUpdate($"Content_{id}_{urlSlug}_{langCode}", content, culture);
-
-            Console.WriteLine($"[DEBUG] Translation saved for {culture} with langCode {langCode}");
+            Console.WriteLine($"[DEBUG] Blog translation saved for {culture}: Title_{id}_{urlSlug}");
         }
 
         Console.WriteLine("[DEBUG] All translations updated successfully.");
@@ -751,7 +835,7 @@ public class AdminController : Controller
             var culture = translation.Key;
             var (title, description, linkText) = translation.Value;
 
-            // Unique keys with carousel prefix
+            // Keys WITHOUT culture suffix (culture is in filename, not key name)
             string keyPrefix = $"Carousel_{baseKey}";
 
             if (!string.IsNullOrEmpty(title))
@@ -806,7 +890,8 @@ public class AdminController : Controller
 
                 if (!string.IsNullOrWhiteSpace(value))
                 {
-                    var resourceKey = $"Product_{productId}_{field}_{culture}";
+                    // Key WITHOUT culture suffix - culture is in the filename!
+                    var resourceKey = $"Product_{productId}_{field}";
                     _resxService.AddOrUpdate(resourceKey, value, culture);
                 }
             }
@@ -871,9 +956,10 @@ public class AdminController : Controller
 
                 if (!string.IsNullOrWhiteSpace(value))
                 {
-                    var resourceKey = $"Product_{productId}_{field}_{culture}";
+                    // Key WITHOUT culture suffix - culture is in the filename!
+                    var resourceKey = $"Product_{productId}_{field}";
                     _resxService.AddOrUpdate(resourceKey, value, culture);
-                    Console.WriteLine($"[INFO] Updated translation: {resourceKey} => {value}");
+                    Console.WriteLine($"[INFO] Updated translation: {resourceKey} => {value} in {culture}");
                 }
             }
         }
@@ -887,19 +973,20 @@ public class AdminController : Controller
     private void DeleteProductTranslations(int productId)
     {
         var cultures = new[] { "fr-FR", "en-US", "de-DE", "tr-TR", "ar-SA" };
-        var fields = new[] { "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
+        var fields = new[] { "Description", "Upper", "Lining", "Protection", "Midsole", "Insole", "Sole" };
 
         foreach (var culture in cultures)
         {
             foreach (var field in fields)
             {
-                var key = $"Product_{productId}_{field}_{culture}";
+                // Key WITHOUT culture suffix - culture is in the filename!
+                var key = $"Product_{productId}_{field}";
                 if (_resxService.Exists(key, culture))
                 {
                     try
                     {
                         _resxService.Delete(key, culture);
-                        Console.WriteLine($"[INFO] Deleted translation: {key}");
+                        Console.WriteLine($"[INFO] Deleted translation: {key} from {culture}");
                     }
                     catch (IOException ioEx)
                     {
@@ -912,7 +999,7 @@ public class AdminController : Controller
                 }
                 else
                 {
-                    Console.WriteLine($"[SKIP] No resource found for {key}");
+                    Console.WriteLine($"[SKIP] No resource found for {key} in {culture}");
                 }
             }
         }
@@ -1968,18 +2055,20 @@ public class AdminController : Controller
 
         var result = await _blogRepository.CreateAsync(blog);
 
-        // Save translations
+        // Save translations - keys WITHOUT language suffix (culture is in filename)
         string idKey = result.BlogId.ToString();
-        _blogResxService.AddOrUpdate($"Title_{idKey}_{model.Url}_en", model.TitleUS, "en-US");
-        _blogResxService.AddOrUpdate($"Content_{idKey}_{model.Url}_en", updatedContentUS, "en-US");
-        _blogResxService.AddOrUpdate($"Title_{idKey}_{model.Url}_tr", model.TitleTR, "tr-TR");
-        _blogResxService.AddOrUpdate($"Content_{idKey}_{model.Url}_tr", updatedContentTR, "tr-TR");
-        _blogResxService.AddOrUpdate($"Title_{idKey}_{model.Url}_de", model.TitleDE, "de-DE");
-        _blogResxService.AddOrUpdate($"Content_{idKey}_{model.Url}_de", updatedContentDE, "de-DE");
-        _blogResxService.AddOrUpdate($"Title_{idKey}_{model.Url}_fr", model.TitleFR, "fr-FR");
-        _blogResxService.AddOrUpdate($"Content_{idKey}_{model.Url}_fr", updatedContentFR, "fr-FR");
-        _blogResxService.AddOrUpdate($"Title_{idKey}_{model.Url}_ar", model.TitleAR, "ar-SA");
-        _blogResxService.AddOrUpdate($"Content_{idKey}_{model.Url}_ar", updatedContentAR, "ar-SA");
+        string urlSlug = model.Url.Trim().ToLowerInvariant();
+        
+        _blogResxService.AddOrUpdate($"Title_{idKey}_{urlSlug}", model.TitleUS, "en-US");
+        _blogResxService.AddOrUpdate($"Content_{idKey}_{urlSlug}", updatedContentUS, "en-US");
+        _blogResxService.AddOrUpdate($"Title_{idKey}_{urlSlug}", model.TitleTR, "tr-TR");
+        _blogResxService.AddOrUpdate($"Content_{idKey}_{urlSlug}", updatedContentTR, "tr-TR");
+        _blogResxService.AddOrUpdate($"Title_{idKey}_{urlSlug}", model.TitleDE, "de-DE");
+        _blogResxService.AddOrUpdate($"Content_{idKey}_{urlSlug}", updatedContentDE, "de-DE");
+        _blogResxService.AddOrUpdate($"Title_{idKey}_{urlSlug}", model.TitleFR, "fr-FR");
+        _blogResxService.AddOrUpdate($"Content_{idKey}_{urlSlug}", updatedContentFR, "fr-FR");
+        _blogResxService.AddOrUpdate($"Title_{idKey}_{urlSlug}", model.TitleAR, "ar-SA");
+        _blogResxService.AddOrUpdate($"Content_{idKey}_{urlSlug}", updatedContentAR, "ar-SA");
 
         Console.WriteLine($"[DEBUG] Blog '{result.Title}' saved successfully with ID {result.BlogId}.");
         foreach (var tempFile in Directory.GetFiles(tempPath))
@@ -2055,7 +2144,11 @@ public class AdminController : Controller
 
             foreach (var (culture, langCode) in cultures)
             {
-                string contentKey = $"Content_{id}_{blog.Url}_{langCode}";
+                // Keys WITHOUT language suffix (culture is in filename)
+                string urlSlug = blog.Url.Trim().ToLowerInvariant();
+                string titleKey = $"Title_{id}_{urlSlug}";
+                string contentKey = $"Content_{id}_{urlSlug}";
+                
                 string? html = _blogResxService.Read(contentKey, culture);
 
                 if (!string.IsNullOrWhiteSpace(html))
@@ -2072,9 +2165,10 @@ public class AdminController : Controller
                     }
                 }
 
-                // Delete translation keys
-                _blogResxService.Delete($"Title_{id}_{blog.Url}_{langCode}", culture);
-                _blogResxService.Delete($"Content_{id}_{blog.Url}_{langCode}", culture);
+                // Delete translation keys WITHOUT language suffix
+                _blogResxService.Delete(titleKey, culture);
+                _blogResxService.Delete(contentKey, culture);
+                Console.WriteLine($"[DEBUG] Deleted translations for {culture}: {titleKey}, {contentKey}");
             }
 
             // STEP 3: Remove many-to-many links (Categories & Products)
@@ -2154,8 +2248,10 @@ public class AdminController : Controller
             string cultureKey = culture.Key;
             string langCode = culture.Value;
 
-            string titleKey = $"Title_{id}_{blog.Url}_{langCode}";
-            string contentKey = $"Content_{id}_{blog.Url}_{langCode}";
+            // Keys WITHOUT language suffix (culture is in the resx filename)
+            string urlSlug = blog.Url.Trim().ToLowerInvariant();
+            string titleKey = $"Title_{id}_{urlSlug}";
+            string contentKey = $"Content_{id}_{urlSlug}";
 
             string title = _blogResxService.Read(titleKey, cultureKey) ?? string.Empty;
             string contentRaw = _blogResxService.Read(contentKey, cultureKey) ?? string.Empty;
@@ -2237,9 +2333,11 @@ public class AdminController : Controller
         { "de-DE", "de" }, { "fr-FR", "fr" }, { "ar-SA", "ar" }
     };
 
+        string urlSlug = blog.Url.Trim().ToLowerInvariant();
         foreach (var (culture, langCode) in cultures)
         {
-            string contentKey = $"Content_{id}_{blog.Url}_{langCode}";
+            // Keys WITHOUT language suffix (culture is in filename)
+            string contentKey = $"Content_{id}_{urlSlug}";
             string? content = _blogResxService.Read(contentKey, culture);
             if (!string.IsNullOrEmpty(content))
             {
@@ -2300,14 +2398,16 @@ public class AdminController : Controller
 
         await _blogRepository.UpdateAsync(blog);
 
+        // Save translations WITHOUT language suffix (culture is in filename)
+        string finalUrlSlug = blog.Url.Trim().ToLowerInvariant();
         foreach (var (culture, langCode) in cultures)
         {
             var (title, content) = translations[culture];
-            _blogResxService.AddOrUpdate($"Title_{id}_{blog.Url}_{langCode}", title, culture);
-            _blogResxService.AddOrUpdate($"Content_{id}_{blog.Url}_{langCode}", content, culture);
+            _blogResxService.AddOrUpdate($"Title_{id}_{finalUrlSlug}", title, culture);
+            _blogResxService.AddOrUpdate($"Content_{id}_{finalUrlSlug}", content, culture);
         }
 
-        Console.WriteLine($"[DEBUG] Translations and blog updated for ID {id}");
+        Console.WriteLine($"[DEBUG] Translations and blog updated for ID {id} with keys: Title_{id}_{finalUrlSlug}, Content_{id}_{finalUrlSlug}");
         TempData["SuccessMessage"] = "Blog updated successfully!";
         foreach (var tempFile in Directory.GetFiles(tempPath))
         {
@@ -2580,67 +2680,81 @@ public class AdminController : Controller
     {
         Console.WriteLine($"[INFO] Initiating image deletion process for ID: {id}");
 
-        // Step 1: Retrieve the image
-        var image = await _imageRepository.GetByIdAsync(id);
-        if (image == null)
-        {
-            Console.WriteLine($"[WARN] No image found with ID: {id}");
-            TempData["ErrorMessage"] = "Image not found.";
-            return RedirectToAction("Images");
-        }
+        using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
-        Console.WriteLine($"[INFO] Image found: ID={image.ImageId}, ImageUrl={image.ImageUrl}, Text={image.Text}");
-
-        // Construct the image path
-        var imgPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", image.ImageUrl ?? string.Empty);
-        Console.WriteLine($"[INFO] Constructed image path: {imgPath}");
-
-        // Step 2: Check if the image file exists
-        if (!string.IsNullOrEmpty(image.ImageUrl))
-        {
-            Console.WriteLine("[INFO] Image has an associated file.");
-
-            // Step 3: Delete the image file if it exists
-            if (System.IO.File.Exists(imgPath))
-            {
-                try
-                {
-                    System.IO.File.Delete(imgPath);
-                    Console.WriteLine($"[INFO] Successfully deleted image file: {imgPath}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[ERROR] Failed to delete image file: {imgPath}. Exception: {ex.Message}");
-                    TempData["ErrorMessage"] = "Failed to delete the associated image file.";
-                    return RedirectToAction("Images");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"[WARN] Image file not found at: {imgPath}. Possibly already deleted or never existed.");
-            }
-        }
-        else
-        {
-            Console.WriteLine("[INFO] No associated image file to delete.");
-        }
-
-        // Step 4: Delete the image record from the database
         try
         {
+            // Step 1: Retrieve the image with its relationships
+            var image = await _dbContext.Images
+                .Include(i => i.ProductImages)
+                .FirstOrDefaultAsync(i => i.ImageId == id);
+
+            if (image == null)
+            {
+                Console.WriteLine($"[WARN] No image found with ID: {id}");
+                TempData["ErrorMessage"] = "Image not found.";
+                return RedirectToAction("Images");
+            }
+
+            Console.WriteLine($"[INFO] Image found: ID={image.ImageId}, ImageUrl={image.ImageUrl}, Text={image.Text}");
+
+            // Step 2: Remove product associations
+            if (image.ProductImages != null && image.ProductImages.Any())
+            {
+                Console.WriteLine($"[INFO] Image is associated with {image.ProductImages.Count} products. Removing associations...");
+                _dbContext.Set<ProductImage>().RemoveRange(image.ProductImages);
+                await _dbContext.SaveChangesAsync();
+                Console.WriteLine("[INFO] Product associations removed.");
+            }
+
+            // Step 3: Delete the physical file
+            if (!string.IsNullOrEmpty(image.ImageUrl))
+            {
+                // ImageUrl is stored as "/img/filename.png", so we need to convert it to a proper file path
+                // Remove leading slash and convert forward slashes to backslashes for Windows
+                var relativePath = image.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+                var imgPath = Path.Combine(_env.WebRootPath, relativePath);
+                Console.WriteLine($"[INFO] Attempting to delete file at: {imgPath}");
+
+                if (System.IO.File.Exists(imgPath))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(imgPath);
+                        Console.WriteLine($"[SUCCESS] Deleted image file: {imgPath}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[ERROR] Failed to delete file: {ex.Message}");
+                        // Continue with database deletion even if file delete fails
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"[WARN] File not found at: {imgPath}");
+                }
+            }
+
+            // Step 4: Delete the image record from database
             Console.WriteLine($"[INFO] Deleting image record with ID: {id}");
-            await _imageRepository.DeleteAsync(id);
-            Console.WriteLine($"[INFO] Successfully deleted image record with ID: {id}");
-            TempData["SuccessMessage"] = "Image and its associated file were successfully deleted.";
+            _dbContext.Images.Remove(image);
+            await _dbContext.SaveChangesAsync();
+
+            // Step 5: Commit transaction
+            await transaction.CommitAsync();
+
+            Console.WriteLine($"[SUCCESS] Image with ID {id} deleted successfully.");
+            TempData["SuccessMessage"] = "Image and its file were successfully deleted.";
+            return RedirectToAction("Images");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] An error occurred while deleting the image record with ID: {id}. Exception: {ex.Message}");
-            TempData["ErrorMessage"] = "An error occurred while deleting the image.";
+            await transaction.RollbackAsync();
+            Console.WriteLine($"[ERROR] Failed to delete image: {ex.Message}");
+            Console.WriteLine($"[ERROR] Stack trace: {ex.StackTrace}");
+            TempData["ErrorMessage"] = $"An error occurred while deleting the image: {ex.Message}";
+            return RedirectToAction("Images");
         }
-
-        Console.WriteLine("[INFO] Redirecting to Images view...");
-        return RedirectToAction("Images");
     }
 
     #endregion
