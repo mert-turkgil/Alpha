@@ -49,10 +49,10 @@ var identityConnection = Environment.GetEnvironmentVariable("APP_DB")
     ?? throw new InvalidOperationException("APP_DB not found.");
 
 builder.Services.AddDbContext<ShopContext>(options =>
-    options.UseSqlServer("Server=DESKTOP-3I419VG;Database=AlphaDb;Trusted_Connection=True;Encrypt=False;"));
+    options.UseSqlServer(shopConnection));
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
-    options.UseSqlServer("Server=DESKTOP-3I419VG;Database=AlphaDb;Trusted_Connection=True;Encrypt=False;"));
+    options.UseSqlServer(identityConnection));
 #endregion
 
 #region IdentityConfiguration
