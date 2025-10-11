@@ -224,7 +224,7 @@
             {
                 @foreach (var product in Model.Products)
                 {
-                    var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+                    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
                     var slug = product?.Url?.ToLower() ?? "urun";
                     string imageUrl = (product?.ProductImages != null && product.ProductImages.Any())
                         ? product.ProductImages.FirstOrDefault()?.Image.ImageUrl ?? "/img/default-image.jpg"

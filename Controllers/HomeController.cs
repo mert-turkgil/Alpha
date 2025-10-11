@@ -72,9 +72,20 @@ public class HomeController : Controller
     [HttpGet("{culture}/blog")]
     public async Task<IActionResult> Blog(string culture,string category, string brand, string searchTerm, int page = 1, int pageSize = 3)
     {
+        // Map short culture code to full culture code
+        var fullCulture = culture.ToLower() switch
+        {
+            "tr" => "tr-TR",
+            "en" => "en-US",
+            "de" => "de-DE",
+            "fr" => "fr-FR",
+            "ar" => "ar-SA",
+            _ => "en-US"
+        };
+        
         // 🌍 Dil ayarını uygula
-        CultureInfo.CurrentUICulture = new CultureInfo(culture);
-        CultureInfo.CurrentCulture = new CultureInfo(culture);
+        CultureInfo.CurrentUICulture = new CultureInfo(fullCulture);
+        CultureInfo.CurrentCulture = new CultureInfo(fullCulture);
         ViewBag.Title = _localization.GetKey("SEO_Blog_Title") 
                         ?? "Blog | İş Güvenliği Rehberleri ve Haberler | Alpha Ayakkabı";
 
@@ -189,8 +200,19 @@ public class HomeController : Controller
     [HttpGet("{culture}/blog/{id}/{slug?}")]
     public async Task<IActionResult> BlogDetails(string culture, int id, string? slug)
     {
-        CultureInfo.CurrentUICulture = new CultureInfo(culture);
-        CultureInfo.CurrentCulture = new CultureInfo(culture);
+        // Map short culture code to full culture code
+        var fullCulture = culture.ToLower() switch
+        {
+            "tr" => "tr-TR",
+            "en" => "en-US",
+            "de" => "de-DE",
+            "fr" => "fr-FR",
+            "ar" => "ar-SA",
+            _ => "en-US"
+        };
+        
+        CultureInfo.CurrentUICulture = new CultureInfo(fullCulture);
+        CultureInfo.CurrentCulture = new CultureInfo(fullCulture);
 
         var blog = await _blogRepository.GetByIdAsync(id);
         if (blog == null)
@@ -204,12 +226,16 @@ public class HomeController : Controller
             return RedirectToAction("BlogDetails", new { culture = culture, id = blog.BlogId, slug = expectedSlug });
         }
 
-        // Localization - keys WITHOUT culture suffix
+        // Localization - keys WITHOUT culture suffix, use full culture code for file lookup
         var titleKey = $"Title_{blog.BlogId}_{blog.Url}";
         var contentKey = $"Content_{blog.BlogId}_{blog.Url}";
 
-        var translatedTitle = _blogResxService.Read(titleKey, culture);
-        var translatedContent = _blogResxService.Read(contentKey, culture);
+        var translatedTitle = _blogResxService.Read(titleKey, fullCulture);
+        var translatedContent = _blogResxService.Read(contentKey, fullCulture);
+        
+        Console.WriteLine($"[BlogDetails] Reading blog {id} with culture {fullCulture}");
+        Console.WriteLine($"[BlogDetails] TitleKey: {titleKey}, Found: {!string.IsNullOrWhiteSpace(translatedTitle)}");
+        Console.WriteLine($"[BlogDetails] ContentKey: {contentKey}, Found: {!string.IsNullOrWhiteSpace(translatedContent)}");
 
         if (!string.IsNullOrWhiteSpace(translatedTitle))
             blog.Title = translatedTitle;

@@ -16,27 +16,45 @@
 
 <script>
 function switchLanguage(langCode) {
-    const shortLang = langCode.split('-')[0];
+    // Extract short language code (e.g., "en" from "en-US")
+    const shortLang = langCode.split('-')[0].toLowerCase();
+    
+    // Get current URL parts
     const path = window.location.pathname;
-    const segments = path.split('/');
+    const segments = path.split('/').filter(s => s !== ''); // Remove empty segments
+    
+    console.log('[Language Selector] Current path:', path);
+    console.log('[Language Selector] Segments:', segments);
+    console.log('[Language Selector] Switching to:', shortLang);
 
-    // Admin panelindeysek kültür değiştirmeyi atla
-    if (segments.length > 1 && segments[1].toLowerCase() === "admin") {
-        // Yalnızca cookie güncellensin
-        document.cookie = ".AspNetCore.Culture=c=" + langCode + "|uic=" + langCode + "; path=/";
-        location.reload(); // sadece içerik değişsin
+    // Set the culture cookie
+    document.cookie = ".AspNetCore.Culture=c=" + langCode + "|uic=" + langCode + "; path=/; SameSite=Lax";
+
+    // Handle admin panel separately
+    if (segments.length > 0 && segments[0].toLowerCase() === "admin") {
+        console.log('[Language Selector] Admin page detected, reloading...');
+        location.reload(true);
         return;
     }
 
-    // Normal sayfa → dil segmentini değiştir
-    if (segments.length > 1 && /^[a-z]{2}$/.test(segments[1])) {
-        segments[1] = shortLang;
+    // Build new path with correct language code
+    let newSegments = [];
+    
+    // Check if first segment is a language code (2 letters)
+    if (segments.length > 0 && /^[a-z]{2}(-[A-Z]{2})?$/i.test(segments[0])) {
+        // Replace the language code
+        console.log('[Language Selector] Replacing existing language:', segments[0], 'with:', shortLang);
+        newSegments = [shortLang, ...segments.slice(1)];
     } else {
-        segments.splice(1, 0, shortLang);
+        // Add language code at the beginning
+        console.log('[Language Selector] Adding language code:', shortLang);
+        newSegments = [shortLang, ...segments];
     }
 
-    const newPath = segments.join('/');
-    document.cookie = ".AspNetCore.Culture=c=" + langCode + "|uic=" + langCode + "; path=/";
-    window.location.href = newPath + window.location.search;
+    const newPath = '/' + newSegments.join('/');
+    console.log('[Language Selector] New path:', newPath);
+    
+    // Navigate to new URL
+    window.location.href = newPath + window.location.search + window.location.hash;
 }
 </script>

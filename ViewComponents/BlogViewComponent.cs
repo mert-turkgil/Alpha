@@ -27,6 +27,10 @@ namespace Alpha.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(int pageIndex = 0, int pageSize = 3)
         {
             var culture = CultureInfo.CurrentCulture.Name;
+            var uiCulture = CultureInfo.CurrentUICulture.Name;
+            
+            // Debug: Log current culture
+            Console.WriteLine($"[BlogViewComponent] Current Culture: {culture}, UI Culture: {uiCulture}");
 
             // Header translation
             var head = _localization.GetKey("HomeBlogHead");
@@ -51,15 +55,58 @@ namespace Alpha.ViewComponents
                 message = _localization.GetKey("NoRecentBlogs");
             }
 
-            // Map to BlogIndexModel with translations
+            // Map to BlogIndexModel with translations for all cultures
+            // NOTE: Keys do NOT have language suffix - the culture is determined by which .resx file we read from
             var blogModels = pagedBlogs.Select(blog => new BlogIndexModel
             {
                 Blogs = new List<Blog> { blog },
-                Title = _blogResxService.Read($"Title_{blog.BlogId}_{blog.Url}_{culture}", culture) ?? blog.Title,
-                Content = ProcessContentImagesForEdit(
-                    _blogResxService.Read($"Content_{blog.BlogId}_{blog.Url}_{culture}", culture) ?? blog.Content
-                )
+                
+                // English (US) - Key without language suffix
+                TitleUS = _blogResxService.Read($"Title_{blog.BlogId}_{blog.Url}", "en-US") ?? blog.Title,
+                ContentUS = ProcessContentImagesForEdit(
+                    _blogResxService.Read($"Content_{blog.BlogId}_{blog.Url}", "en-US") ?? blog.Content
+                ),
+                
+                // Turkish (TR) - Key without language suffix
+                TitleTR = _blogResxService.Read($"Title_{blog.BlogId}_{blog.Url}", "tr-TR") ?? blog.Title,
+                ContentTR = ProcessContentImagesForEdit(
+                    _blogResxService.Read($"Content_{blog.BlogId}_{blog.Url}", "tr-TR") ?? blog.Content
+                ),
+                
+                // German (DE) - Key without language suffix
+                TitleDE = _blogResxService.Read($"Title_{blog.BlogId}_{blog.Url}", "de-DE") ?? blog.Title,
+                ContentDE = ProcessContentImagesForEdit(
+                    _blogResxService.Read($"Content_{blog.BlogId}_{blog.Url}", "de-DE") ?? blog.Content
+                ),
+                
+                // French (FR) - Key without language suffix
+                TitleFR = _blogResxService.Read($"Title_{blog.BlogId}_{blog.Url}", "fr-FR") ?? blog.Title,
+                ContentFR = ProcessContentImagesForEdit(
+                    _blogResxService.Read($"Content_{blog.BlogId}_{blog.Url}", "fr-FR") ?? blog.Content
+                ),
+                
+                // Arabic (SA) - Key without language suffix
+                TitleAR = _blogResxService.Read($"Title_{blog.BlogId}_{blog.Url}", "ar-SA") ?? blog.Title,
+                ContentAR = ProcessContentImagesForEdit(
+                    _blogResxService.Read($"Content_{blog.BlogId}_{blog.Url}", "ar-SA") ?? blog.Content
+                ),
+                
+                // Fallback
+                Title = blog.Title,
+                Content = ProcessContentImagesForEdit(blog.Content)
             }).ToList();
+            
+            // Debug: Log what was loaded
+            foreach (var model in blogModels)
+            {
+                var blog = model.Blogs.FirstOrDefault();
+                if (blog != null)
+                {
+                    Console.WriteLine($"[BlogViewComponent] Blog {blog.BlogId} loaded:");
+                    Console.WriteLine($"  TitleUS: {model.TitleUS?.Substring(0, Math.Min(30, model.TitleUS?.Length ?? 0))}");
+                    Console.WriteLine($"  TitleTR: {model.TitleTR?.Substring(0, Math.Min(30, model.TitleTR?.Length ?? 0))}");
+                }
+            }
 
 
             // Pass data to view

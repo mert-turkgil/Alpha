@@ -2948,7 +2948,7 @@ public class AdminController : Controller
             {
                 m.Categories = await _categoryRepository.GetAllAsync();
                 m.Products = await _productRepository.GetRecentProductsAsync();
-                m.RecaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"];
+                m.RecaptchaSiteKey = _configuration["reCAPTCHA:GoogleSiteKey"];
             }
             if (!string.IsNullOrEmpty(model.Honey))
             {

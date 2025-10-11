@@ -422,7 +422,7 @@
                 {
                     @foreach (var blog in Model.Blogs)
                     {
-                        var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+                        var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
                         var slug = blog?.Url?.ToLower() ?? "blog";
                         string imageUrl = !string.IsNullOrEmpty(blog?.Image)
                             ? Url.Content($"~/img/{blog.Image}")

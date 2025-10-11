@@ -384,62 +384,87 @@
 
         <!-- Blog Cards Grid -->
         <div class="blog-grid">
-            @foreach (var blogModel in Model)
-            {
+            @{
                 var culture = CultureInfo.CurrentCulture.Name;
                 var culturee = System.Globalization.CultureInfo.CurrentUICulture.Name;
-                foreach (var blogData in blogModel.Blogs ?? new List<Alpha.Entity.Blog>())
-                {
-                    var slug = blogData.Url?.ToLower() ?? "blog";
-                    string localizedTitle = blogModel.GetTitleByCulture(culture) ?? blogData.Title;
-                    string localizedContent = blogModel.GetContentByCulture(culture) ?? string.Empty;
-                    string snippet = Html.Raw(localizedContent).ToString() ?? string.Empty;
-                    snippet = System.Text.RegularExpressions.Regex.Replace(snippet, "<.*?>", string.Empty);
+                
+                // Extract SHORT culture code for URLs (e.g., "tr" from "tr-TR")
+                var shortCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                
+                // Debug output
+                System.Console.WriteLine($"=== BLOG VIEW RENDERING ===");
+                System.Console.WriteLine($"Culture: {culture}");
+                System.Console.WriteLine($"UI Culture: {culturee}");
+                System.Console.WriteLine($"Short Culture for URLs: {shortCulture}");
+            }
+            @foreach (var blogModel in Model)
+            {
+                var blogData = blogModel.Blogs?.FirstOrDefault();
+                if (blogData == null) continue;
 
-                    snippet = snippet.Length > 150 ? snippet.Substring(0, 150) + "..." : snippet;
+                var slug = blogData.Url?.ToLower() ?? "blog";
+                
+                // Debug: Show what's in the model
+                System.Console.WriteLine($"\n--- Blog {blogData.BlogId} ---");
+                System.Console.WriteLine($"TitleUS: {blogModel.TitleUS?.Substring(0, Math.Min(40, blogModel.TitleUS?.Length ?? 0))}");
+                System.Console.WriteLine($"TitleTR: {blogModel.TitleTR?.Substring(0, Math.Min(40, blogModel.TitleTR?.Length ?? 0))}");
+                System.Console.WriteLine($"TitleDE: {blogModel.TitleDE?.Substring(0, Math.Min(40, blogModel.TitleDE?.Length ?? 0))}");
+                System.Console.WriteLine($"Calling GetTitleByCulture('{culture}')");
+                
+                string localizedTitle = blogModel.GetTitleByCulture(culture) ?? blogData.Title;
+                string localizedContent = blogModel.GetContentByCulture(culture) ?? string.Empty;
+                
+                System.Console.WriteLine($"Result Title: {localizedTitle?.Substring(0, Math.Min(40, localizedTitle?.Length ?? 0))}");
+                
+                // Remove HTML tags and decode HTML entities properly
+                string snippet = System.Text.RegularExpressions.Regex.Replace(localizedContent, "<.*?>", string.Empty);
+                snippet = System.Net.WebUtility.HtmlDecode(snippet);
+                snippet = snippet.Trim();
 
-                    string imageUrl = !string.IsNullOrEmpty(blogData.Image)
-                        ? Url.Content($"~/img/{blogData.Image}")
-                        : Url.Content("~/img/default-image.jpg");
+                snippet = snippet.Length > 150 ? snippet.Substring(0, 150) + "..." : snippet;
 
-                    <a asp-controller="Home"
-                       asp-action="BlogDetails"
-                       asp-route-culture="@culturee"
-                       asp-route-id="@blogData.BlogId"
-                       asp-route-slug="@slug"
-                       class="text-decoration-none">
-                        <article class="blog-card">
-                            <div class="blog-image-container">
-                                <img src="@imageUrl" 
-                                     alt="@localizedTitle" 
-                                     class="blog-image" 
-                                     loading="lazy" />
-                                <div class="blog-image-overlay"></div>
-                                <span class="blog-category-badge">
-                                    <i class="fas fa-shield-alt"></i> SAFETY
+                string imageUrl = !string.IsNullOrEmpty(blogData.Image)
+                    ? Url.Content($"~/img/{blogData.Image}")
+                    : Url.Content("~/img/default-image.jpg");
+
+                <a asp-controller="Home"
+                   asp-action="BlogDetails"
+                   asp-route-culture="@shortCulture"
+                   asp-route-id="@blogData.BlogId"
+                   asp-route-slug="@slug"
+                   class="text-decoration-none">
+                    <article class="blog-card">
+                        <div class="blog-image-container">
+                            <img src="@imageUrl" 
+                                 alt="@localizedTitle" 
+                                 class="blog-image" 
+                                 style="object-fit:contain;"
+                                 loading="lazy" />
+                            <div class="blog-image-overlay"></div>
+                            <span class="blog-category-badge">
+                                <i class="fas fa-shield-alt"></i> @(blogData.CategoryBlogs?.FirstOrDefault()?.Category?.Name ?? "Industry News")
+                            </span>
+                        </div>
+
+                        <div class="blog-content-area">
+                            <div class="blog-meta">
+                                <span class="blog-meta-item">
+                                    <i class="fas fa-clock"></i> 5 min read
+                                </span>
+                                <span class="blog-meta-item">
+                                    <i class="fas fa-tag"></i> Industry News
                                 </span>
                             </div>
 
-                            <div class="blog-content-area">
-                                <div class="blog-meta">
-                                    <span class="blog-meta-item">
-                                        <i class="fas fa-clock"></i> 5 min read
-                                    </span>
-                                    <span class="blog-meta-item">
-                                        <i class="fas fa-tag"></i> Industry News
-                                    </span>
-                                </div>
-
-                                <h3 class="blog-article-title">@localizedTitle</h3>
-                                <p class="blog-excerpt">@snippet</p>
-                                
-                                <span class="blog-action-link">
-                                    Read Full Article <i class="fas fa-arrow-right"></i>
-                                </span>
-                            </div>
-                        </article>
-                    </a>
-                }
+                            <h3 class="blog-article-title">@localizedTitle</h3>
+                            <p class="blog-excerpt">@Html.Raw(snippet)</p>
+                            
+                            <span class="blog-action-link">
+                                Read Full Article <i class="fas fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </article>
+                </a>
             }
         </div>
     </div>

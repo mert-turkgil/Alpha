@@ -470,7 +470,7 @@
                 <div class="row g-4">
                     @foreach (var product in Model.Products)
                     {
-                            string? culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+                            string? culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
                             string? slug = product?.Url?.ToLower() ?? "urun";
                             string imageUrl = (product?.ProductImages != null && product.ProductImages.Any())
                                 ? product.ProductImages.FirstOrDefault()?.Image?.ImageUrl ?? "/img/default-image.jpg"
