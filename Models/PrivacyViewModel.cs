@@ -46,6 +46,7 @@ namespace Alpha.Models
         public string ProtectionIntro { get; internal set; }
         public string SharingIntro { get; internal set; }
         public string UsageIntro { get; internal set; }
+        public string UseContactFormText { get; set; }
     }
 
 }

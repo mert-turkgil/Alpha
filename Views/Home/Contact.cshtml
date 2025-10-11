@@ -447,9 +447,12 @@
                     <i class="fa fa-envelope"></i>
                 </div>
                 <h5>@Model.Contact_EmailUs</h5>
-                <p>
-                    <a href="mailto:info@alphasafetyshoes.com">@Model.Contact_EmailAddressValue</a>
+                <p class="text-muted" style="user-select: none;">
+                    @Model.Contact_EmailAddressValue
                 </p>
+                <small class="text-primary fw-bold">
+                    <i class="fa fa-arrow-down"></i> @(Model.Contact_UseFormBelow ?? "Please use the contact form below")
+                </small>
             </div>
         </div>
     </div>

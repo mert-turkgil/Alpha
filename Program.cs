@@ -160,8 +160,11 @@ builder.Services.AddScoped<IBlogRepository, EfCoreBlogRepository>();
 builder.Services.AddScoped<IProductRepository, EfCoreProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
 
+var fromEmail = emailSection.GetValue<string>("FromEmail") ?? username;
+var fromName = emailSection.GetValue<string>("FromName") ?? "Alpha Safety Shoes";
+
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>(i =>
-    new SmtpEmailSender(host, port, enableSsl, username, password));
+    new SmtpEmailSender(host, port, enableSsl, username, password, fromEmail, fromName));
 
 #endregion
 

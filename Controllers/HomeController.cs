@@ -403,11 +403,12 @@ public class HomeController : Controller
             m.Contact_SendMessageButton   = _localization.GetKey("Contact_SendMessageButton")   ?? "Send";
             m.Contact_OurLocation         = _localization.GetKey("Contact_OurLocation")         ?? "Our Location";
             m.Contact_FollowUsSocialMedia = _localization.GetKey("Contact_FollowUsSocialMedia") ?? "Follow Us";
+            m.Contact_UseFormBelow        = _localization.GetKey("Contact_UseFormBelow")        ?? "Please use the contact form below";
 
             // İletişim detayları
             m.Contact_OurAddressValue     = _localization.GetKey("Contact_OurAddressValue")     ?? "123 Alpha Street";
             m.Contact_PhoneNumberValue    = _localization.GetKey("Contact_PhoneNumberValue")    ?? "+1 (555) 123-4567";
-            m.Contact_EmailAddressValue   = _localization.GetKey("Contact_EmailAddressValue")   ?? "info@alphasafetyshoes.com";
+            m.Contact_EmailAddressValue   = _localization.GetKey("Contact_EmailAddressValue")   ?? "info@alphaayakkabi.com";
         }
 
         /// <summary>
@@ -492,7 +493,10 @@ public class HomeController : Controller
             try
             {
                 // --- Admin bildirim e-postası (with HTML sanitization) ---
-                var adminEmail = "info@alphaayakkabi.com";
+                var adminEmail = _configuration.GetValue<string>("EmailSender:AdminNotificationEmail") 
+                              ?? _configuration.GetValue<string>("EmailSender:Username") 
+                              ?? "info@alphaayakkabi.com";
+                              
                 var adminSubject = "Yeni İletişim Formu Mesajı";
                 var adminBody = $@"
                     <p><strong>From:</strong> {System.Net.WebUtility.HtmlEncode(model.Name)} ({System.Net.WebUtility.HtmlEncode(model.Email)})</p>
@@ -500,6 +504,7 @@ public class HomeController : Controller
                     <hr/>
                     <p>{System.Net.WebUtility.HtmlEncode(model.Message).Replace("\n", "<br/>")}</p>";
 
+                _logger.LogInformation($"Sending contact form to admin: {adminEmail}");
                 await _emailSender.SendEmailAsync(adminEmail, adminSubject, adminBody);
 
                 // --- Kullanıcıya teşekkür e-postası ---
@@ -933,9 +938,10 @@ public IActionResult Privacy(string culture)
         // Contact Section
         ContactTitle = _localization.GetKey("Privacy_ContactTitle"),
         ContactQuestion = _localization.GetKey("Privacy_ContactQuestion"),
-        ContactEmail = _localization.GetKey("Privacy_ContactEmail"),
+        ContactEmail = _localization.GetKey("Privacy_ContactEmail") ?? "support@alphaayakkabi.com",
         ContactPhone = _localization.GetKey("Privacy_ContactPhone"),
-        ContactAddress = _localization.GetKey("Privacy_ContactAddress")
+        ContactAddress = _localization.GetKey("Privacy_ContactAddress"),
+        UseContactFormText = _localization.GetKey("Privacy_UseContactForm") ?? "Please use our contact form"
     };
 
     return View(model);

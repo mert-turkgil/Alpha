@@ -32,6 +32,7 @@ namespace Alpha.Models
         // Map + Social
         public string Contact_OurLocation { get; set; }
         public string Contact_FollowUsSocialMedia { get; set; }
+        public string Contact_UseFormBelow { get; set; }
 
         // ✅ Form alanları
         [Required]
