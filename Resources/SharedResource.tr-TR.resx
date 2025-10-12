@@ -720,13 +720,13 @@
 </value>
   </data>
   <data name="Carousel_1_Title" xml:space="preserve">
-    <value>S1-S1Paaaaa</value>
+    <value>Hakkımızda</value>
   <comment></comment></data>
   <data name="Carousel_1_Description" xml:space="preserve">
-    <value>İş ayakkabılarını satın alırken kararsızlık yaşamak doğal olabilir...</value>
+    <value>Güvenliğe önem veriyoruz ve çeşitli sektörlerdeki profesyoneller için yenilikçi ve dayanıklı ayakkabı çözümleri sunuyoruz.</value>
   <comment></comment></data>
   <data name="Carousel_1_LinkText" xml:space="preserve">
-    <value>Buraya Tıkla</value>
+    <value>Bilgi Edin</value>
   <comment></comment></data>
   <data name="Title_1_toeergy_tr" xml:space="preserve">
     <value>ccccccccccccccccc</value>
@@ -783,35 +783,75 @@
     <comment></comment>
   </data>
   <data name="Product_3_Description" xml:space="preserve">
-    <value>a</value>
+    <value>TestTR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Upper" xml:space="preserve">
-    <value>a</value>
+    <value>TestTR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Lining" xml:space="preserve">
-    <value>a</value>
+    <value>TestTR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Protection" xml:space="preserve">
-    <value>a</value>
+    <value>TestTR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Midsole" xml:space="preserve">
-    <value>a</value>
+    <value>TestTR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Insole" xml:space="preserve">
-    <value>a</value>
+    <value>TestTR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Sole" xml:space="preserve">
-    <value>a</value>
+    <value>TestTR</value>
     <comment></comment>
   </data>
   <data name="Product_12_Lining" xml:space="preserve">
     <value>vvvvvvvvvvvv</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Description" xml:space="preserve">
+    <value>TestProductTR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Upper" xml:space="preserve">
+    <value>TestProductTR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Lining" xml:space="preserve">
+    <value>TestProductTR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Protection" xml:space="preserve">
+    <value>TestProductTR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Midsole" xml:space="preserve">
+    <value>TestProductTR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Insole" xml:space="preserve">
+    <value>TestProductTR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Sole" xml:space="preserve">
+    <value>TestProductTR</value>
+    <comment></comment>
+  </data>
+  <data name="Carousel_2_Title" xml:space="preserve">
+    <value>Güvenlik Ayakkabılarında Konfor ve Koruma</value>
+    <comment></comment>
+  </data>
+  <data name="Carousel_2_Description" xml:space="preserve">
+    <value>İşyerinde güvenlik ve konforu bir araya getiren güvenlik ayakkabıları hakkında bilgilendirici makaleler keşfedin. Ayakkabı seçimi ve kullanım ipuçlarıyla iş kazalarına karşı önlem alın.</value>
+    <comment></comment>
+  </data>
+  <data name="Carousel_2_LinkText" xml:space="preserve">
+    <value>Keşfet</value>
     <comment></comment>
   </data>
 </root>

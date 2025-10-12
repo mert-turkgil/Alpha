@@ -628,23 +628,23 @@
 </value>
   </data>
   <data name="Carousel_1_Title" xml:space="preserve">
-    <value>Our Services</value>
+    <value>About Us</value>
   <comment></comment></data>
   <data name="Carousel_1_Description" xml:space="preserve">
-    <value>Alpha Safety Footwear sets industry standards with innovative and reliable solutions. Enhance your workplace safety with our services.</value>
+    <value>We are committed to safety, delivering innovative and durable footwear solutions for professionals in various industries.</value>
   <comment></comment></data>
   <data name="Carousel_1_LinkText" xml:space="preserve">
-    <value>Discover</value>
+    <value>Learn More</value>
   <comment></comment></data>
   <data name="Carousel_2_Title" xml:space="preserve">
-    <value>Our Blog</value>
-  </data>
+    <value>Comfort and Protection in Safety Footwear</value>
+  <comment></comment></data>
   <data name="Carousel_2_Description" xml:space="preserve">
-    <value>The Alpha Blog goes beyond safety shoes—offering content on industry innovations, our production processes, employee stories, and sustainability. We invite you to explore and be inspired.</value>
-  </data>
+    <value>Discover informative articles about safety shoes that combine safety and comfort in the workplace. Take precautions against workplace accidents with shoe selection and usage tips.</value>
+  <comment></comment></data>
   <data name="Carousel_2_LinkText" xml:space="preserve">
     <value>Discover</value>
-  </data>
+  <comment></comment></data>
   <data name="Title_1_toeergy_en" xml:space="preserve">
     <value>How to Choose Safety Work Shoes?</value>
   </data>
@@ -841,31 +841,59 @@
     <value>-</value>
   </data>
   <data name="Product_3_Description" xml:space="preserve">
-    <value>aaa</value>
+    <value>TestUS</value>
     <comment></comment>
   </data>
   <data name="Product_3_Upper" xml:space="preserve">
-    <value>a</value>
+    <value>TestUS</value>
     <comment></comment>
   </data>
   <data name="Product_3_Lining" xml:space="preserve">
-    <value>a</value>
+    <value>TestUS</value>
     <comment></comment>
   </data>
   <data name="Product_3_Protection" xml:space="preserve">
-    <value>a</value>
+    <value>TestUS</value>
     <comment></comment>
   </data>
   <data name="Product_3_Midsole" xml:space="preserve">
-    <value>aa</value>
+    <value>TestUS</value>
     <comment></comment>
   </data>
   <data name="Product_3_Insole" xml:space="preserve">
-    <value>aa</value>
+    <value>TestUS</value>
     <comment></comment>
   </data>
   <data name="Product_3_Sole" xml:space="preserve">
-    <value>a</value>
+    <value>TestUS</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Description" xml:space="preserve">
+    <value>TestProductUS</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Upper" xml:space="preserve">
+    <value>TestProductUS</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Lining" xml:space="preserve">
+    <value>TestProductUS</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Protection" xml:space="preserve">
+    <value>TestProductUS</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Midsole" xml:space="preserve">
+    <value>TestProductUS</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Insole" xml:space="preserve">
+    <value>TestProductUS</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Sole" xml:space="preserve">
+    <value>TestProductUS</value>
     <comment></comment>
   </data>
 </root>

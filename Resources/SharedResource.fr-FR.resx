@@ -658,13 +658,13 @@
 </value>
   </data>
   <data name="Carousel_1_Title" xml:space="preserve">
-    <value>S1-S1P</value>
+    <value>Services</value>
   <comment></comment></data>
   <data name="Carousel_1_Description" xml:space="preserve">
-    <value>İş ayakkabılarını satın alırken kararsızlık yaşamak doğal olabilir...</value>
+    <value>Nous nous engageons à garantir la sécurité et à fournir des solutions innovantes et durables en matière de chaussures pour les professionnels de divers secteurs.</value>
   <comment></comment></data>
   <data name="Carousel_1_LinkText" xml:space="preserve">
-    <value>Buraya Tıkla</value>
+    <value>En savoir plus</value>
   <comment></comment></data>
   <data name="Title_1_toeergy_fr" xml:space="preserve">
     <value>ee</value>
@@ -741,31 +741,71 @@
     <comment></comment>
   </data>
   <data name="Product_3_Description" xml:space="preserve">
-    <value>aaaaaaaa</value>
+    <value>TestFR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Upper" xml:space="preserve">
-    <value>a</value>
+    <value>TestFR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Lining" xml:space="preserve">
-    <value>a</value>
+    <value>TestFR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Protection" xml:space="preserve">
-    <value>a</value>
+    <value>TestFR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Midsole" xml:space="preserve">
-    <value>aaa</value>
+    <value>TestFR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Insole" xml:space="preserve">
-    <value>a</value>
+    <value>TestFR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Sole" xml:space="preserve">
-    <value>a</value>
+    <value>TestFR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Description" xml:space="preserve">
+    <value>TestProductFR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Upper" xml:space="preserve">
+    <value>TestProductFR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Lining" xml:space="preserve">
+    <value>TestProductFR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Protection" xml:space="preserve">
+    <value>TestProductFR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Midsole" xml:space="preserve">
+    <value>TestProductFR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Insole" xml:space="preserve">
+    <value>TestProductFR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Sole" xml:space="preserve">
+    <value>TestProductFR</value>
+    <comment></comment>
+  </data>
+  <data name="Carousel_2_Title" xml:space="preserve">
+    <value>Confort et protection dans les chaussures de sécurité</value>
+    <comment></comment>
+  </data>
+  <data name="Carousel_2_Description" xml:space="preserve">
+    <value>Découvrez des articles informatifs sur les chaussures de sécurité qui allient sécurité et confort au travail. Prenez des précautions contre les accidents du travail grâce à des conseils sur le choix et l'utilisation des chaussures.</value>
+    <comment></comment>
+  </data>
+  <data name="Carousel_2_LinkText" xml:space="preserve">
+    <value>Découvrez</value>
     <comment></comment>
   </data>
 </root>

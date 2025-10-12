@@ -57,6 +57,24 @@
             initializeEditor('ContentDE', '@Html.Raw(Model.ContentDE)');
             initializeEditor('ContentFR', '@Html.Raw(Model.ContentFR)');
             initializeEditor('ContentAR', '@Html.Raw(Model.ContentAR)');
+            
+            // ✅ FIX: Sync CKEditor content to textareas before form submission
+            const form = document.querySelector('form[asp-action="BlogEdit"]');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    console.log('[DEBUG] Form submitting, syncing CKEditor content...');
+                    
+                    // Update all textarea values with CKEditor content
+                    const editors = ['Content', 'ContentUS', 'ContentTR', 'ContentDE', 'ContentFR', 'ContentAR'];
+                    editors.forEach(editorId => {
+                        if (CKEDITOR.instances[editorId]) {
+                            const content = CKEDITOR.instances[editorId].getData();
+                            document.getElementById(editorId).value = content;
+                            console.log(`[DEBUG] Synced ${editorId}: ${content.substring(0, 100)}...`);
+                        }
+                    });
+                });
+            }
         });
     </script>
         <!-- Initialize DataTables -->

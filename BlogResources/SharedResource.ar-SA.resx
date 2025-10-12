@@ -7,4 +7,272 @@
     <value>&lt;p&gt;a&lt;/p&gt;
 </value>
   </data>
-</root>
+<data name="Title_1_selecting safety footwear: what to look for?" xml:space="preserve"><value>اختيار أحذية السلامة: ما الذي يجب مراعاته؟</value></data><data name="Content_1_selecting safety footwear: what to look for?" xml:space="preserve"><value>&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p&gt;الحذاء السلامي المناسب؛ يمنع الإصابات، يقلل التعب ويُعزّز الإنتاجية. عند الاختيار، يجب مراعاة المعايير، بيئة العمل، المواد والتركيب جميعًا معًا.&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;h2&gt;المعايير والفئات (EN ISO 20345)&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;حماية الأصابع (السنفرة):&lt;/strong&gt; يجب أن تتحمّل صدمة بقدرة 200 جول.&lt;br /&gt;
+&lt;strong&gt;الفئات:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;S1:&lt;/strong&gt; كعب مغلق، مضاد للكهرباء الساكنة، امتصاص الطاقة، مقاومة لزيت الوقود.&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;S1P:&lt;/strong&gt; تجمع بين ميزات S1 + مقاومة للاختراق (نعل داخلي مقاوم).&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;S2:&lt;/strong&gt; ميزات S1 + مقاومتها للماء (في الجزء العلوي).&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;S3:&lt;/strong&gt; ميزات S2 + مقاومة للاختراق + نعل مدبب (شائع للأعمال الخارجية / مواقع البناء).&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;S4:&lt;/strong&gt; حذاء من البوليمر/المطاط، مقاوم للماء.&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;S5:&lt;/strong&gt; ميزات S4 + مقاومة للاختراق (للأرضيات الرطبة / الموحلة).&lt;/p&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;علامات إضافية:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+	&lt;p&gt;SRC: مقاومة انزلاق عالية&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;HRO: مقاومة لدرجة حرارة التلامس 300 &amp;deg;C&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;CI: عزل من البرد&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;WR: مقاومة للماء بالكامل&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;ESD / مضاد للكهرباء الساكنة (لمناطق الإلكترونيات وATEX)&lt;/p&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;h2&gt;النقاط التي يجب الانتباه إليها&lt;/h2&gt;
+
+&lt;h3&gt;الخصائص الأمنية&lt;/h3&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;حماية الأصابع:&lt;/strong&gt; معدنية (فولاذ)، مركبة، أو ألمنيوم&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;المقاومة للاختراق:&lt;/strong&gt; نعل داخلي من الفولاذ أو نسيج/كيفلار&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;مقاومة الانزلاق:&lt;/strong&gt; يُفضّل وجود علامة SRC&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;الحماية من الماء / المواد الكيميائية:&lt;/strong&gt; WR / فئة S5، نعل نيتريل، حذاء من PVC أو PU&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;الخصائص الحرارية:&lt;/strong&gt; HRO، HI / CI، وإذا لزم الأمر حماية المِتاتارسال&lt;/p&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;الراحة والأرغونومية&lt;/h3&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;الملاءمة والقالب:&lt;/strong&gt; يجب أن يحاط بالقدم، مع وجود فراغ نحو ~1 سم أمام الأصابع&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;الوزن:&lt;/strong&gt; النماذج الخفيفة مفضّلة للحركة طوال اليوم&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;التوسيد والنعل الأوسط:&lt;/strong&gt; PU / EVA تزيد الراحة&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;قابلية التنفس وإدارة العرق:&lt;/strong&gt; بطانة من الشبك / الجلد، ونعال تمتص الرطوبة&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;دعم الكاحل:&lt;/strong&gt; ارتفاع الكعب مهم للتضاريس أو السلالم، والانخفاض مفيد للبيئة المخزنية / المدن&lt;/p&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;التربة ونوع العمل&lt;/h3&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;زيوت / أرضيات مبللة:&lt;/strong&gt; تقنية SRC + مقاومة زيت / وقود (FO) + الحماية من الماء&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;مواقع البناء / العمل الخارجي:&lt;/strong&gt; فئة S3، نعل مدبب، نعل داخلي محمي من الأحجار الحادة&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;الغذاء / التنظيف:&lt;/strong&gt; فئة S2 / S4&amp;ndash;S5، سهلة التنظيف، نعل أبيض، مقاومة للانزلاق&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;الورش / المعادن:&lt;/strong&gt; HRO، فئة S3، مقاومة للحرارة والشرر، الجزء العلوي من الجلد&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;المخازن / اللوجستيات:&lt;/strong&gt; سعة خفيفة، نعل داخلي مرن، SRC، حماية من ESD عند الحاجة&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;الإلكترونيات / ATEX:&lt;/strong&gt; ESD / مضاد للكهرباء الساكنة، يفضّل أن يكون خالٍ من المعادن&lt;/p&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;h2&gt;المتانة والصيانة&lt;/h2&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+	&lt;p&gt;جودة المواد العلوية، جودة الخياطة، الحمايات الجانبية&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;مؤشرات تآكل النعل ومقاومة التحلل المائي (PU قد يتأثر بالعوامل البيئية)&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;دليل المواد وفوائدها:&lt;/strong&gt;&lt;/p&gt;
+
+	&lt;table&gt;
+		&lt;thead&gt;
+			&lt;tr&gt;
+				&lt;th&gt;&lt;span style="background-color:#f1c40f"&gt;المكون&lt;/span&gt;&lt;/th&gt;
+				&lt;th&gt;&lt;span style="background-color:#f1c40f"&gt;المزايا&lt;/span&gt;&lt;/th&gt;
+				&lt;th&gt;&lt;span style="background-color:#f1c40f"&gt;الملاحظات&lt;/span&gt;&lt;/th&gt;
+			&lt;/tr&gt;
+		&lt;/thead&gt;
+		&lt;tbody&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;strong&gt;&lt;span style="background-color:#f1c40f"&gt;حماية الأصابع (سنفرة)&lt;/span&gt;&lt;/strong&gt;&lt;/td&gt;
+				&lt;td&gt;فولاذ: متانة عالية، حجم صغير، اقتصادي&lt;/td&gt;
+				&lt;td&gt;لكنه أثقل وقد ينقل الحرارة / البرودة&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+				&lt;td&gt;مركبة (ألياف زجاجية / كربون): خفيف، عازل حراري، بدون معدن&lt;/td&gt;
+				&lt;td&gt;قد يكون أكثر حجماً وسعره أعلى&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+				&lt;td&gt;ألمنيوم: أخف من الفولاذ، بروفيل أنيق&lt;/td&gt;
+				&lt;td&gt;قد يفعّل أجهزة الكشف عن المعادن&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;strong&gt;&lt;span style="background-color:#f1c40f"&gt;النعل الداخلي المقاوم للاختراق&lt;/span&gt;&lt;/strong&gt;&lt;/td&gt;
+				&lt;td&gt;فولاذ: مقاومة عالية للاختراق، ممتاز ضد الأجسام الحادة&lt;/td&gt;
+				&lt;td&gt;لكنه أثقل وقد ينقل البرودة&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+				&lt;td&gt;نسيج / كيفلار: خفيف، مرن، يغطي كامل النعل، لا يلتقط في أجهزة الكشف&lt;/td&gt;
+				&lt;td&gt;قد لا يكون بنفس قدرة الفولاذ أمام مسامير حادة&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;strong&gt;&lt;span style="background-color:#f1c40f"&gt;الجزء العلوي (Upper)&lt;/span&gt;&lt;/strong&gt;&lt;/td&gt;
+				&lt;td&gt;جلد كامل الحبة: متين، مقاوم للماء، سهل الصيانة&lt;/td&gt;
+				&lt;td&gt;يحتاج إلى عناية للحفاظ عليه&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+				&lt;td&gt;نابوك / جلد معالج: أكثر تنفّساً، مريح&lt;/td&gt;
+				&lt;td&gt;يتطلب تنظيفًا دوريًا&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+				&lt;td&gt;ميكروفايبر: خفيف، صحي، مقاوم للمواد الكيميائية، خيار نباتي&lt;/td&gt;
+				&lt;td&gt;قد يتآكل بسرعة في ظروف قاسية&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+				&lt;td&gt;شبك / نسيج: تهوية ممتازة، خفيف&lt;/td&gt;
+				&lt;td&gt;قد يُهترئ بسرعة في الاستخدام الكثيف&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;strong&gt;&lt;span style="background-color:#f1c40f"&gt;النعل الخارجي&lt;/span&gt;&lt;/strong&gt;&lt;/td&gt;
+				&lt;td&gt;PU (بولي يوريثان): خفيف، توسيد جيد&lt;/td&gt;
+				&lt;td&gt;قد يتأثر بالمواد الكيميائية والتحلل المائي&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+				&lt;td&gt;TPU: مقاومة عالية للتآكل والانزلاق، أداء جيد في البرد&lt;/td&gt;
+				&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+				&lt;td&gt;نيتريل مطاطي: مقاومة للحرارة (HRO) والزيوت، متين&lt;/td&gt;
+				&lt;td&gt;قد يكون أثقل بعض الشيء&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+				&lt;td&gt;EVA (نعل متوسط): راحة إضافية وامتصاص للصدمة&lt;/td&gt;
+				&lt;td&gt;غالبًا يستخدم مع مواد نعل خارجي أخرى&lt;/td&gt;
+			&lt;/tr&gt;
+		&lt;/tbody&gt;
+	&lt;/table&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;h2&gt;اختيار المقاس وتجربة الحذاء&lt;/h2&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+	&lt;p&gt;جرب الحذاء في نهاية اليوم مع الجورب الذي ستستخدمه عمليًا&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;اترك حوالي ~1 سم أمام الأصابع، ولا يجب أن ينزلق الكعب&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;نقطة الانحناء يجب أن تتوافق مع مفصل أصابع القدم&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;إذا لزم الأمر، جرّب نعلًا إضافيًا بدعم للقوس&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;الموديلات المخصصة للنساء قد تناسب أفضل في بعض الحالات&lt;/p&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;h2&gt;الصيانة، النظافة والعمر الافتراضي&lt;/h2&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+	&lt;p&gt;نظّف الأوساخ والمواد الكيميائية يوميًا، وجفّفه طبيعيًا (بدون تدفئة مباشرة)&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;هوّر النعال الداخلية؛ تغيير الحذائين بالتناوب يقلل من الروائح والتآكل&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;إذا تأثر النعل الداخلي أو السنفرة بصدمات، حتى بدون ضرر ظاهري، فكّر في الاستبدال&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;العمر الافتراضي يعتمد على ظروف الاستخدام: عادة بين &lt;strong&gt;6 إلى 24 شهرًا&lt;/strong&gt;&lt;/p&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;h2&gt;ملخّص سريع للاختيار&lt;/h2&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;مواقع البناء / الخارج:&lt;/strong&gt; فئة S3 + SRC + سنفرة مركبة + نعل داخلي نسيجي + مقاومة للماء&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;الأرضيات المبللة / الغذاء:&lt;/strong&gt; فئة S2 / S4&amp;ndash;S5 + SRC + الجزء العلوي من الميكروفايبر + سهلة التنظيف&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;الأسطح الساخنة / المعادن:&lt;/strong&gt; فئة S3 + HRO + نعل نيتريل + جلد علوي&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;المخازن / اللوجستيات:&lt;/strong&gt; فئة S1P أو S3 + خفة الوزن + إضافة ESD عند الحاجة&lt;/p&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+	&lt;p&gt;&lt;strong&gt;الإلكترونيات / ATEX:&lt;/strong&gt; ESD / مضاد للكهرباء الساكنة + خالٍ من المعادن إذا أمكن + SRC&lt;/p&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+</value></data></root>

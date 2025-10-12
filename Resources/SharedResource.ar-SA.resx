@@ -653,13 +653,13 @@
     <value />
   </data>
   <data name="Carousel_1_Title" xml:space="preserve">
-    <value>S1-S1Pesfaaaaaaa</value>
+    <value>نبذة عنا</value>
   <comment></comment></data>
   <data name="Carousel_1_Description" xml:space="preserve">
-    <value>قد يكون من الطبيعي التردد عند شراء أحذية العمل...sef</value>
+    <value>نحن ملتزمون بالسلامة، ونقدم حلولاً مبتكرة ومتينة للأحذية للمهنيين في مختلف الصناعات.</value>
   <comment></comment></data>
   <data name="Carousel_1_LinkText" xml:space="preserve">
-    <value>انقر هناsefse</value>
+    <value>تعرف على المزيد</value>
   <comment></comment></data>
   <data name="Title_1_toeergy_ar" xml:space="preserve">
     <value>h</value>
@@ -736,31 +736,71 @@
     <comment></comment>
   </data>
   <data name="Product_3_Description" xml:space="preserve">
-    <value>a</value>
+    <value>TestAR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Upper" xml:space="preserve">
-    <value>a</value>
+    <value>TestAR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Lining" xml:space="preserve">
-    <value>a</value>
+    <value>TestAR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Protection" xml:space="preserve">
-    <value>a</value>
+    <value>TestAR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Midsole" xml:space="preserve">
-    <value>a</value>
+    <value>TestAR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Insole" xml:space="preserve">
-    <value>a</value>
+    <value>TestAR</value>
     <comment></comment>
   </data>
   <data name="Product_3_Sole" xml:space="preserve">
-    <value>a</value>
+    <value>TestAR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Description" xml:space="preserve">
+    <value>TestProductAR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Upper" xml:space="preserve">
+    <value>TestProductAR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Lining" xml:space="preserve">
+    <value>TestProductAR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Protection" xml:space="preserve">
+    <value>TestProductAR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Midsole" xml:space="preserve">
+    <value>TestProductAR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Insole" xml:space="preserve">
+    <value>TestProductAR</value>
+    <comment></comment>
+  </data>
+  <data name="Product_4_Sole" xml:space="preserve">
+    <value>TestProductAR</value>
+    <comment></comment>
+  </data>
+  <data name="Carousel_2_Title" xml:space="preserve">
+    <value>الراحة والحماية في الأحذية الآمنة</value>
+    <comment></comment>
+  </data>
+  <data name="Carousel_2_Description" xml:space="preserve">
+    <value>اكتشف مقالات إعلامية حول أحذية السلامة التي تجمع بين السلامة والراحة في مكان العمل. اتخذ الاحتياطات اللازمة للوقاية من حوادث العمل من خلال نصائح حول اختيار الأحذية واستخدامها.</value>
+    <comment></comment>
+  </data>
+  <data name="Carousel_2_LinkText" xml:space="preserve">
+    <value>اكتشف</value>
     <comment></comment>
   </data>
 </root>

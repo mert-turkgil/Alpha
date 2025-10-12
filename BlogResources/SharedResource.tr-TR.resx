@@ -7,4 +7,131 @@
     <value>&lt;p&gt;aww&lt;/p&gt;
 </value>
   </data>
-</root>
+<data name="Title_1_selecting safety footwear: what to look for?" xml:space="preserve"><value>İş güvenliği ayakkabısı seçimi: Nelere dikkat etmeli?</value></data><data name="Content_1_selecting safety footwear: what to look for?" xml:space="preserve"><value>&lt;p&gt;Doğru iş g&amp;uuml;venliği ayakkabısı; yaralanmaları &amp;ouml;nler, yorgunluğu azaltır ve verimliliği artırır. Se&amp;ccedil;im yaparken standartlar, iş ortamı, malzemeler ve uyum birlikte değerlendirilmelidir.&lt;br /&gt;
+&amp;nbsp;&lt;/p&gt;
+
+&lt;h2&gt;Standart ve sınıflar (EN ISO 20345)&lt;/h2&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;Burun koruması: 200 J darbe dayanımı zorunlu.&lt;/li&gt;
+	&lt;li&gt;Sınıflar:
+	&lt;ul&gt;
+		&lt;li&gt;S1: Kapalı topuk, antistatik, enerji emilimi, yakıt yağı direnci.&lt;/li&gt;
+		&lt;li&gt;S1P: S1 + delinmeye dayanım (ARA taban).&lt;/li&gt;
+		&lt;li&gt;S2: S1 + su ge&amp;ccedil;irmezlik (&amp;uuml;st y&amp;uuml;zey).&lt;/li&gt;
+		&lt;li&gt;S3: S2 + delinmeye dayanım + dişli taban (dış mek&amp;acirc;n/şantiye i&amp;ccedil;in yaygın).&lt;/li&gt;
+		&lt;li&gt;S4: Polimer/lastik bot, su ge&amp;ccedil;irmez.&lt;/li&gt;
+		&lt;li&gt;S5: S4 + delinmeye dayanım (ıslak/&amp;ccedil;amurlu zeminler).&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/li&gt;
+	&lt;li&gt;Ek işaretler: SRC (&amp;uuml;st d&amp;uuml;zey kayma direnci), HRO (300&amp;deg;C temas ısısı), CI (soğuk yalıtımı), WR (tam su ge&amp;ccedil;irmez), ESD/antistatik (elektronik ve ATEX alanlar)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Dikkat edilmesi gereken başlıklar&lt;/h2&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;G&amp;uuml;venlik &amp;ouml;zellikleri:
+	&lt;ul&gt;
+		&lt;li&gt;Burun koruması (&amp;ccedil;elik, kompozit, al&amp;uuml;minyum).&lt;/li&gt;
+		&lt;li&gt;Delinmeye dayanım (&amp;ccedil;elik veya tekstil/kevlar ara taban).&lt;/li&gt;
+		&lt;li&gt;Kayma direnci (SRC &amp;ouml;nerilir).&lt;/li&gt;
+		&lt;li&gt;Su/kimyasal koruma (WR/S5, nitril taban, PVC/PU bot).&lt;/li&gt;
+		&lt;li&gt;Isı &amp;ouml;zellikleri (HRO, HI/CI), metatarsal koruma gerekirse.&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/li&gt;
+	&lt;li&gt;Konfor ve ergonomi:
+	&lt;ul&gt;
+		&lt;li&gt;Uyum ve kalıp: Ayağı sarmalı, parmak &amp;ouml;n&amp;uuml;nde ~1 cm pay.&lt;/li&gt;
+		&lt;li&gt;Ağırlık: G&amp;uuml;n boyu hareket i&amp;ccedil;in hafif modeller avantajlı.&lt;/li&gt;
+		&lt;li&gt;Yastıklama ve orta taban: PU/EVA konforu artırır.&lt;/li&gt;
+		&lt;li&gt;Nefes alabilirlik ve ter y&amp;ouml;netimi: Mesh/deri astar, nem emici tabanlık.&lt;/li&gt;
+		&lt;li&gt;Bilek desteği: Y&amp;uuml;ksek kon&amp;ccedil; arazide/merdivende; d&amp;uuml;ş&amp;uuml;k kon&amp;ccedil; depoda/şehir i&amp;ccedil;i.&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/li&gt;
+	&lt;li&gt;Zemin ve iş t&amp;uuml;r&amp;uuml;:
+	&lt;ul&gt;
+		&lt;li&gt;Yağlı/ıslak: SRC + yağ yakıt direnci (FO) + su koruması.&lt;/li&gt;
+		&lt;li&gt;Şantiye/dış mek&amp;acirc;n: S3, dişli taban, taş delici riskine karşı ara taban.&lt;/li&gt;
+		&lt;li&gt;Gıda/temizlik: S2/S4-S5, kolay yıkanabilir, beyaz taban, kaymaz.&lt;/li&gt;
+		&lt;li&gt;Metal/at&amp;ouml;lye: HRO, S3, ısı ve kıvılcım dayanımı; deri &amp;uuml;st.&lt;/li&gt;
+		&lt;li&gt;Depo/lojistik: Hafif kompozit burun, esnek tekstil ara taban, SRC.&lt;/li&gt;
+		&lt;li&gt;Elektronik/ATEX: ESD/antistatik, metal i&amp;ccedil;ermeyen tercihen.&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/li&gt;
+	&lt;li&gt;Dayanıklılık ve bakım:
+	&lt;ul&gt;
+		&lt;li&gt;&amp;Uuml;st materyal, dikiş kalitesi, burun/yan korumalar.&lt;/li&gt;
+		&lt;li&gt;Taban aşınma g&amp;ouml;stergeleri ve hidroliz dayanımı (PU &amp;ccedil;evresel koşullarda etkilenebilir).&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Malzeme rehberi ve avantajları&lt;/h2&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;Burun koruması:
+	&lt;ul&gt;
+		&lt;li&gt;&amp;Ccedil;elik: &amp;Ccedil;ok sağlam, ince hacim, ekonomik; daha ağır, ısı/soğuk iletir.&lt;/li&gt;
+		&lt;li&gt;Kompozit (cam elyafı/karbon): Hafif, metal i&amp;ccedil;ermez, termal yalıtım; biraz hacimli, fiyat daha y&amp;uuml;ksek.&lt;/li&gt;
+		&lt;li&gt;Al&amp;uuml;minyum: &amp;Ccedil;elikten hafif, profili daha ince; metal dedekt&amp;ouml;rlerinde uyarır.&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/li&gt;
+	&lt;li&gt;Delinme ara tabanı:
+	&lt;ul&gt;
+		&lt;li&gt;&amp;Ccedil;elik: Y&amp;uuml;ksek delinme direnci, noktasal sivri nesnelere &amp;ccedil;ok iyi; daha ağır, soğuk k&amp;ouml;pr&amp;uuml;s&amp;uuml; yapabilir.&lt;/li&gt;
+		&lt;li&gt;Tekstil/Kevlar: Daha hafif, esnek, t&amp;uuml;m tabanı kaplayabilir, metal dedekt&amp;ouml;r&amp;uuml;ne takılmaz; bazı sivri &amp;ccedil;ivilere &amp;ccedil;eliğe g&amp;ouml;re daha az diren&amp;ccedil;li olabilir.&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/li&gt;
+	&lt;li&gt;&amp;Uuml;st (upper):
+	&lt;ul&gt;
+		&lt;li&gt;Tam tahıl deri: Dayanıklı, suya diren&amp;ccedil;li, kolay bakım.&lt;/li&gt;
+		&lt;li&gt;Nubuk/ayakkabılık deri: Daha nefes alır, konforlu; y&amp;uuml;zey bakımı ister.&lt;/li&gt;
+		&lt;li&gt;Mikrofiber: Hafif, hijyenik, kimyasala daha diren&amp;ccedil;li, vegan se&amp;ccedil;enek.&lt;/li&gt;
+		&lt;li&gt;Mesh/tekstil: &amp;Ccedil;ok nefes alır, hafif; zorlu aşınmada &amp;ccedil;abuk yıpranabilir.&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/li&gt;
+	&lt;li&gt;Taban:
+	&lt;ul&gt;
+		&lt;li&gt;PU (poli&amp;uuml;retan): Hafif, yastıklama iyi; bazı kimyasallarda/hidrolizde zayıflayabilir.&lt;/li&gt;
+		&lt;li&gt;TPU: Y&amp;uuml;ksek aşınma ve kayma direnci, soğukta performans iyi.&lt;/li&gt;
+		&lt;li&gt;Nitril kau&amp;ccedil;uk: ısıya (HRO) ve yağa dayanıklı, sağlam; biraz daha ağır.&lt;/li&gt;
+		&lt;li&gt;EVA (orta taban): Ekstra konfor ve darbe s&amp;ouml;n&amp;uuml;mleme.&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/li&gt;
+	&lt;li&gt;Bot materyalleri:
+	&lt;ul&gt;
+		&lt;li&gt;PVC: Su ve kimyasallara dayanıklı, ekonomik; kayma ve soğukta sertleşme dezavantaj olabilir.&lt;/li&gt;
+		&lt;li&gt;PU bot: Daha hafif, daha iyi yalıtım, uzun s&amp;uuml;re rahat.&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Numara se&amp;ccedil;imi ve deneme ipu&amp;ccedil;ları&lt;/h2&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;G&amp;uuml;n sonunda, kullanacağınız iş &amp;ccedil;orabıyla deneyin.&lt;/li&gt;
+	&lt;li&gt;Parmak ucunda ~1 cm boşluk, topukta kayma olmamalı.&lt;/li&gt;
+	&lt;li&gt;Esneme noktası ayak parmak k&amp;ouml;k&amp;uuml;yle hizalı olmalı.&lt;/li&gt;
+	&lt;li&gt;Gerekirse kavis desteği olan tabanlıkla deneyin.&lt;/li&gt;
+	&lt;li&gt;Kadınlara &amp;ouml;zel kalıp sunan modeller daha iyi uyabilir.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Bakım, hijyen ve &amp;ouml;m&amp;uuml;r&lt;/h2&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;Kir ve kimyasalları g&amp;uuml;nl&amp;uuml;k temizleyin, doğal kurutun (radyat&amp;ouml;r yok).&lt;/li&gt;
+	&lt;li&gt;Tabanlıkları havalandırın; &amp;ccedil;ift ayakkabı rotasyonu koku ve aşınmayı azaltır.&lt;/li&gt;
+	&lt;li&gt;Delinme/burun darbe aldıysa, g&amp;ouml;r&amp;uuml;n&amp;uuml;r hasar olmasa bile değiştirmeyi d&amp;uuml;ş&amp;uuml;n&amp;uuml;n.&lt;/li&gt;
+	&lt;li&gt;Ortalama &amp;ouml;m&amp;uuml;r kullanım koşullarına g&amp;ouml;re 6&amp;ndash;24 ay.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Hızlı se&amp;ccedil;im &amp;ouml;zeti&lt;/h2&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;Şantiye/dış mek&amp;acirc;n: S3, SRC, kompozit burun + tekstil ara taban, suya dayanım.&lt;/li&gt;
+	&lt;li&gt;Gıda/ıslak zemin: S2/S4&amp;ndash;S5, SRC, mikrofiber &amp;uuml;st, kolay temizlenebilir.&lt;/li&gt;
+	&lt;li&gt;Sıcak y&amp;uuml;zey/metal: S3, HRO, nitril taban, deri &amp;uuml;st.&lt;/li&gt;
+	&lt;li&gt;Depo/loji̇sti̇k: S1P/S3, hafiflik &amp;ouml;nceliği, ESD gerekiyorsa ekleyin.&lt;/li&gt;
+	&lt;li&gt;Elektronik/ATEX: ESD, metal i&amp;ccedil;ermeyen, SRC.&lt;/li&gt;
+&lt;/ul&gt;
+</value></data></root>

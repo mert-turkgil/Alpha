@@ -2295,8 +2295,31 @@ public class AdminController : Controller
     [HttpPost]
     public async Task<IActionResult> BlogEdit(int id, BlogEditModel model)
     {
+        // ✅ DEBUG: Log received translation data
+        Console.WriteLine($"[DEBUG BlogEdit POST] Received translations:");
+        Console.WriteLine($"  - TitleUS: {model.TitleUS?.Substring(0, Math.Min(50, model.TitleUS?.Length ?? 0))}...");
+        Console.WriteLine($"  - TitleTR: {model.TitleTR?.Substring(0, Math.Min(50, model.TitleTR?.Length ?? 0))}...");
+        Console.WriteLine($"  - TitleDE: {model.TitleDE?.Substring(0, Math.Min(50, model.TitleDE?.Length ?? 0))}...");
+        Console.WriteLine($"  - TitleFR: {model.TitleFR?.Substring(0, Math.Min(50, model.TitleFR?.Length ?? 0))}...");
+        Console.WriteLine($"  - TitleAR: {model.TitleAR?.Substring(0, Math.Min(50, model.TitleAR?.Length ?? 0))}...");
+        Console.WriteLine($"  - ContentUS length: {model.ContentUS?.Length ?? 0}");
+        Console.WriteLine($"  - ContentTR length: {model.ContentTR?.Length ?? 0}");
+        Console.WriteLine($"  - ContentDE length: {model.ContentDE?.Length ?? 0}");
+        Console.WriteLine($"  - ContentFR length: {model.ContentFR?.Length ?? 0}");
+        Console.WriteLine($"  - ContentAR length: {model.ContentAR?.Length ?? 0}");
+        
         if (!ModelState.IsValid)
         {
+            // ✅ DEBUG: Log ModelState errors
+            Console.WriteLine("[DEBUG BlogEdit POST] ModelState is INVALID. Errors:");
+            foreach (var error in ModelState)
+            {
+                if (error.Value.Errors.Count > 0)
+                {
+                    Console.WriteLine($"  - {error.Key}: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
+                }
+            }
+            
             if (string.IsNullOrWhiteSpace(model.Url))
             {
                 throw new InvalidOperationException("URL boş olamaz. Blog için benzersiz bir URL gerekli.");
@@ -2368,11 +2391,11 @@ public class AdminController : Controller
         string updatedContent = ProcessContentImages(model.Content, fileMappings);
         var translations = new Dictionary<string, (string Title, string Content)>
     {
-        { "en-US", (model.TitleUS, ProcessContentImages(model.ContentUS, fileMappings)) },
-        { "tr-TR", (model.TitleTR, ProcessContentImages(model.ContentTR, fileMappings)) },
-        { "de-DE", (model.TitleDE, ProcessContentImages(model.ContentDE, fileMappings)) },
-        { "fr-FR", (model.TitleFR, ProcessContentImages(model.ContentFR, fileMappings)) },
-        { "ar-SA", (model.TitleAR, ProcessContentImages(model.ContentAR, fileMappings)) }
+        { "en-US", (model.TitleUS ?? "", ProcessContentImages(model.ContentUS ?? "", fileMappings)) },
+        { "tr-TR", (model.TitleTR ?? "", ProcessContentImages(model.ContentTR ?? "", fileMappings)) },
+        { "de-DE", (model.TitleDE ?? "", ProcessContentImages(model.ContentDE ?? "", fileMappings)) },
+        { "fr-FR", (model.TitleFR ?? "", ProcessContentImages(model.ContentFR ?? "", fileMappings)) },
+        { "ar-SA", (model.TitleAR ?? "", ProcessContentImages(model.ContentAR ?? "", fileMappings)) }
     };
 
         // STEP 4: Save blog and translations
