@@ -525,17 +525,73 @@ public class HomeController : Controller
 
             try
             {
-                // --- Admin bildirim e-postası (with HTML sanitization) ---
+                // --- Admin notification email using HTML template ---
                 var adminEmail = _configuration.GetValue<string>("EmailSender:AdminNotificationEmail") 
                               ?? _configuration.GetValue<string>("EmailSender:Username") 
                               ?? "info@alphaayakkabi.com";
                               
                 var adminSubject = "Yeni İletişim Formu Mesajı";
-                var adminBody = $@"
-                    <p><strong>From:</strong> {System.Net.WebUtility.HtmlEncode(model.Name)} ({System.Net.WebUtility.HtmlEncode(model.Email)})</p>
-                    <p><strong>Subject:</strong> {System.Net.WebUtility.HtmlEncode(model.Subject)}</p>
-                    <hr/>
-                    <p>{System.Net.WebUtility.HtmlEncode(model.Message).Replace("\n", "<br/>")}</p>";
+                
+                // Read admin email template
+                var adminTemplatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", "AdminNotification.html");
+                string adminBody;
+                
+                if (System.IO.File.Exists(adminTemplatePath))
+                {
+                    adminBody = await System.IO.File.ReadAllTextAsync(adminTemplatePath);
+                    
+                    // Replace placeholders with actual data (sanitized for XSS)
+                    adminBody = adminBody
+                        .Replace("{UserName}", System.Net.WebUtility.HtmlEncode(model.Name))
+                        .Replace("{UserEmail}", System.Net.WebUtility.HtmlEncode(model.Email))
+                        .Replace("{UserMessage}", System.Net.WebUtility.HtmlEncode(model.Message).Replace("\n", "<br/>"));
+                }
+                else
+                {
+                    // Fallback to inline HTML if template not found
+                    adminBody = $@"
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <style>
+                            body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                            .container {{ max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }}
+                            .header {{ background: linear-gradient(135deg, #e79c00, #ff9900); padding: 20px; text-align: center; color: white; }}
+                            .content {{ background: white; padding: 30px; margin-top: 20px; border-radius: 8px; }}
+                            .field {{ margin-bottom: 15px; }}
+                            .label {{ font-weight: bold; color: #555; }}
+                            .footer {{ text-align: center; padding: 15px; color: #888; font-size: 12px; }}
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <div class='header'>
+                                <h2>🔔 New Contact Form Message</h2>
+                            </div>
+                            <div class='content'>
+                                <div class='field'>
+                                    <span class='label'>From:</span> {System.Net.WebUtility.HtmlEncode(model.Name)}
+                                </div>
+                                <div class='field'>
+                                    <span class='label'>Email:</span> {System.Net.WebUtility.HtmlEncode(model.Email)}
+                                </div>
+                                <div class='field'>
+                                    <span class='label'>Subject:</span> {System.Net.WebUtility.HtmlEncode(model.Subject)}
+                                </div>
+                                <hr/>
+                                <div class='field'>
+                                    <span class='label'>Message:</span>
+                                    <p>{System.Net.WebUtility.HtmlEncode(model.Message).Replace("\n", "<br/>")}</p>
+                                </div>
+                            </div>
+                            <div class='footer'>
+                                &copy; 2025 Alpha Ayakkabı. All rights reserved.
+                            </div>
+                        </div>
+                    </body>
+                    </html>";
+                }
 
                 _logger.LogInformation($"Sending contact form to admin: {adminEmail}");
                 await _emailSender.SendEmailAsync(adminEmail, adminSubject, adminBody);
