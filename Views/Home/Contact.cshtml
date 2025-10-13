@@ -447,12 +447,9 @@
                     <i class="fa fa-envelope"></i>
                 </div>
                 <h5>@Model.Contact_EmailUs</h5>
-                <p class="text-muted" style="user-select: none;">
+                <a href="mailto:@Model.Contact_EmailAddressValue" class="text-decoration-none">
                     @Model.Contact_EmailAddressValue
-                </p>
-                <small class="text-primary fw-bold">
-                    <i class="fa fa-arrow-down"></i> @(Model.Contact_UseFormBelow ?? "Please use the contact form below")
-                </small>
+                </a>
             </div>
         </div>
     </div>
@@ -485,7 +482,12 @@
 
                     <div class="mb-3">
                         <label asp-for="Email" class="form-label">@Model.Contact_YourEmail</label>
-                        <input asp-for="Email" type="email" class="form-control" required />
+                        <input asp-for="Email" 
+                               type="email" 
+                               class="form-control" 
+                               required 
+                               pattern="^[a-zA-Z0-9._%+-]+@@(gmail|yahoo|outlook|hotmail|icloud|protonmail|aol|zoho|yandex|mail)\.(com|net|org|ru|co\.uk|de|fr|tr)$"
+                               title="Please use a valid email from providers like Gmail, Yahoo, Outlook, etc." />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 

@@ -357,31 +357,56 @@ public class HomeController : Controller
 #endregion
 #region oto mail
 
+    /// <summary>
+    /// Sends confirmation email to user after contact form submission
+    /// </summary>
     private async Task SendBackEmail(ContactFormViewModel model)
     {
-        var subject = "Alpha Admin Invitation";
-        var message = $@"
-            <h2>Welcome to Alpha Admin Panel</h2>
-            <p>You have been invited to join the Alpha Admin system.</p>
-            <p>Please click the link below to set up your account:</p>
-            <p>
-                <a href='' 
-                style='display: inline-block; background-color: #ff7b00; color: #fff; 
-                        padding: 10px 20px; text-decoration: none; border-radius: 5px;'>
-                    Complete Registration
-                </a>
-            </p>
-            <p>This invitation link will expire in <strong> day(s)</strong>.</p>
-            <p>If you did not expect this email, please ignore it.</p>";
-
         try
         {
-            await _emailSender.SendEmailAsync(model.Email, subject, message);
+            // Get current culture to determine which email template to use
+            var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            
+            // Map culture to template file
+            var templateFile = culture.ToLower() switch
+            {
+                "tr" => "UserNotification_tr.html",
+                "de" => "UserNotification_de.html",
+                "fr" => "UserNotification_fr.html",
+                "ar" => "UserNotification_ar.html",
+                _ => "UserNotification_en.html"
+            };
+
+            // Set subject based on culture
+            var subject = culture.ToLower() switch
+            {
+                "tr" => "Mesajınız Alındı - Alpha Ayakkabı",
+                "de" => "Ihre Nachricht wurde empfangen - Alpha Ayakkabı",
+                "fr" => "Votre message a été reçu - Alpha Ayakkabı",
+                "ar" => "تم استلام رسالتك - Alpha Ayakkabı",
+                _ => "Your Message Has Been Received - Alpha Ayakkabı"
+            };
+
+            // Read email template from file
+            var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", templateFile);
+            
+            if (!System.IO.File.Exists(templatePath))
+            {
+                Console.WriteLine($"[EMAIL WARNING] Template not found: {templatePath}, using default");
+                templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", "UserNotification_en.html");
+            }
+
+            var emailBody = await System.IO.File.ReadAllTextAsync(templatePath);
+
+            // Send confirmation email to user
+            await _emailSender.SendEmailAsync(model.Email, subject, emailBody);
+            
+            Console.WriteLine($"[EMAIL] Confirmation sent to user: {model.Email} (Culture: {culture})");
         }
         catch (Exception ex)
         {
-            // Handle exceptions for logging or debugging
-            Console.WriteLine($"Error sending email: {ex.Message}");
+            Console.WriteLine($"[EMAIL ERROR] Failed to send confirmation to user: {ex.Message}");
+            // Don't throw - we don't want to fail the contact form submission if confirmation email fails
         }
     }
 
@@ -487,6 +512,14 @@ public class HomeController : Controller
                 return View(model);
             }
 
+            // 5) Public email provider validation (no bot/temporary emails)
+            if (!IsPublicEmailProvider(model.Email))
+            {
+                PopulateContactViewModel(model);
+                ModelState.AddModelError("Email", "Lütfen Gmail, Yahoo, Outlook gibi geçerli bir e-posta sağlayıcısı kullanın.");
+                return View(model);
+            }
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -507,28 +540,15 @@ public class HomeController : Controller
                 _logger.LogInformation($"Sending contact form to admin: {adminEmail}");
                 await _emailSender.SendEmailAsync(adminEmail, adminSubject, adminBody);
 
-                // --- Kullanıcıya teşekkür e-postası ---
-                var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-                var userSubject = culture switch
+                // --- Send confirmation email to user using proper method ---
+                var contactFormModel = new ContactFormViewModel
                 {
-                    "en" => "Thank You for Your Message",
-                    "de" => "Vielen Dank für Ihre Nachricht",
-                    "fr" => "Merci pour votre message",
-                    "ar" => "شكراً لرسالتك",
-                    _    => "Mesajınız İçin Teşekkürler"
+                    Name = model.Name,
+                    Email = model.Email,
+                    Subject = model.Subject,
+                    Message = model.Message
                 };
-
-                var templatePath = Path.Combine(
-                    Directory.GetCurrentDirectory(),
-                    "EmailTemplates",
-                    $"UserNotification_{culture}.html"
-                );
-                var userBodyTpl = System.IO.File.Exists(templatePath)
-                    ? await System.IO.File.ReadAllTextAsync(templatePath)
-                    : "<p>Hi {UserName}, thanks for reaching out!</p>";
-                var userBody = userBodyTpl.Replace("{UserName}", model.Name);
-
-                await _emailSender.SendEmailAsync(model.Email, userSubject, userBody);
+                await SendBackEmail(contactFormModel);
 
                 TempData["SuccessMessage"] = _localization.GetKey("ContactSuccessMessage")
                                             ?? "Your message has been sent!";
@@ -973,4 +993,41 @@ public IActionResult Privacy(string culture)
             return false;
         }
     }
+
+    /// <summary>
+    /// Validates that email is from a public provider (not temporary/bot email)
+    /// </summary>
+    private bool IsPublicEmailProvider(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+
+        // Extract domain from email
+        var parts = email.ToLower().Split('@');
+        if (parts.Length != 2)
+            return false;
+
+        var domain = parts[1];
+
+        // List of allowed public email providers
+        var allowedProviders = new[]
+        {
+            "gmail.com", "googlemail.com",
+            "yahoo.com", "yahoo.co.uk", "yahoo.fr", "yahoo.de",
+            "outlook.com", "hotmail.com", "live.com", "msn.com",
+            "icloud.com", "me.com", "mac.com",
+            "protonmail.com", "proton.me", "pm.me",
+            "aol.com",
+            "zoho.com", "zoho.eu",
+            "yandex.com", "yandex.ru",
+            "mail.com", "email.com",
+            "gmx.com", "gmx.de", "gmx.net",
+            "mail.ru",
+            "fastmail.com",
+            "tutanota.com", "tuta.io"
+        };
+
+        return allowedProviders.Contains(domain);
+    }
 }
+
