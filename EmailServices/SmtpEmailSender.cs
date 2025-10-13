@@ -46,14 +46,16 @@ namespace Alpha.EmailServices
                 var mailMessage = new MailMessage(fromAddress, toAddress)
                 {
                     Subject = subject,
-                    Body = htmlMessage,
+                    // Remove this line: Body = htmlMessage,
                     IsBodyHtml = true,
                     Priority = MailPriority.Normal
                 };
 
-                // Add UTF-8 encoding for international characters
-                mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
-                mailMessage.SubjectEncoding = System.Text.Encoding.UTF8;
+
+                    // Add UTF-8 encoding for international characters
+                    mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
+                    mailMessage.SubjectEncoding = System.Text.Encoding.UTF8;
+
 
                 // Explicitly set content type to text/html
                 mailMessage.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(
