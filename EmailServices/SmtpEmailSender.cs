@@ -55,6 +55,13 @@ namespace Alpha.EmailServices
                 mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
                 mailMessage.SubjectEncoding = System.Text.Encoding.UTF8;
 
+                // Explicitly set content type to text/html
+                mailMessage.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(
+                    htmlMessage, 
+                    System.Text.Encoding.UTF8, 
+                    System.Net.Mime.MediaTypeNames.Text.Html
+                ));
+
                 // Add custom headers for Cloudflare Email Workers verification
                 mailMessage.Headers.Add("X-Alpha-Contact-Form", "true");
                 mailMessage.Headers.Add("X-Turnstile-Verified", "true");
