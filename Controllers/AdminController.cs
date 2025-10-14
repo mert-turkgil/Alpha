@@ -2954,11 +2954,13 @@ public class AdminController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Login()
     {
+        var siteKey = _configuration["reCAPTCHA:SiteKey"];
+        
         var model = new LoginModel
         {
             Categories = await _categoryRepository.GetAllAsync(),
             Products = await _productRepository.GetRecentProductsAsync(),
-            RecaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"]
+            RecaptchaSiteKey = siteKey
         };
         return View(model);
     }
@@ -3013,15 +3015,19 @@ public class AdminController : Controller
                 return View(model);
             }
 
-            // reCAPTCHA kontrolü
-            if (!Request.Form.TryGetValue("g-recaptcha-response", out var token)
-                || string.IsNullOrWhiteSpace(token.ToString())
-                || !await VerifyCaptchaAsync(token.ToString()))
+            // reCAPTCHA kontrolü - only if configured
+            var recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"];
+            if (!string.IsNullOrEmpty(recaptchaSiteKey))
             {
-                ViewBag.RecaptchaError = "Lütfen robot olmadığınızı doğrulayın.";
-                ViewBag.ErrorMessage = "Lütfen robot olmadığınızı doğrulayın.";
-                await PopulateModel(model);
-                return View(model);
+                if (!Request.Form.TryGetValue("g-recaptcha-response", out var token)
+                    || string.IsNullOrWhiteSpace(token.ToString())
+                    || !await VerifyCaptchaAsync(token.ToString()))
+                {
+                    ViewBag.RecaptchaError = "Lütfen robot olmadığınızı doğrulayın.";
+                    ViewBag.ErrorMessage = "Lütfen robot olmadığınızı doğrulayın.";
+                    await PopulateModel(model);
+                    return View(model);
+                }
             }
 
             var user = await _userManager.FindByEmailAsync(model.Email);

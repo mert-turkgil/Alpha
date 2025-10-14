@@ -548,10 +548,7 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.6/jquery.validate.unobtrusive.min.js"></script>
     
-    @if (!string.IsNullOrEmpty(Model?.RecaptchaSiteKey))
-    {
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    }
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     
     <script>
         // Initialize AOS
@@ -591,11 +588,17 @@
 
         // Form submission validation
         document.querySelector('form').addEventListener('submit', function(e) {
-            var recaptchaResponse = document.querySelector('.g-recaptcha-response');
-            if (recaptchaResponse && !recaptchaResponse.value) {
-                e.preventDefault();
-                alert('Please complete the reCAPTCHA verification');
-                return false;
+            var recaptchaDiv = document.querySelector('.g-recaptcha');
+            var siteKey = recaptchaDiv ? recaptchaDiv.getAttribute('data-sitekey') : null;
+            
+            // Only validate if reCAPTCHA is configured (has a site key)
+            if (siteKey && siteKey.trim() !== '') {
+                var recaptchaResponse = document.querySelector('.g-recaptcha-response');
+                if (!recaptchaResponse || !recaptchaResponse.value) {
+                    e.preventDefault();
+                    alert('Please complete the reCAPTCHA verification');
+                    return false;
+                }
             }
         });
     </script>
