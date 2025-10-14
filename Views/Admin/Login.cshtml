@@ -455,17 +455,10 @@
 
                 <!-- reCAPTCHA -->
                 <div class="form-group">
-                    @if (!string.IsNullOrEmpty(Model?.RecaptchaSiteKey))
-                    {
-                        <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            reCAPTCHA configuration error
-                        </div>
-                    }
+                @if (Model != null && !string.IsNullOrEmpty(Model.RecaptchaSiteKey))
+                {
+                    <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+                }
                 </div>
 
                 <!-- Error Message -->
