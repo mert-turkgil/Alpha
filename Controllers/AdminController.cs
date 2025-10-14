@@ -1442,6 +1442,12 @@ public class AdminController : Controller
         ViewBag.TotalBlogs = (await _blogRepository.GetAllAsync()).Count;
         ViewBag.TotalUsers = (_userManager.Users.ToList()).Count;
         ViewBag.TotalCarousel = (await _carouselRepository.GetAllAsync()).Count;
+        
+        // Check reCAPTCHA configuration
+        var recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"];
+        var recaptchaSecretKey = _configuration["reCAPTCHA:SecretKey"];
+        ViewBag.RecaptchaConfigured = !string.IsNullOrEmpty(recaptchaSiteKey) && !string.IsNullOrEmpty(recaptchaSecretKey);
+        
         var translations = new Dictionary<string, string>
         {
             { "HomeBlogHead", "Expert tips and essential guidance" },
@@ -3054,17 +3060,50 @@ public class AdminController : Controller
     
     private async Task<bool> VerifyCaptchaAsync(string token)
     {
-        var _recaptchaSecret = _configuration["reCAPTCHA:SecretKey"];
+        try
+        {
+            var _recaptchaSecret = _configuration["reCAPTCHA:SecretKey"];
 
-        using var client = new HttpClient();
-        var response = await client.PostAsync(
-            $"https://www.google.com/recaptcha/api/siteverify?secret={_recaptchaSecret}&response={token}",
-            null);
-        var json = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrEmpty(_recaptchaSecret))
+            {
+                _logger.LogWarning("reCAPTCHA SecretKey is not configured");
+                return false;
+            }
 
-        dynamic? result = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
-        bool success = result?.success == true;
-        return success;
+            using var client = new HttpClient();
+            var response = await client.PostAsync(
+                $"https://www.google.com/recaptcha/api/siteverify?secret={_recaptchaSecret}&response={token}",
+                null);
+            var json = await response.Content.ReadAsStringAsync();
+
+            _logger.LogInformation($"reCAPTCHA verification response: {json}");
+
+            dynamic? result = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+            bool success = result?.success == true;
+
+            if (!success)
+            {
+                try
+                {
+                    var errorCodes = result != null ? result["error-codes"] : null;
+                    if (errorCodes != null)
+                    {
+                        _logger.LogWarning($"reCAPTCHA verification failed. Response: {json}");
+                    }
+                }
+                catch
+                {
+                    _logger.LogWarning($"reCAPTCHA verification failed. Response: {json}");
+                }
+            }
+
+            return success;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during reCAPTCHA verification");
+            return false;
+        }
     }
 
     #endregion

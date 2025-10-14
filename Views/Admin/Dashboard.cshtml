@@ -126,6 +126,19 @@
         <p>@alertMessage.Message </p>
     </div>
 }
+@if (ViewBag.RecaptchaConfigured != null && !ViewBag.RecaptchaConfigured)
+{
+    <div class="alert alert-danger container" role="alert">
+        <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> CONFIGURATION ERROR</h4>
+        <p><strong>reCAPTCHA is not configured properly!</strong></p>
+        <p>The login page requires valid reCAPTCHA keys. Please configure the following in your appsettings.Production.json:</p>
+        <ul>
+            <li><code>"reCAPTCHA:SiteKey"</code> - Your Google reCAPTCHA Site Key</li>
+            <li><code>"reCAPTCHA:SecretKey"</code> - Your Google reCAPTCHA Secret Key</li>
+        </ul>
+        <p>Get your keys from: <a href="https://www.google.com/recaptcha/admin" target="_blank" class="alert-link">Google reCAPTCHA Admin Console</a></p>
+    </div>
+}
 <div class="dashboard-container">
     <!-- Dashboard Title -->
     <h1 class="dashboard-title">Alpha Admin Dashboard</h1>
