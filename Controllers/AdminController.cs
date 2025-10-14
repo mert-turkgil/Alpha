@@ -3018,6 +3018,7 @@ public class AdminController : Controller
                 || string.IsNullOrWhiteSpace(token.ToString())
                 || !await VerifyCaptchaAsync(token.ToString()))
             {
+                ViewBag.RecaptchaError = "Lütfen robot olmadığınızı doğrulayın.";
                 ViewBag.ErrorMessage = "Lütfen robot olmadığınızı doğrulayın.";
                 await PopulateModel(model);
                 return View(model);
