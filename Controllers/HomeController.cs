@@ -593,27 +593,43 @@ public class HomeController : Controller
                     </html>";
                 }
 
+                // --- Send admin email with metadata for Worker callback ---
                 _logger.LogInformation($"Sending contact form to admin: {adminEmail}");
-                await _emailSender.SendEmailAsync(adminEmail, adminSubject, adminBody);
-
-                // --- Send confirmation email to user using proper method ---
-                var contactFormModel = new ContactFormViewModel
+                
+                try
                 {
-                    Name = model.Name,
-                    Email = model.Email,
-                    Subject = model.Subject,
-                    Message = model.Message
-                };
-                await SendBackEmail(contactFormModel);
-
-                TempData["SuccessMessage"] = _localization.GetKey("ContactSuccessMessage")
-                                            ?? "Your message has been sent!";
+                    // Add metadata headers for Worker to use in callback
+                    var customHeaders = new Dictionary<string, string>
+                    {
+                        { "X-User-Email", model.Email },
+                        { "X-User-Culture", CultureInfo.CurrentCulture.Name },
+                        { "X-User-Name", model.Name },
+                        { "X-Webhook-Url", $"{Request.Scheme}://{Request.Host}/api/email/send-confirmation" }
+                    };
+                    
+                    await _emailSender.SendEmailAsync(adminEmail, adminSubject, adminBody, customHeaders);
+                    _logger.LogInformation("✅ Admin notification sent - Worker will validate and trigger user confirmation");
+                    
+                    // NOTE: User confirmation is now sent by Worker via webhook after spam validation
+                    // This ensures users only get confirmation if the message passes spam checks
+                    
+                    TempData["SuccessMessage"] = _localization.GetKey("ContactSuccessMessage")
+                                                ?? "Your message has been sent!";
+                }
+                catch (Exception emailEx)
+                {
+                    _logger.LogError(emailEx, "❌ Failed to send email");
+                    
+                    // Show success to user for security (don't reveal email issues)
+                    TempData["SuccessMessage"] = _localization.GetKey("ContactSuccessMessage")
+                                                ?? "Your message has been sent!";
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Contact form error");
+                _logger.LogError(ex, "Contact form validation error");
                 TempData["ErrorMessage"] = _localization.GetKey("ContactErrorMessage")
-                                        ?? "There was an error sending your message.";
+                                        ?? "There was an error processing your message.";
             }
 
             return View(model);
@@ -850,22 +866,42 @@ public class HomeController : Controller
         var relatedCategories = product.ProductCategories?.Select(pc => pc.Category).Where(c => c != null).ToList() ?? new();
         var recentProducts = await _productRepository.GetRecentProductsAsync() ?? new();
 
+        // Helper function to clean up "Test" or empty values
+        // Helper function to get localized default values
+        string GetLocalizedDefault(string key, string fallback)
+        {
+            var localized = _localization.GetKey(key);
+            return !string.IsNullOrWhiteSpace(localized) ? localized : fallback;
+        }
+
+        string CleanValue(string value, string defaultValue)
+        {
+            // If value is null, empty, or "Test", return the default
+            if (string.IsNullOrWhiteSpace(value) || value.Trim().Equals("Test", StringComparison.OrdinalIgnoreCase))
+                return defaultValue;
+            return value;
+        }
+
+        // Get localized "Not specified" text once
+        var notSpecified = GetLocalizedDefault("ProductDetail_NotSpecified", "Belirtilmemiş");
+        var noDescription = GetLocalizedDefault("ProductDetail_NoDescription", "Açıklama mevcut değil");
+
         var viewModel = new ProductDetailViewModel
         {
             ProductId = product.ProductId,
             Name = product.Name,
-            Description = product.Description,
-            Upper = product.Upper,
-            Insole = product.Insole,
-            Lining = product.Lining,
-            Protection = product.Protection,
-            Midsole = product.Midsole,
-            Sole = product.Sole,
-            Model = product.Model,
-            Standard = product.Standard,
-            Certificate = product.Certificate,
-            Brand = product.Brand,
-            Size = product.Size,
+            Description = CleanValue(product.Description, noDescription),
+            Upper = CleanValue(product.Upper, notSpecified),
+            Insole = CleanValue(product.Insole, notSpecified),
+            Lining = CleanValue(product.Lining, notSpecified),
+            Protection = CleanValue(product.Protection, notSpecified),
+            Midsole = CleanValue(product.Midsole, notSpecified),
+            Sole = CleanValue(product.Sole, notSpecified),
+            Model = CleanValue(product.Model, notSpecified),
+            Standard = CleanValue(product.Standard, notSpecified),
+            Certificate = CleanValue(product.Certificate, notSpecified),
+            Brand = CleanValue(product.Brand, "Alpha"),
+            Size = CleanValue(product.Size, notSpecified),
             BodyNo = product.BodyNo,
             DateAdded = product.DateAdded,
             ProductImages = product.ProductImages?.ToList() ?? new(),

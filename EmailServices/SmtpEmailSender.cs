@@ -30,6 +30,11 @@ namespace Alpha.EmailServices
         
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
+            await SendEmailAsync(email, subject, htmlMessage, null);
+        }
+
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage, Dictionary<string, string>? customHeaders = null)
+        {
             try
             {
                 var client = new SmtpClient(this._host, this._port)
@@ -46,16 +51,13 @@ namespace Alpha.EmailServices
                 var mailMessage = new MailMessage(fromAddress, toAddress)
                 {
                     Subject = subject,
-                    // Remove this line: Body = htmlMessage,
                     IsBodyHtml = true,
                     Priority = MailPriority.Normal
                 };
 
-
-                    // Add UTF-8 encoding for international characters
-                    mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
-                    mailMessage.SubjectEncoding = System.Text.Encoding.UTF8;
-
+                // Add UTF-8 encoding for international characters
+                mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
+                mailMessage.SubjectEncoding = System.Text.Encoding.UTF8;
 
                 // Explicitly set content type to text/html
                 mailMessage.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(
@@ -69,6 +71,15 @@ namespace Alpha.EmailServices
                 mailMessage.Headers.Add("X-Turnstile-Verified", "true");
                 mailMessage.Headers.Add("X-Sent-From", "Alpha-Contact-Application");
                 mailMessage.Headers.Add("X-App-Version", "1.0");
+
+                // Add any additional custom headers
+                if (customHeaders != null)
+                {
+                    foreach (var header in customHeaders)
+                    {
+                        mailMessage.Headers.Add(header.Key, header.Value);
+                    }
+                }
 
                 Console.WriteLine($"[SMTP] Sending email to: {email}");
                 Console.WriteLine($"[SMTP] From: {_fromEmail} ({_fromName})");

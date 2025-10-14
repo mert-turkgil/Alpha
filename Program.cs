@@ -314,4 +314,85 @@ app.MapControllerRoute(
 
 #endregion
 
+#region Worker Webhook API
+
+// API endpoint for Cloudflare Worker to trigger user confirmation email
+app.MapPost("/api/email/send-confirmation", async (HttpContext context, IEmailSender emailSender, IConfiguration configuration) =>
+{
+    try
+    {
+        // Verify request is from Cloudflare Worker (check secret token)
+        var authHeader = context.Request.Headers["X-Worker-Secret"].FirstOrDefault();
+        var expectedSecret = Environment.GetEnvironmentVariable("WORKER_SECRET") 
+                          ?? configuration["Worker:Secret"];
+        
+        if (authHeader != expectedSecret)
+        {
+            Console.WriteLine("[API] ❌ Unauthorized webhook attempt");
+            return Results.Unauthorized();
+        }
+
+        // Read request body
+        using var reader = new StreamReader(context.Request.Body);
+        var body = await reader.ReadToEndAsync();
+        var data = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(body);
+
+        if (data == null || !data.ContainsKey("userEmail") || !data.ContainsKey("culture"))
+        {
+            Console.WriteLine("[API] ❌ Invalid request data");
+            return Results.BadRequest(new { error = "Missing required fields" });
+        }
+
+        var userEmail = data["userEmail"];
+        var culture = data["culture"];
+        var userName = data.GetValueOrDefault("userName", "Customer");
+
+        Console.WriteLine($"[API] ✅ Webhook received for user: {userEmail}, culture: {culture}");
+
+        // Determine which template to use based on culture
+        var templateFile = culture.ToLower() switch
+        {
+            "tr-tr" or "tr" => "UserNotification_tr.html",
+            "de-de" or "de" => "UserNotification_de.html",
+            "fr-fr" or "fr" => "UserNotification_fr.html",
+            "ar-sa" or "ar" => "UserNotification_ar.html",
+            _ => "UserNotification_en.html"
+        };
+
+        var subject = culture.ToLower() switch
+        {
+            "tr-tr" or "tr" => "Mesajınız Alındı - Alpha Ayakkabı",
+            "de-de" or "de" => "Ihre Nachricht wurde empfangen - Alpha Ayakkabı",
+            "fr-fr" or "fr" => "Votre message a été reçu - Alpha Ayakkabı",
+            "ar-sa" or "ar" => "تم استلام رسالتك - Alpha Ayakkabı",
+            _ => "Your Message Has Been Received - Alpha Ayakkabı"
+        };
+
+        // Read email template
+        var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", templateFile);
+        
+        if (!System.IO.File.Exists(templatePath))
+        {
+            Console.WriteLine($"[API] ⚠️ Template not found: {templatePath}, using default");
+            templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", "UserNotification_en.html");
+        }
+
+        var emailBody = await System.IO.File.ReadAllTextAsync(templatePath);
+
+        // Send confirmation email to user
+        await emailSender.SendEmailAsync(userEmail, subject, emailBody);
+        
+        Console.WriteLine($"[API] ✅ Confirmation email sent to: {userEmail}");
+        
+        return Results.Ok(new { success = true, message = "Confirmation email sent" });
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[API] ❌ Error: {ex.Message}");
+        return Results.Problem(detail: ex.Message, statusCode: 500);
+    }
+});
+
+#endregion
+
 app.Run();
