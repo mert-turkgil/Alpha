@@ -197,7 +197,7 @@
     <value>+1 (555) 123-4567</value>
   </data>
   <data name="Contact_EmailAddressValue" xml:space="preserve">
-    <value>support@alphaayakkabi.com</value>
+    <value>info@alphaayakkabi.com</value>
   </data>
   <data name="Contact_Title" xml:space="preserve">
     <value>Bize Ulaşın</value>
@@ -386,7 +386,7 @@
     <value>Gizlilik Politikamız hakkında herhangi bir sorunuz varsa, lütfen bizimle iletişime geçin:</value>
   </data>
   <data name="Privacy_ContactEmail" xml:space="preserve">
-    <value>support@alphaayakkabi.com</value>
+    <value>info@alphaayakkabi.com</value>
   </data>
   <data name="Privacy_ContactPhone" xml:space="preserve">
     <value>+1 (555) 123-4567</value>

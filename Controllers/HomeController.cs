@@ -1050,7 +1050,7 @@ public IActionResult Privacy(string culture)
         // Contact Section
         ContactTitle = _localization.GetKey("Privacy_ContactTitle"),
         ContactQuestion = _localization.GetKey("Privacy_ContactQuestion"),
-        ContactEmail = _localization.GetKey("Privacy_ContactEmail") ?? "support@alphaayakkabi.com",
+        ContactEmail = _localization.GetKey("Privacy_ContactEmail") ?? "info@alphaayakkabi.com",
         ContactPhone = _localization.GetKey("Privacy_ContactPhone"),
         ContactAddress = _localization.GetKey("Privacy_ContactAddress"),
         UseContactFormText = _localization.GetKey("Privacy_UseContactForm") ?? "Please use our contact form"
