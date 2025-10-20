@@ -223,7 +223,6 @@ public async Task<List<Blog>> GetAllAsync()
                         .ThenInclude(pb => pb.Product)             // Include related Product
                         .ThenInclude(p => p.ProductImages)     // Include ProductImages in Product
                         .ThenInclude(pi => pi.Image)       // Include Image in ProductImages
-                        .Include(m => m.Image)
                         .Include(m=>m.CategoryBlogs).ThenInclude(m=>m.Category)
                     .ToListAsync();
             }
@@ -236,7 +235,6 @@ public async Task<List<Blog>> GetAllAsync()
                     .ThenInclude(pb => pb.Product)             // Include related Product
                     .ThenInclude(p => p.ProductImages)     // Include ProductImages in Product
                     .ThenInclude(pi => pi.Image)       // Include Image in ProductImages
-                    .Include(m => m.Image)
                     .Include(m=>m.CategoryBlogs).ThenInclude(m=>m.Category)
                     .FirstOrDefaultAsync();
 

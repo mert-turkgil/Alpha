@@ -200,31 +200,42 @@ public class HomeController : Controller
     [HttpGet("{culture}/blog/{id}/{slug?}")]
     public async Task<IActionResult> BlogDetails(string culture, int id, string? slug)
     {
-        // Map short culture code to full culture code
-        var fullCulture = culture.ToLower() switch
+        try
         {
-            "tr" => "tr-TR",
-            "en" => "en-US",
-            "de" => "de-DE",
-            "fr" => "fr-FR",
-            "ar" => "ar-SA",
-            _ => "en-US"
-        };
-        
-        CultureInfo.CurrentUICulture = new CultureInfo(fullCulture);
-        CultureInfo.CurrentCulture = new CultureInfo(fullCulture);
+            // Map short culture code to full culture code
+            var fullCulture = culture.ToLower() switch
+            {
+                "tr" => "tr-TR",
+                "en" => "en-US",
+                "de" => "de-DE",
+                "fr" => "fr-FR",
+                "ar" => "ar-SA",
+                _ => "en-US"
+            };
+            
+            CultureInfo.CurrentUICulture = new CultureInfo(fullCulture);
+            CultureInfo.CurrentCulture = new CultureInfo(fullCulture);
 
-        var blog = await _blogRepository.GetByIdAsync(id);
-        if (blog == null)
-            return NotFound();
+            var blog = await _blogRepository.GetByIdAsync(id);
+            if (blog == null)
+            {
+                Console.WriteLine($"[ERROR] Blog with ID {id} not found");
+                return NotFound();
+            }
 
-        var expectedSlug = blog.Url?.ToLower() ?? "blog";
+            // URL decode the slug and normalize it
+            var expectedSlug = blog.Url?.ToLower().Trim() ?? "blog";
+            var normalizedSlug = slug?.ToLower().Trim();
 
-        // Slug yanlışsa düzelt
-        if (!string.Equals(slug, expectedSlug, StringComparison.OrdinalIgnoreCase))
-        {
-            return RedirectToAction("BlogDetails", new { culture = culture, id = blog.BlogId, slug = expectedSlug });
-        }
+            Console.WriteLine($"[BlogDetails] Blog ID: {id}, Expected: '{expectedSlug}', Received: '{normalizedSlug}'");
+
+            // Slug yanlışsa düzelt (only if slug is provided and different)
+            if (!string.IsNullOrEmpty(normalizedSlug) && 
+                !string.Equals(normalizedSlug, expectedSlug, StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine($"[BlogDetails] Redirecting to correct slug: {expectedSlug}");
+                return RedirectToAction("BlogDetails", new { culture = culture, id = blog.BlogId, slug = expectedSlug });
+            }
 
         // Localization - keys WITHOUT culture suffix, use full culture code for file lookup
         var titleKey = $"Title_{blog.BlogId}_{blog.Url}";
@@ -271,10 +282,17 @@ public class HomeController : Controller
             ViewButton = _localization.GetKey("ViewButton") ?? "View"
         };
 
-        ViewBag.RecentBlogs = await _blogRepository.GetRecentBlogsAsync();
-        ViewBag.Categories = relatedCategories;
+            ViewBag.RecentBlogs = await _blogRepository.GetRecentBlogsAsync();
+            ViewBag.Categories = relatedCategories;
 
-        return View("BlogDetail", model);
+            return View("BlogDetail", model);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] BlogDetails exception: {ex.Message}");
+            Console.WriteLine($"[ERROR] Stack trace: {ex.StackTrace}");
+            return StatusCode(500, $"An error occurred while loading the blog: {ex.Message}");
+        }
     }
 
 
