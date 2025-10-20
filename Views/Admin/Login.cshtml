@@ -321,6 +321,13 @@
             border-radius: 12px;
         }
 
+        /* Turnstile Container */
+        .cf-turnstile {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
         /* reCAPTCHA */
         .g-recaptcha {
             display: flex;
@@ -453,17 +460,23 @@
                     <input type="hidden" asp-for="ReturnUrl" />
                 }
 
-                <!-- reCAPTCHA -->
+                <!-- Cloudflare Turnstile or reCAPTCHA -->
                 <div class="form-group">
-                    @if (!string.IsNullOrEmpty(Model?.RecaptchaSiteKey))
+                    @if (!string.IsNullOrEmpty(Model?.TurnstileSiteKey))
                     {
+                        <!-- Cloudflare Turnstile -->
+                        <div class="cf-turnstile" data-sitekey="@Model.TurnstileSiteKey" data-theme="light"></div>
+                    }
+                    else if (!string.IsNullOrEmpty(Model?.RecaptchaSiteKey))
+                    {
+                        <!-- Fallback to reCAPTCHA -->
                         <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
                     }
                     else
                     {
                         <div class="alert alert-warning small mt-2" style="text-align: center; font-weight: 600; padding: 10px; background: rgba(255, 193, 7, 0.1); border: 1px solid #ffc107; color: #856404;">
                             <i class="fas fa-exclamation-triangle me-1"></i>
-                            reCAPTCHA is not configured. Please contact the administrator.
+                            CAPTCHA is not configured. Please contact the administrator.
                         </div>
                     }
                     @if (ViewBag.RecaptchaError != null)
@@ -558,7 +571,16 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.6/jquery.validate.unobtrusive.min.js"></script>
     
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @if (!string.IsNullOrEmpty(Model?.TurnstileSiteKey))
+    {
+        <!-- Cloudflare Turnstile -->
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    }
+    else if (!string.IsNullOrEmpty(Model?.RecaptchaSiteKey))
+    {
+        <!-- Google reCAPTCHA (Fallback) -->
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    }
     
     <script>
         // Initialize AOS
@@ -568,46 +590,34 @@
             offset: 100
         });
 
-        // Reset reCAPTCHA on page load (needed for failed login attempts)
-        document.addEventListener('DOMContentLoaded', function() {
-            // Wait for reCAPTCHA to load
-            var checkRecaptcha = setInterval(function() {
-                if (typeof grecaptcha !== 'undefined' && grecaptcha.render) {
-                    clearInterval(checkRecaptcha);
-                    try {
-                        // Check if reCAPTCHA is already rendered
-                        var recaptchaElement = document.querySelector('.g-recaptcha');
-                        if (recaptchaElement && !recaptchaElement.hasChildNodes()) {
-                            // Not rendered yet, let the API handle it
-                            console.log('reCAPTCHA ready');
-                        } else if (recaptchaElement) {
-                            // Already rendered, reset it
-                            grecaptcha.reset();
-                        }
-                    } catch (e) {
-                        console.error('reCAPTCHA error:', e);
-                    }
-                }
-            }, 100);
-            
-            // Clear interval after 5 seconds if reCAPTCHA doesn't load
-            setTimeout(function() {
-                clearInterval(checkRecaptcha);
-            }, 5000);
-        });
-
         // Form submission validation
         document.querySelector('form').addEventListener('submit', function(e) {
-            var recaptchaDiv = document.querySelector('.g-recaptcha');
-            var siteKey = recaptchaDiv ? recaptchaDiv.getAttribute('data-sitekey') : null;
-            
-            // Only validate if reCAPTCHA is configured (has a site key)
-            if (siteKey && siteKey.trim() !== '') {
-                var recaptchaResponse = document.querySelector('.g-recaptcha-response');
-                if (!recaptchaResponse || !recaptchaResponse.value) {
-                    e.preventDefault();
-                    alert('Please complete the reCAPTCHA verification');
-                    return false;
+            // Check if Turnstile is configured
+            var turnstileDiv = document.querySelector('.cf-turnstile');
+            if (turnstileDiv) {
+                var turnstileSiteKey = turnstileDiv.getAttribute('data-sitekey');
+                if (turnstileSiteKey && turnstileSiteKey.trim() !== '') {
+                    var turnstileResponse = document.querySelector('input[name="cf-turnstile-response"]');
+                    if (!turnstileResponse || !turnstileResponse.value) {
+                        e.preventDefault();
+                        alert('Please complete the verification');
+                        return false;
+                    }
+                }
+            } 
+            // Fallback to reCAPTCHA check
+            else {
+                var recaptchaDiv = document.querySelector('.g-recaptcha');
+                if (recaptchaDiv) {
+                    var siteKey = recaptchaDiv.getAttribute('data-sitekey');
+                    if (siteKey && siteKey.trim() !== '') {
+                        var recaptchaResponse = document.querySelector('.g-recaptcha-response');
+                        if (!recaptchaResponse || !recaptchaResponse.value) {
+                            e.preventDefault();
+                            alert('Please complete the reCAPTCHA verification');
+                            return false;
+                        }
+                    }
                 }
             }
         });

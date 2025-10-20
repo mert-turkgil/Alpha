@@ -27,6 +27,7 @@ namespace Alpha.Models
         public string Culture { get; set; }
 
         public string RecaptchaSiteKey { get; set; }
+        public string TurnstileSiteKey { get; set; }
         public string Honey { get; set; }
     }
 }

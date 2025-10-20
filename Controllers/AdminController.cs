@@ -2960,13 +2960,15 @@ public class AdminController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Login()
     {
-        var siteKey = _configuration["reCAPTCHA:SiteKey"];
+        var recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"];
+        var turnstileSiteKey = _configuration["Cloudflare:TurnstileSiteKey"];
         
         var model = new LoginModel
         {
             Categories = await _categoryRepository.GetAllAsync(),
             Products = await _productRepository.GetRecentProductsAsync(),
-            RecaptchaSiteKey = siteKey
+            RecaptchaSiteKey = recaptchaSiteKey,
+            TurnstileSiteKey = turnstileSiteKey
         };
         return View(model);
     }
@@ -2981,6 +2983,7 @@ public class AdminController : Controller
                 m.Categories = await _categoryRepository.GetAllAsync();
                 m.Products = await _productRepository.GetRecentProductsAsync();
                 m.RecaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"];
+                m.TurnstileSiteKey = _configuration["Cloudflare:TurnstileSiteKey"];
             }
             if (!string.IsNullOrEmpty(model.Honey))
             {
@@ -3021,18 +3024,35 @@ public class AdminController : Controller
                 return View(model);
             }
 
-            // reCAPTCHA kontrolü - only if configured
-            var recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"];
-            if (!string.IsNullOrEmpty(recaptchaSiteKey))
+            // Cloudflare Turnstile kontrolü (öncelikli)
+            var turnstileSiteKey = _configuration["Cloudflare:TurnstileSiteKey"];
+            if (!string.IsNullOrEmpty(turnstileSiteKey))
             {
-                if (!Request.Form.TryGetValue("g-recaptcha-response", out var token)
-                    || string.IsNullOrWhiteSpace(token.ToString())
-                    || !await VerifyCaptchaAsync(token.ToString()))
+                if (!Request.Form.TryGetValue("cf-turnstile-response", out var turnstileToken)
+                    || string.IsNullOrWhiteSpace(turnstileToken.ToString())
+                    || !await VerifyTurnstileAsync(turnstileToken.ToString()))
                 {
                     ViewBag.RecaptchaError = "Lütfen robot olmadığınızı doğrulayın.";
                     ViewBag.ErrorMessage = "Lütfen robot olmadığınızı doğrulayın.";
                     await PopulateModel(model);
                     return View(model);
+                }
+            }
+            // Fallback to reCAPTCHA if Turnstile is not configured
+            else
+            {
+                var recaptchaSiteKey = _configuration["reCAPTCHA:SiteKey"];
+                if (!string.IsNullOrEmpty(recaptchaSiteKey))
+                {
+                    if (!Request.Form.TryGetValue("g-recaptcha-response", out var token)
+                        || string.IsNullOrWhiteSpace(token.ToString())
+                        || !await VerifyCaptchaAsync(token.ToString()))
+                    {
+                        ViewBag.RecaptchaError = "Lütfen robot olmadığınızı doğrulayın.";
+                        ViewBag.ErrorMessage = "Lütfen robot olmadığınızı doğrulayın.";
+                        await PopulateModel(model);
+                        return View(model);
+                    }
                 }
             }
 
@@ -3102,6 +3122,61 @@ public class AdminController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during reCAPTCHA verification");
+            return false;
+        }
+    }
+
+    private async Task<bool> VerifyTurnstileAsync(string token)
+    {
+        try
+        {
+            var turnstileSecret = _configuration["Cloudflare:TurnstileSecretKey"];
+
+            if (string.IsNullOrEmpty(turnstileSecret))
+            {
+                _logger.LogWarning("Cloudflare Turnstile SecretKey is not configured");
+                return false;
+            }
+
+            var userIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+            using var client = new HttpClient();
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("secret", turnstileSecret),
+                new KeyValuePair<string, string>("response", token),
+                new KeyValuePair<string, string>("remoteip", userIp)
+            });
+
+            var response = await client.PostAsync("https://challenges.cloudflare.com/turnstile/v0/siteverify", content);
+            var json = await response.Content.ReadAsStringAsync();
+
+            _logger.LogInformation($"Turnstile verification response: {json}");
+
+            dynamic? result = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+            bool success = result?.success == true;
+
+            if (!success)
+            {
+                try
+                {
+                    var errorCodes = result != null ? result["error-codes"] : null;
+                    if (errorCodes != null)
+                    {
+                        _logger.LogWarning($"Turnstile verification failed. Error codes: {errorCodes}");
+                    }
+                }
+                catch
+                {
+                    _logger.LogWarning($"Turnstile verification failed. Response: {json}");
+                }
+            }
+
+            return success;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during Turnstile verification");
             return false;
         }
     }
