@@ -129,6 +129,11 @@ namespace Alpha.Controllers
                     case "blog":
                         href = $"{baseUrl}/{culture}/blog";
                         break;
+                    case "blog-detail":
+                        // Extract blog slug from the original loc URL
+                        var blogSlug = loc.Split('/').LastOrDefault() ?? "";
+                        href = $"{baseUrl}/{culture}/blog/{blogId}/{blogSlug}";
+                        break;
                     default:
                         href = $"{baseUrl}/{culture}";
                         break;
@@ -143,11 +148,15 @@ namespace Alpha.Controllers
             }
 
             // Add x-default hreflang
+            var defaultHref = pageType == "blog-detail" 
+                ? $"{baseUrl}/en/blog/{blogId}/{loc.Split('/').LastOrDefault()}"
+                : $"{baseUrl}/en";
+            
             urlElement.Add(
                 new XElement(xhtml + "link",
                     new XAttribute("rel", "alternate"),
                     new XAttribute("hreflang", "x-default"),
-                    new XAttribute("href", $"{baseUrl}/en"))
+                    new XAttribute("href", defaultHref))
             );
 
             return urlElement;

@@ -1,9 +1,40 @@
+# robots.txt for Alpha Safety Shoes
+# Updated: 2025-11-12
+
+# Allow all search engines
 User-agent: *
+
+# Disallow admin and authentication pages
 Disallow: /Admin/
+Disallow: /admin/
 Disallow: /Identity/
 Disallow: /Account/
+
+# Disallow development/build directories
 Disallow: /bin/
 Disallow: /obj/
-Allow: /
 
+# Disallow private files
+Disallow: /*.json$
+Disallow: /appsettings.
+
+# Allow all public content
+Allow: /
+Allow: /tr/
+Allow: /en/
+Allow: /de/
+Allow: /fr/
+Allow: /ar/
+Allow: /img/
+Allow: /css/
+Allow: /js/
+
+# Sitemap location
 Sitemap: https://www.alphaayakkabi.com/sitemap.xml
+
+# Additional sitemaps (if you have them)
+# Sitemap: https://www.alphaayakkabi.com/sitemap-products.xml
+# Sitemap: https://www.alphaayakkabi.com/sitemap-blogs.xml
+
+# Crawl-delay for search engines (optional - only if server load is a concern)
+# Crawl-delay: 1
