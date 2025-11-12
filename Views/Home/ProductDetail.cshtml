@@ -4,6 +4,11 @@
 @{
     ViewData["Title"] = Model.Name;
     var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var currentUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+    var imageUrl = Model.ProductImages?.FirstOrDefault()?.Image?.ImageUrl;
+    var fullImageUrl = !string.IsNullOrEmpty(imageUrl) 
+        ? $"{Context.Request.Scheme}://{Context.Request.Host}{imageUrl}" 
+        : $"{Context.Request.Scheme}://{Context.Request.Host}/img/biglogo.png";
 }
 @section Css{
     <link rel="stylesheet" href="~/css/Category.css" />
@@ -636,15 +641,15 @@
         <h1>@Model.Name</h1>
         <div class="hero-meta">
             <div class="hero-meta-item" data-aos="zoom-in" data-aos-delay="100">
-                <span class="hero-meta-label">@ViewBag.BodyNoLabel</span>
+                <span class="hero-meta-label">Body No</span>
                 <span class="hero-meta-value">@Model.BodyNo</span>
             </div>
             <div class="hero-meta-item" data-aos="zoom-in" data-aos-delay="200">
-                <span class="hero-meta-label">@ViewBag.BrandLabel</span>
+                <span class="hero-meta-label">@Model.BrandLabel</span>
                 <span class="hero-meta-value">@Model.Brand</span>
             </div>
             <div class="hero-meta-item" data-aos="zoom-in" data-aos-delay="300">
-                <span class="hero-meta-label">@ViewBag.DateAddedLabel</span>
+                <span class="hero-meta-label">@Model.DateAddedLabel</span>
                 <span class="hero-meta-value">@Model.DateAdded.ToString("MMM dd, yyyy")</span>
             </div>
         </div>
@@ -662,7 +667,7 @@
             <div class="detail-card">
                 <div class="detail-card-header">
                     <i class="fas fa-images"></i>
-                    @ViewBag.ImagesLabel
+                    @Model.ImagesLabel
                 </div>
                 <div class="detail-card-body">
                     @if (Model.ProductImages != null && Model.ProductImages.Any())
@@ -745,55 +750,55 @@
                     <table class="table info-table mb-0">
                         <tbody>
                             <tr>
-                                <th>@ViewBag.DescriptionLabel</th>
+                                <th>@Model.DescriptionLabel</th>
                                 <td>@Model.Description</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.UpperLabel</th>
+                                <th>@Model.UpperLabel</th>
                                 <td>@Model.Upper</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.LiningLabel</th>
+                                <th>@Model.LiningLabel</th>
                                 <td>@Model.Lining</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.ProtectionLabel</th>
+                                <th>@Model.ProtectionLabel</th>
                                 <td>@Model.Protection</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.MidsoleLabel</th>
+                                <th>@Model.MidsoleLabel</th>
                                 <td>@Model.Midsole</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.InsoleLabel</th>
+                                <th>@Model.InsoleLabel</th>
                                 <td>@Model.Insole</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.SoleLabel</th>
+                                <th>@Model.SoleLabel</th>
                                 <td>@Model.Sole</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.ModelLabel</th>
+                                <th>@Model.ModelLabel</th>
                                 <td>@Model.Model</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.StandardLabel</th>
+                                <th>@Model.StandardLabel</th>
                                 <td>@Model.Standard</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.CertificateLabel</th>
+                                <th>@Model.CertificateLabel</th>
                                 <td>@Model.Certificate</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.SizeLabel</th>
+                                <th>@Model.SizeLabel</th>
                                 <td>@Model.Size</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.BodyNoLabel</th>
+                                <th>Body No</th>
                                 <td>@Model.BodyNo</td>
                             </tr>
                             <tr>
-                                <th>@ViewBag.BrandLabel</th>
+                                <th>@Model.BrandLabel</th>
                                 <td>@Model.Brand</td>
                             </tr>
                         </tbody>
@@ -827,7 +832,7 @@
     {
         <section data-aos="fade-up">
             <h4 class="section-header">
-                <i class="fas fa-th-large me-3"></i>@ViewBag.Message
+                <i class="fas fa-th-large me-3"></i>@Model.CategoryLabel
             </h4>
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 justify-content-center">
                 @foreach (var category in Model.RelatedCategories)
@@ -873,7 +878,7 @@
                                 <a href="@Url.Action("ProductDetail", "Home", new { culture, id = recentProduct.ProductId })"
                                    class="btn-view-product w-100 text-center">
                                     <i class="fas fa-eye"></i>
-                                    @ViewBag.BTN
+                                    @Model.BtnText
                                 </a>
                             </div>
                         </div>
@@ -887,6 +892,56 @@
 @section Scripts {
   <script src="~/lib/viewerjs/dist/viewer.min.js"></script>
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  
+  <!-- JSON-LD Structured Data for Product -->
+  <script type="application/ld+json">
+  {
+    "@@context": "https://schema.org/",
+    "@@type": "Product",
+    "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(Model.Name).Value)",
+    "description": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(Model.Description ?? "Alpha safety footwear").Value)",
+    "image": "@fullImageUrl",
+    "brand": {
+      "@@type": "Brand",
+      "name": "@(Model.Brand ?? "Alpha")"
+    },
+    "manufacturer": {
+      "@@type": "Organization",
+      "name": "Alpha Ayakkabı"
+    },
+    "sku": "@Model.BodyNo",
+    "mpn": "@Model.Model",
+    "offers": {
+      "@@type": "Offer",
+      "url": "@currentUrl",
+      "priceCurrency": "TRY",
+      "availability": "https://schema.org/InStock",
+      "seller": {
+        "@@type": "Organization",
+        "name": "Alpha Ayakkabı"
+      }
+    },
+    "category": "@(Model.CategoryName ?? "Safety Footwear")",
+    "additionalProperty": [
+      {
+        "@@type": "PropertyValue",
+        "name": "Upper Material",
+        "value": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(Model.Upper ?? "Not specified").Value)"
+      },
+      {
+        "@@type": "PropertyValue",
+        "name": "Sole Material",
+        "value": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(Model.Sole ?? "Not specified").Value)"
+      },
+      {
+        "@@type": "PropertyValue",
+        "name": "Safety Standard",
+        "value": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(Model.Standard ?? "Not specified").Value)"
+      }
+    ]
+  }
+  </script>
+
   <script>
     // Initialize AOS Animations
     AOS.init({

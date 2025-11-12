@@ -841,6 +841,13 @@ public class HomeController : Controller
                 : product.Description)
             : "Alpha Ayakkabı'nın en güvenilir iş güvenliği ve askeri ayakkabı ürünlerini keşfedin.";
         ViewBag.MetaKeywords = $"alpha ayakkabı, {product.Name}, iş güvenliği ayakkabısı, askeri bot, endüstriyel ayakkabı";
+        
+        // Set product image for social sharing
+        var firstImage = product.ProductImages?.FirstOrDefault()?.Image?.ImageUrl;
+        if (!string.IsNullOrEmpty(firstImage))
+        {
+            ViewBag.MetaImage = $"{Request.Scheme}://{Request.Host}{firstImage}";
+        }
 
         // 🔄 ViewBag çeviri etiketleri (aynen kalabilir)
         ViewBag.BrandLabel = _localization.GetKey("ProductDetail_BrandLabel") ?? "Brand";
@@ -926,7 +933,25 @@ public class HomeController : Controller
             RelatedBlogs = relatedBlogs,
             RelatedCategories = relatedCategories,
             RecentProducts = recentProducts,
-            CategoryName = relatedCategories.FirstOrDefault()?.Name ?? "Unknown Category"
+            CategoryName = relatedCategories.FirstOrDefault()?.Name ?? "Unknown Category",
+            
+            // Localized labels
+            DescriptionLabel = _localization.GetKey("ProductDetail_DescriptionLabel") ?? "Description",
+            UpperLabel = _localization.GetKey("ProductDetail_UpperLabel") ?? "Upper",
+            LiningLabel = _localization.GetKey("ProductDetail_LiningLabel") ?? "Lining",
+            ProtectionLabel = _localization.GetKey("ProductDetail_ProtectionLabel") ?? "Protection",
+            MidsoleLabel = _localization.GetKey("ProductDetail_MidsoleLabel") ?? "Midsole",
+            InsoleLabel = _localization.GetKey("ProductDetail_InsoleLabel") ?? "Insole",
+            SoleLabel = _localization.GetKey("ProductDetail_SoleLabel") ?? "Sole",
+            ModelLabel = _localization.GetKey("ProductDetail_ModelLabel") ?? "Model",
+            BrandLabel = _localization.GetKey("ProductDetail_BrandLabel") ?? "Brand",
+            StandardLabel = _localization.GetKey("ProductDetail_StandardLabel") ?? "Standard",
+            CertificateLabel = _localization.GetKey("ProductDetail_CertificateLabel") ?? "Certificate",
+            SizeLabel = _localization.GetKey("ProductDetail_SizeLabel") ?? "Size",
+            CategoryLabel = _localization.GetKey("ProductDetail_CategoryLabel") ?? "Category",
+            DateAddedLabel = _localization.GetKey("ProductDetail_DateAddedLabel") ?? "Date Added",
+            ImagesLabel = _localization.GetKey("ProductDetail_ImagesLabel") ?? "Images",
+            BtnText = _localization.GetKey("ViewButton") ?? "View Details"
         };
 
         ViewBag.RelatedBlogs = relatedBlogs;
