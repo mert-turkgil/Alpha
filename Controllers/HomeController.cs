@@ -69,7 +69,7 @@ public class HomeController : Controller
 
 
 #region Blog
-    [HttpGet("{culture}/blog")]
+    [HttpGet]
     public async Task<IActionResult> Blog(string culture,string category, string brand, string searchTerm, int page = 1, int pageSize = 3)
     {
         // Map short culture code to full culture code
@@ -197,7 +197,7 @@ public class HomeController : Controller
 
 
 
-    [HttpGet("{culture}/blog/{id}/{slug?}")]
+    [HttpGet]
     public async Task<IActionResult> BlogDetails(string culture, int id, string? slug)
     {
         try
@@ -313,7 +313,7 @@ public class HomeController : Controller
 
 
 #region About
-  [HttpGet("{culture}/about")]
+  [HttpGet]
   public IActionResult About(string culture)
     {
         CultureInfo.CurrentUICulture = new CultureInfo(culture);
@@ -457,7 +457,7 @@ public class HomeController : Controller
         /// <summary>
         /// GET: /Home/Contact
         /// </summary>
-        [HttpGet("{culture}/contact")]
+        [HttpGet]
         public IActionResult Contact(string culture)
         {
             CultureInfo.CurrentUICulture = new CultureInfo(culture);
@@ -718,7 +718,7 @@ public class HomeController : Controller
 #endregion
 
 #region  Services
-    [HttpGet("{culture}/hizmetler")]
+    [HttpGet]
     public async Task<IActionResult> Services(string culture,string category, string brand, string search)
     {
         CultureInfo.CurrentUICulture = new CultureInfo(culture);
@@ -812,15 +812,26 @@ public class HomeController : Controller
 
 
 
-    [HttpGet("{culture}/urun/{id}/{slug?}")]
+    [HttpGet]
     public async Task<IActionResult> ProductDetail(string culture, int id, string? slug)
     {
         if (id <= 0)
             return BadRequest("Invalid product ID.");
 
+        // Map short culture code to full culture code
+        var fullCulture = culture.ToLower() switch
+        {
+            "tr" => "tr-TR",
+            "en" => "en-US",
+            "de" => "de-DE",
+            "fr" => "fr-FR",
+            "ar" => "ar-SA",
+            _ => "en-US"
+        };
+
         // 🌍 Culture ayarla
-        CultureInfo.CurrentUICulture = new CultureInfo(culture);
-        CultureInfo.CurrentCulture = new CultureInfo(culture);
+        CultureInfo.CurrentUICulture = new CultureInfo(fullCulture);
+        CultureInfo.CurrentCulture = new CultureInfo(fullCulture);
 
         var product = await _productRepository.GetByIdAsync(id);
         if (product == null)
@@ -874,8 +885,8 @@ public class HomeController : Controller
         string? TryLocalize(string field)
         {
             var key = $"Product_{product.ProductId}_{field}";
-            var translated = _resxService.Read(key, culture);
-            Console.WriteLine($"[ProductDetail] Trying to translate '{key}' for culture '{culture}': '{translated}'");
+            var translated = _resxService.Read(key, fullCulture);
+            Console.WriteLine($"[ProductDetail] Trying to translate '{key}' for culture '{fullCulture}': '{translated}'");
             return !string.IsNullOrWhiteSpace(translated) ? translated : null;
         }
 
@@ -969,7 +980,7 @@ public class HomeController : Controller
 
 
 #region Index
-    [HttpGet("{culture}")]
+    [HttpGet]
     public async Task<IActionResult> Index(string culture)
     {
         CultureInfo.CurrentUICulture = new CultureInfo(culture);
@@ -1039,7 +1050,7 @@ public class HomeController : Controller
 #endregion
 
 #region Privacy
-[HttpGet("{culture}/privacy")]
+[HttpGet]
 public IActionResult Privacy(string culture)
 {
     CultureInfo.CurrentUICulture = new CultureInfo(culture);

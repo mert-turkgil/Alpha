@@ -1,3 +1,4 @@
+@using Alpha.Services
 @using System.Globalization
 <!-- Footer Section -->
 <div class="container-fluid footer-container">
@@ -5,29 +6,26 @@
 
         <!-- Column 1: Quick Links -->
         <div class="col-md-4">
-            <h3 class="footer-heading">@Model.QuickLinks</h3>
-            <a asp-action="Index" asp-controller="Home" class="footer-link">@Model.Home</a><br />
-                @{
-                    var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-                    var isActive = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Services", StringComparison.OrdinalIgnoreCase);
-                  }
-                  <a asp-controller="Home"
-                    asp-action="Services"
-                    asp-route-culture="@culture"
-                    class="footer-link fw-semibold @(isActive ? "active" : "")">
-                    @Model.Services
-                  </a>
-                  <br />
-            <a asp-action="Contact" asp-route-culture="@culture" asp-controller="Home" class="footer-link">@Model.Contact</a><br />
             @{
+                var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                var homeUrl = $"/{culture}";
+                var servicesUrl = $"/{culture}/{RouteTranslationService.GetRoute("services", culture)}";
+                var contactUrl = $"/{culture}/{RouteTranslationService.GetRoute("contact", culture)}";
+                var blogUrl = $"/{culture}/blog";
+                var privacyUrl = $"/{culture}/{RouteTranslationService.GetRoute("privacy", culture)}";
+                var isActive = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Services", StringComparison.OrdinalIgnoreCase);
                 var isActiveBlog = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Blog", StringComparison.OrdinalIgnoreCase);
             }
-                    <a asp-controller="Home"
-                    asp-action="Blog"
-                    asp-route-culture="@culture"
-                    class="footer-link fw-semibold @(isActiveBlog ? "active" : "")">
-                    @Model.Blog
-                  </a>
+            <h3 class="footer-heading">@Model.QuickLinks</h3>
+            <a href="@homeUrl" class="footer-link">@Model.Home</a><br />
+            <a href="@servicesUrl" class="footer-link fw-semibold @(isActive ? "active" : "")">
+                @Model.Services
+            </a>
+            <br />
+            <a href="@contactUrl" class="footer-link">@Model.Contact</a><br />
+            <a href="@blogUrl" class="footer-link fw-semibold @(isActiveBlog ? "active" : "")">
+                @Model.Blog
+            </a>
         </div>
 
         <!-- Column 2: Employee Login -->
@@ -55,7 +53,7 @@
             <h3 class="footer-heading">@Model.Follow</h3>
             <div class="socialContainer">
                 <a href="#" class="text-white"><i class="fa-brands fa-square-x-twitter fa-2xl"></i></a>
-                <a href="#" class="text-white"><i class="fa-brands fa-square-instagram fa-2xl"></i></a>
+                <a href="https://www.instagram.com/alphasafetyshoes/" class="text-white"><i class="fa-brands fa-square-instagram fa-2xl"></i></a>
                 <a href="#" class="text-white"><i class="fa-brands fa-square-whatsapp fa-2xl"></i></a>
                 <a href="#" class="text-white"><i class="fa-brands fa-linkedin fa-2xl"></i></a>
             </div>
@@ -74,7 +72,7 @@
     <!-- Copyright Row -->
     <div class="row mt-4 text-center">
         <div class="col">
-            <p>&copy; 2024 Alpha Company | <a asp-action="Privacy" asp-controller="Home"  asp-route-culture="@culture" class="footer-link">@Model.Privacy </a></p>
+            <p>&copy; 2024 Alpha Company | <a href="@privacyUrl" class="footer-link">@Model.Privacy </a></p>
         </div>
     </div>
 </div>

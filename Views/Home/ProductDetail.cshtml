@@ -458,60 +458,56 @@
             margin: 0;
         }
 
-        /* Recent Products Grid */
+        /* Recent Products Grid - Awesome ViewComponent Style */
         .recent-product-card {
-            background: white;
-            border-radius: 16px;
+            border: none;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            border: 2px solid #f0f0f0;
-            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #fff;
             height: 100%;
             display: flex;
             flex-direction: column;
         }
 
-        .recent-product-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #e79c00, #ff9900);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-            z-index: 1;
-        }
-
-        .recent-product-card:hover::before {
-            transform: scaleX(1);
-        }
-
         .recent-product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(231, 156, 0, 0.25);
-            border-color: #e79c00;
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(231, 156, 0, 0.3);
         }
 
         .recent-product-img-wrapper {
-            height: 200px;
-            overflow: hidden;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             position: relative;
+            overflow: hidden;
+            height: 280px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         .recent-product-img-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            padding: 15px;
-            transition: transform 0.4s ease;
+            transition: transform 0.6s ease;
         }
 
         .recent-product-card:hover .recent-product-img-wrapper img {
-            transform: scale(1.15);
+            transform: scale(1.1);
+        }
+
+        .recent-product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(231, 156, 0, 0.95);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .recent-product-body {
@@ -522,35 +518,124 @@
         }
 
         .recent-product-title {
-            color: #1a1a1a;
-            font-weight: 800;
-            font-size: 1.1rem;
+            color: #e79c00;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .recent-product-brand {
+            color: #666;
+            font-size: 0.95rem;
+            font-weight: 600;
             margin-bottom: 15px;
-            line-height: 1.3;
-            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recent-product-brand i {
+            color: #e79c00;
+        }
+
+        .recent-product-description {
+            color: #777;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .recent-specs-table {
+            margin-top: auto;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 2px solid #e79c00;
+        }
+
+        .recent-specs-table tr:first-child td:first-child {
+            border-top-left-radius: 8px;
+        }
+
+        .recent-specs-table tr:first-child td:last-child {
+            border-top-right-radius: 8px;
+        }
+
+        .recent-specs-table tr:last-child td:first-child {
+            border-bottom-left-radius: 8px;
+        }
+
+        .recent-specs-table tr:last-child td:last-child {
+            border-bottom-right-radius: 8px;
+        }
+
+        .recent-specs-table td {
+            padding: 12px 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid #e8e8e8;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            color: #333;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .recent-specs-table td:hover {
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe6b3 100%);
+            color: #e79c00;
+            transform: scale(1.05);
+        }
+
+        .recent-specs-table tr:nth-child(odd) td {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        .recent-product-footer {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #e79c00 0%, #ff9900 100%);
+            color: #fff;
+            font-weight: 700;
+            text-align: center;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .recent-product-footer i {
+            font-size: 1.1rem;
         }
 
         .btn-view-product {
-            background: linear-gradient(135deg, #28a745, #20c997);
+            background: linear-gradient(135deg, #e79c00 0%, #ff9900 100%);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             padding: 12px 24px;
             font-weight: 700;
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 4px 12px rgba(231, 156, 0, 0.3);
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
 
         .btn-view-product:hover {
-            background: linear-gradient(135deg, #20c997, #28a745);
+            background: linear-gradient(135deg, #ff9900, #e79c00);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+            box-shadow: 0 6px 16px rgba(231, 156, 0, 0.4);
             color: white;
         }
 
@@ -861,27 +946,57 @@
             <h4 class="section-header">
                 <i class="fas fa-clock me-3"></i>Recent Products
             </h4>
-            <div class="row">
+            <div class="row g-4">
                 @foreach (var recentProduct in Model.RecentProducts)
                 {
                     var recentImageUrl = recentProduct.ProductImages?.FirstOrDefault()?.Image?.ImageUrl ?? "/img/default-image.jpg";
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="recent-product-card position-relative">
-                            <div class="recent-product-img-wrapper">
-                                <img src="@($"{recentImageUrl}?v={DateTime.UtcNow.Ticks}")"
-                                     alt="@recentProduct.Name"
-                                     loading="lazy"
-                                     onerror="this.onerror=null;this.src='/img/default-image.jpg';" />
+                    var slug = recentProduct.Url?.ToLower() ?? "urun";
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <a href="@Url.Action("ProductDetail", "Home", new { culture, id = recentProduct.ProductId, slug })"
+                           class="text-decoration-none">
+                            <div class="recent-product-card">
+                                <div class="recent-product-img-wrapper">
+                                    <img src="@($"{recentImageUrl}?v={DateTime.UtcNow.Ticks}")"
+                                         alt="@recentProduct.Name"
+                                         loading="lazy"
+                                         onerror="this.onerror=null;this.src='/img/default-image.jpg';" />
+                                    <span class="recent-product-badge">
+                                        <i class="fas fa-shield-alt"></i> SAFETY
+                                    </span>
+                                </div>
+                                <div class="recent-product-body">
+                                    <h5 class="recent-product-title">@recentProduct.Name</h5>
+                                    
+                                    <div class="recent-product-brand">
+                                        <i class="fas fa-certificate"></i>
+                                        <span>@(string.IsNullOrWhiteSpace(recentProduct.Brand) ? "Alpha" : recentProduct.Brand)</span>
+                                    </div>
+
+                                    <p class="recent-product-description">
+                                        @(string.IsNullOrWhiteSpace(recentProduct.Description) ? "Premium safety footwear designed for maximum protection and comfort." : recentProduct.Description)
+                                    </p>
+
+                                    <table class="recent-specs-table w-100">
+                                        <tbody>
+                                            <tr>
+                                                <td><i class="fas fa-barcode"></i> @recentProduct.BodyNo</td>
+                                                <td><i class="fas fa-tag"></i> @(string.IsNullOrWhiteSpace(recentProduct.Model) ? "N/A" : recentProduct.Model)</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fas fa-shield-alt"></i> @(string.IsNullOrWhiteSpace(recentProduct.Standard) ? "N/A" : recentProduct.Standard)</td>
+                                                <td><i class="fas fa-ruler"></i> @(string.IsNullOrWhiteSpace(recentProduct.Size) ? "N/A" : recentProduct.Size)</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="recent-product-footer">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>@Model.BtnText</span>
+                                </div>
                             </div>
-                            <div class="recent-product-body">
-                                <h6 class="recent-product-title">@recentProduct.Name</h6>
-                                <a href="@Url.Action("ProductDetail", "Home", new { culture, id = recentProduct.ProductId })"
-                                   class="btn-view-product w-100 text-center">
-                                    <i class="fas fa-eye"></i>
-                                    @Model.BtnText
-                                </a>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 }
             </div>

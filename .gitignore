@@ -25,3 +25,7 @@ yarn.lock
 # Security clean-up files
 passwords.txt
 .cache_ggshield
+## DOCUMENTATION FILES - DO NOT UPLOAD TO GITHUB
+##
+*.md
+!README.md

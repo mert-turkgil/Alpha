@@ -46,24 +46,64 @@
     @{
         string? baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
         string[]? cultures = new[] { "en", "tr", "de", "fr", "ar" };
+        string? currentCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLower();
         string? action = ViewContext.RouteData.Values[key: "action"]?.ToString()?.ToLower() ?? "index";
         string? id = ViewContext.RouteData.Values[key: "id"]?.ToString();
         string? slug = ViewContext.RouteData.Values[key: "slug"]?.ToString();
+        
+        // Determine route key based on action
+        string? routeKey = action switch
+        {
+            "services" => "services",
+            "about" => "about",
+            "contact" => "contact",
+            "privacy" => "privacy",
+            "productdetail" => "product",
+            _ => null
+        };
     }
     @foreach (string culture in cultures)
     {
-        string? path = $"/{culture}/{action}";
-        if (!string.IsNullOrEmpty(id))
+        string? path;
+        
+        if (routeKey != null)
         {
-            path += $"/{id}";
-            if (!string.IsNullOrEmpty(slug))
+            // Use translated route
+            var translatedRoute = Alpha.Services.RouteTranslationService.GetRoute(routeKey, culture);
+            path = $"/{culture}/{translatedRoute}";
+            
+            // Add ID and slug for product/blog details
+            if (!string.IsNullOrEmpty(id))
             {
-                path += $"/{slug}";
+                path += $"/{id}";
+                if (!string.IsNullOrEmpty(slug))
+                {
+                    path += $"/{slug}";
+                }
             }
         }
+        else if (action == "blog" || action == "blogdetails")
+        {
+            // Blog routes don't need translation
+            path = $"/{culture}/blog";
+            if (!string.IsNullOrEmpty(id))
+            {
+                path += $"/{id}";
+                if (!string.IsNullOrEmpty(slug))
+                {
+                    path += $"/{slug}";
+                }
+            }
+        }
+        else
+        {
+            // Default fallback (e.g., home page)
+            path = $"/{culture}";
+        }
+        
         <link rel="alternate" hreflang="@culture" href="@(value: $"{baseUrl}{path}")" />
     }
-    <link rel="alternate" hreflang="x-default" href="@baseUrl" />
+    <link rel="alternate" hreflang="x-default" href="@($"{baseUrl}/en")" />
 
     
     

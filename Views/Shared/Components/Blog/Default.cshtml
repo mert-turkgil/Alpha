@@ -427,12 +427,9 @@
                     ? Url.Content($"~/img/{blogData.Image}")
                     : Url.Content("~/img/default-image.jpg");
 
-                <a asp-controller="Home"
-                   asp-action="BlogDetails"
-                   asp-route-culture="@shortCulture"
-                   asp-route-id="@blogData.BlogId"
-                   asp-route-slug="@slug"
-                   class="text-decoration-none">
+                var blogUrl = $"/{shortCulture}/blog/{blogData.BlogId}/{slug}";
+
+                <a href="@blogUrl" class="text-decoration-none">
                     <article class="blog-card">
                         <div class="blog-image-container">
                             <img src="@imageUrl" 

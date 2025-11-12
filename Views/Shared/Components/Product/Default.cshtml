@@ -226,17 +226,14 @@
                 {
                     var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
                     var slug = product?.Url?.ToLower() ?? "urun";
+                    var productRoute = Alpha.Services.RouteTranslationService.GetRoute("product", culture);
+                    var productUrl = $"/{culture}/{productRoute}/{product!.ProductId}/{slug}";
                     string imageUrl = (product?.ProductImages != null && product.ProductImages.Any())
                         ? product.ProductImages.FirstOrDefault()?.Image.ImageUrl ?? "/img/default-image.jpg"
                         : "/img/default-image.jpg";
 
                     <div class="col">
-                        <a asp-controller="Home" 
-                           asp-action="ProductDetail"
-                           asp-route-culture="@culture"
-                           asp-route-id="@product!.ProductId"
-                           asp-route-slug="@slug"
-                           class="text-decoration-none">
+                        <a href="@productUrl" class="text-decoration-none">
                             <div class="product-card">
                                 <div class="product-card-img-wrapper">
                                     <img src="@($"{imageUrl}?v={DateTime.UtcNow.Ticks}")"

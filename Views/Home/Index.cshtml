@@ -318,11 +318,9 @@
         </p>
               @{
               var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+              var servicesUrl = $"/{culture}/{Alpha.Services.RouteTranslationService.GetRoute("services", culture)}";
               }
-            <a asp-controller="Home"
-            asp-action="Services"
-            asp-route-culture="@culture"
-            class="btn btn-success btn-lg mt-3">
+            <a href="@servicesUrl" class="btn btn-success btn-lg mt-3">
            @Model.HeroLink
           </a>
     </div>

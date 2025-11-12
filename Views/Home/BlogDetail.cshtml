@@ -466,7 +466,7 @@
             border-radius: 10px;
         }
 
-        /* Product Slider */
+        /* Product Slider - Awesome ViewComponent Style */
         .product-slider-card {
             position: relative;
         }
@@ -497,78 +497,145 @@
         }
 
         .product-slide-card {
-            background: white;
-            border-radius: 16px;
+            border: none;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            border: 2px solid #f0f0f0;
-            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #fff;
             min-width: 250px;
             max-width: 250px;
-        }
-
-        .product-slide-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #e79c00, #ff9900);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-            z-index: 1;
-        }
-
-        .product-slide-card:hover::before {
-            transform: scaleX(1);
+            display: flex;
+            flex-direction: column;
         }
 
         .product-slide-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 32px rgba(231, 156, 0, 0.25);
-            border-color: #e79c00;
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(231, 156, 0, 0.3);
         }
 
         .product-slide-img {
-            height: 180px;
+            position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         .product-slide-img img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            padding: 15px;
-            transition: transform 0.4s ease;
+            transition: transform 0.6s ease;
         }
 
         .product-slide-card:hover .product-slide-img img {
-            transform: scale(1.15);
+            transform: scale(1.1);
+        }
+
+        .product-slide-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(231, 156, 0, 0.95);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .product-slide-body {
             padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .product-slide-title {
-            color: #1a1a1a;
-            font-weight: 800;
-            font-size: 1rem;
-            margin-bottom: 10px;
-            line-height: 1.3;
+            color: #e79c00;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .product-slide-brand {
             color: #666;
             font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .product-slide-brand i {
+            color: #e79c00;
+        }
+
+        .product-slide-description {
+            color: #777;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .slide-specs-table {
+            margin-top: auto;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 2px solid #e79c00;
             margin-bottom: 15px;
         }
 
+        .slide-specs-table td {
+            padding: 10px 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid #e8e8e8;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            color: #333;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .slide-specs-table td:hover {
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe6b3 100%);
+            color: #e79c00;
+            transform: scale(1.05);
+        }
+
+        .product-slide-footer {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #e79c00 0%, #ff9900 100%);
+            color: #fff;
+            font-weight: 700;
+            text-align: center;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .product-slide-footer i {
+            font-size: 1rem;
+        }
+
         .btn-view-slide {
-            background: linear-gradient(135deg, #28a745, #20c997);
+            background: linear-gradient(135deg, #e79c00, #ff9900);
             color: white;
             border: none;
             border-radius: 8px;
@@ -578,7 +645,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 4px 12px rgba(231, 156, 0, 0.3);
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -586,9 +653,9 @@
         }
 
         .btn-view-slide:hover {
-            background: linear-gradient(135deg, #20c997, #28a745);
+            background: linear-gradient(135deg, #ff9900, #e79c00);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+            box-shadow: 0 6px 16px rgba(231, 156, 0, 0.4);
             color: white;
         }
 
@@ -798,25 +865,44 @@
                                 @foreach (var prod in Model.RelatedProducts)
                                 {
                                     var prodImageUrl = prod.ProductImages?.FirstOrDefault()?.Image?.ImageUrl ?? "/img/default-image.jpg";
-                                    <div class="product-slide-card position-relative">
-                                        <div class="product-slide-img">
-                                            <img src="@($"{prodImageUrl}?v={DateTime.UtcNow.Ticks}")"
-                                                 alt="@prod.Name"
-                                                 loading="lazy"
-                                                 onerror="this.onerror=null;this.src='/img/default-image.jpg';" />
-                                        </div>
-                                        <div class="product-slide-body">
-                                            <h6 class="product-slide-title">@prod.Name</h6>
-                                            <div class="product-slide-brand">
-                                                <strong>@Model.BlogDetail_CategoriesTitle:</strong> @prod.Brand
+                                    var slug = prod.Url?.ToLower() ?? "urun";
+                                    
+                                    <a href="@Url.Action("ProductDetail", "Home", new { culture, id = prod.ProductId, slug })"
+                                       class="text-decoration-none">
+                                        <div class="product-slide-card">
+                                            <div class="product-slide-img">
+                                                <img src="@($"{prodImageUrl}?v={DateTime.UtcNow.Ticks}")"
+                                                     alt="@prod.Name"
+                                                     loading="lazy"
+                                                     onerror="this.onerror=null;this.src='/img/default-image.jpg';" />
+                                                <span class="product-slide-badge">
+                                                    <i class="fas fa-shield-alt"></i> SAFETY
+                                                </span>
                                             </div>
-                                            <a href="@Url.Action("ProductDetail", "Home", new { culture, id = prod.ProductId })"
-                                               class="btn-view-slide w-100 justify-content-center">
-                                                <i class="fas fa-eye"></i>
-                                                @Model.ViewButton
-                                            </a>
+                                            <div class="product-slide-body">
+                                                <h6 class="product-slide-title">@prod.Name</h6>
+                                                <div class="product-slide-brand">
+                                                    <i class="fas fa-certificate"></i>
+                                                    <span>@(string.IsNullOrWhiteSpace(prod.Brand) ? "Alpha" : prod.Brand)</span>
+                                                </div>
+                                                <p class="product-slide-description">
+                                                    @(string.IsNullOrWhiteSpace(prod.Description) ? "Premium safety footwear." : prod.Description)
+                                                </p>
+                                                <table class="slide-specs-table w-100">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><i class="fas fa-barcode"></i> @prod.BodyNo</td>
+                                                            <td><i class="fas fa-tag"></i> @(string.IsNullOrWhiteSpace(prod.Model) ? "N/A" : prod.Model)</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="product-slide-footer">
+                                                <i class="fas fa-info-circle"></i>
+                                                <span>@Model.ViewButton</span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 }
                             </div>
                         </div>

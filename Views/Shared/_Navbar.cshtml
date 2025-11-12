@@ -1,7 +1,19 @@
+@using Alpha.Services
+@{
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLower();
+    
+    // Build localized URLs
+    var homeUrl = $"/{culture}";
+    var aboutUrl = $"/{culture}/{RouteTranslationService.GetRoute("about", culture)}";
+    var servicesUrl = $"/{culture}/{RouteTranslationService.GetRoute("services", culture)}";
+    var blogUrl = $"/{culture}/blog";
+    var privacyUrl = $"/{culture}/{RouteTranslationService.GetRoute("privacy", culture)}";
+    var contactUrl = $"/{culture}/{RouteTranslationService.GetRoute("contact", culture)}";
+}
 <div class="container-xxl ">
     <!-- #region logo-->
     <div class="justify-content-start">
-      <a href="/" class="navbar-nav navbar-brand text-dark text-decoration-none">
+      <a href="@homeUrl" class="navbar-nav navbar-brand text-dark text-decoration-none">
         <img src="~/img/littlelogo.png" alt="Alpha" width="50" height="50">
         <h1 class="fs-4 m-1 d-none d-lg-block">Alpha
         <br>
@@ -19,40 +31,28 @@
     <div class="collapse navbar-collapse d-none d-lg-block justify-content-center" id="navbarNav">
       <ul class="navbar-nav">
         <li id="orta" class="nav-item">
-          <a class="nav-link fw-semibold" href="/">@Model.Home</a>
+          <a class="nav-link fw-semibold" href="@homeUrl">@Model.Home</a>
         </li>
         <li id="orta" class="nav-item">
-              @{
-              var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-              }
-            <a asp-controller="Home"
-            asp-action="About"
-            asp-route-culture="@culture"
-            class="nav-link fw-semibold">
+            <a href="@aboutUrl" class="nav-link fw-semibold">
             @Model.About
           </a>
         </li>
         <li id="orta" class="nav-item">
-          <a asp-controller="Home"
-            asp-action="Services"
-            asp-route-culture="@culture"
-            class="nav-link fw-semibold">
+          <a href="@servicesUrl" class="nav-link fw-semibold">
             @Model.Services
           </a>
         </li>
         <li id="orta" class="nav-item">
-            <a asp-controller="Home"
-            asp-action="Blog"
-            asp-route-culture="@culture"
-            class="nav-link fw-semibold">
+            <a href="@blogUrl" class="nav-link fw-semibold">
             @Model.Blog
           </a>
         </li>
         <li id="orta" class="nav-item">
-          <a asp-controller="Home" asp-action="Privacy" asp-route-culture="@culture" class="nav-link fw-semibold">@Model.Privacy</a>
+          <a href="@privacyUrl" class="nav-link fw-semibold">@Model.Privacy</a>
         </li>
       </ul>
-      <a asp-controller="Home" asp-route-culture="@culture" asp-action="Contact" style="border-radius: 0px;" class="btn btn-outline-e79c00  btn-lg fw-semibold ms-3">@Model.Contact</a>
+      <a href="@contactUrl" style="border-radius: 0px;" class="btn btn-outline-e79c00  btn-lg fw-semibold ms-3">@Model.Contact</a>
     </div> 
     <!-- #endregion -->
     <!-- #giriş çıkış -->
@@ -83,16 +83,13 @@
       <div class="offcanvas-body ">
           <ul class="nav nav-pills nav-justified flex-column flex-grow-1 pe-3">
               <li id="ofcanva" class="nav-item">
-                  <a class="nav-link fw-semibold @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" href="/">@Model.Home</a>
+                  <a class="nav-link fw-semibold @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" href="@homeUrl">@Model.Home</a>
               </li>
               <li id="ofcanva" class="nav-item">
                @{
                     var isActiveAbout = ViewContext.RouteData.Values["action"]?.ToString() == "About";
                 }
-                <a asp-controller="Home"
-                  asp-action="About"
-                  asp-route-culture="@culture"
-                  class="nav-link @(isActiveAbout ? "active" : "")">
+                <a href="@aboutUrl" class="nav-link @(isActiveAbout ? "active" : "")">
                     @Model.About
                 </a>
               </li>
@@ -100,10 +97,7 @@
                   @{
                     var isActive = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Services", StringComparison.OrdinalIgnoreCase);
                   }
-                  <a asp-controller="Home"
-                    asp-action="Services"
-                    asp-route-culture="@culture"
-                    class="nav-link fw-semibold @(isActive ? "active" : "")">
+                  <a href="@servicesUrl" class="nav-link fw-semibold @(isActive ? "active" : "")">
                     @Model.Services
                   </a>
               </li>
@@ -111,25 +105,19 @@
                 @{
                     var isActiveBlog = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Blog", StringComparison.OrdinalIgnoreCase);
                 }
-                <a asp-controller="Home"
-                  asp-action="Blog"
-                  asp-route-culture="@culture"
-                  class="nav-link fw-semibold @(isActiveBlog ? "active" : "")">
+                <a href="@blogUrl" class="nav-link fw-semibold @(isActiveBlog ? "active" : "")">
                     @Model.Blog
                 </a>
               </li>
               <li id="ofcanva" class="nav-item">
                   @{
-                    var isActivePriv = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Blog", StringComparison.OrdinalIgnoreCase);
+                    var isActivePriv = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Privacy", StringComparison.OrdinalIgnoreCase);
                 }
-                  <a asp-controller="Home" asp-action="Privacy" asp-route-culture="@culture"  class="nav-link fw-semibold @(isActivePriv ? "active" : "")">@Model.Privacy</a>
+                  <a href="@privacyUrl" class="nav-link fw-semibold @(isActivePriv ? "active" : "")">@Model.Privacy</a>
               </li>
               <li id="ofcanva" class="nav-item">
                 @{var isActiveContact = ViewContext.RouteData.Values["action"]?.ToString() == "Contact";}
-                  <a asp-controller="Home"
-                    asp-action="Contact"
-                    asp-route-culture="@culture"
-                    class="nav-link @(isActiveContact ? "active" : "")">
+                  <a href="@contactUrl" class="nav-link @(isActiveContact ? "active" : "")">
                       @Model.Contact
                   </a>
               </li>

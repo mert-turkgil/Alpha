@@ -450,12 +450,12 @@
                                         </span>
                                     </div>
 
+                                    @{
+                                        var blogUrl = $"/{culture}/blog/{blog.BlogId}/{slug}";
+                                    }
+
                                     <h5 class="blog-title">
-                                        <a asp-controller="Home"
-                                           asp-action="BlogDetails"
-                                           asp-route-culture="@culture"
-                                           asp-route-id="@blog.BlogId"
-                                           asp-route-slug="@slug">
+                                        <a href="@blogUrl">
                                             @blog.Title
                                         </a>
                                     </h5>
@@ -471,12 +471,7 @@
                                         }
                                     </div>
 
-                                    <a asp-controller="Home"
-                                       asp-action="BlogDetails"
-                                       asp-route-culture="@culture"
-                                       asp-route-id="@blog.BlogId"
-                                       asp-route-slug="@slug"
-                                       class="btn-blog-read">
+                                    <a href="@blogUrl" class="btn-blog-read">
                                         <i class="fas fa-book-open"></i>
                                         @Model.BlogList_ReadMore
                                     </a>

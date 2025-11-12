@@ -230,17 +230,8 @@ using (var scope = app.Services.CreateScope())
 #endregion
 
 #region AppMiddleware
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path == "/")
-    {
-        var defaultCulture = "tr"; // veya "en"
-        context.Response.Redirect($"/{defaultCulture}");
-        return;
-    }
-
-    await next();
-});
+// Use custom middleware for culture detection and redirection
+app.UseMiddleware<Alpha.Middleware.CultureRedirectMiddleware>();
 var ckLicenseKey = builder.Configuration["CKEditor:LicenseKey"];
 
 app.Use(async (context, next) =>
@@ -261,41 +252,188 @@ app.MapControllerRoute(
     name: "sitemap",
     pattern: "sitemap.xml",
     defaults: new { controller = "Sitemap", action = "Index" });
-    
+
+// Product routes - keep URL slugs as-is (they're already in DB)
 app.MapControllerRoute(
-    name: "localized_product",
-    pattern: "{culture}/urun/{id}/{slug?}",
-    defaults: new { controller = "Home", action = "ProductDetail" });
+    name: "localized_product_tr",
+    pattern: "tr/urun/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "ProductDetail", culture = "tr" });
 
 app.MapControllerRoute(
-    name: "localized_services",
-    pattern: "{culture}/hizmetler",
-    defaults: new { controller = "Home", action = "Services" });
+    name: "localized_product_en",
+    pattern: "en/product/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "ProductDetail", culture = "en" });
 
 app.MapControllerRoute(
-    name: "localized_blog_detail",
-    pattern: "{culture}/blog/{id}/{slug?}",
-    defaults: new { controller = "Home", action = "BlogDetails" });
+    name: "localized_product_de",
+    pattern: "de/produkt/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "ProductDetail", culture = "de" });
 
 app.MapControllerRoute(
-    name: "localized_blog",
-    pattern: "{culture}/blog",
-    defaults: new { controller = "Home", action = "Blog" });
+    name: "localized_product_fr",
+    pattern: "fr/produit/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "ProductDetail", culture = "fr" });
 
 app.MapControllerRoute(
-    name: "localized_contact",
-    pattern: "{culture}/contact",
-    defaults: new { controller = "Home", action = "Contact" });
+    name: "localized_product_ar",
+    pattern: "ar/product/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "ProductDetail", culture = "ar" });
+
+// Services routes - translated
+app.MapControllerRoute(
+    name: "localized_services_tr",
+    pattern: "tr/hizmetlerimiz",
+    defaults: new { controller = "Home", action = "Services", culture = "tr" });
 
 app.MapControllerRoute(
-    name: "localized_about",
-    pattern: "{culture}/about", 
-    defaults: new { controller = "Home", action = "About" });
+    name: "localized_services_en",
+    pattern: "en/services",
+    defaults: new { controller = "Home", action = "Services", culture = "en" });
 
 app.MapControllerRoute(
-    name: "localized_privacy",
-    pattern: "{culture}/privacy", 
-    defaults: new { controller = "Home", action = "Privacy" });
+    name: "localized_services_de",
+    pattern: "de/dienstleistungen",
+    defaults: new { controller = "Home", action = "Services", culture = "de" });
+
+app.MapControllerRoute(
+    name: "localized_services_fr",
+    pattern: "fr/services",
+    defaults: new { controller = "Home", action = "Services", culture = "fr" });
+
+app.MapControllerRoute(
+    name: "localized_services_ar",
+    pattern: "ar/services",
+    defaults: new { controller = "Home", action = "Services", culture = "ar" });
+
+// Blog detail routes - keep URL slugs as-is
+app.MapControllerRoute(
+    name: "localized_blog_detail_tr",
+    pattern: "tr/blog/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "BlogDetails", culture = "tr" });
+
+app.MapControllerRoute(
+    name: "localized_blog_detail_en",
+    pattern: "en/blog/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "BlogDetails", culture = "en" });
+
+app.MapControllerRoute(
+    name: "localized_blog_detail_de",
+    pattern: "de/blog/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "BlogDetails", culture = "de" });
+
+app.MapControllerRoute(
+    name: "localized_blog_detail_fr",
+    pattern: "fr/blog/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "BlogDetails", culture = "fr" });
+
+app.MapControllerRoute(
+    name: "localized_blog_detail_ar",
+    pattern: "ar/blog/{id}/{slug?}",
+    defaults: new { controller = "Home", action = "BlogDetails", culture = "ar" });
+
+// Blog list routes
+app.MapControllerRoute(
+    name: "localized_blog_tr",
+    pattern: "tr/blog",
+    defaults: new { controller = "Home", action = "Blog", culture = "tr" });
+
+app.MapControllerRoute(
+    name: "localized_blog_en",
+    pattern: "en/blog",
+    defaults: new { controller = "Home", action = "Blog", culture = "en" });
+
+app.MapControllerRoute(
+    name: "localized_blog_de",
+    pattern: "de/blog",
+    defaults: new { controller = "Home", action = "Blog", culture = "de" });
+
+app.MapControllerRoute(
+    name: "localized_blog_fr",
+    pattern: "fr/blog",
+    defaults: new { controller = "Home", action = "Blog", culture = "fr" });
+
+app.MapControllerRoute(
+    name: "localized_blog_ar",
+    pattern: "ar/blog",
+    defaults: new { controller = "Home", action = "Blog", culture = "ar" });
+
+// Contact routes - translated
+app.MapControllerRoute(
+    name: "localized_contact_tr",
+    pattern: "tr/iletisim",
+    defaults: new { controller = "Home", action = "Contact", culture = "tr" });
+
+app.MapControllerRoute(
+    name: "localized_contact_en",
+    pattern: "en/contact",
+    defaults: new { controller = "Home", action = "Contact", culture = "en" });
+
+app.MapControllerRoute(
+    name: "localized_contact_de",
+    pattern: "de/kontakt",
+    defaults: new { controller = "Home", action = "Contact", culture = "de" });
+
+app.MapControllerRoute(
+    name: "localized_contact_fr",
+    pattern: "fr/contact",
+    defaults: new { controller = "Home", action = "Contact", culture = "fr" });
+
+app.MapControllerRoute(
+    name: "localized_contact_ar",
+    pattern: "ar/contact",
+    defaults: new { controller = "Home", action = "Contact", culture = "ar" });
+
+// About routes - translated
+app.MapControllerRoute(
+    name: "localized_about_tr",
+    pattern: "tr/hakkimizda",
+    defaults: new { controller = "Home", action = "About", culture = "tr" });
+
+app.MapControllerRoute(
+    name: "localized_about_en",
+    pattern: "en/about",
+    defaults: new { controller = "Home", action = "About", culture = "en" });
+
+app.MapControllerRoute(
+    name: "localized_about_de",
+    pattern: "de/uber-uns",
+    defaults: new { controller = "Home", action = "About", culture = "de" });
+
+app.MapControllerRoute(
+    name: "localized_about_fr",
+    pattern: "fr/a-propos",
+    defaults: new { controller = "Home", action = "About", culture = "fr" });
+
+app.MapControllerRoute(
+    name: "localized_about_ar",
+    pattern: "ar/about",
+    defaults: new { controller = "Home", action = "About", culture = "ar" });
+
+// Privacy routes - translated
+app.MapControllerRoute(
+    name: "localized_privacy_tr",
+    pattern: "tr/gizlilik",
+    defaults: new { controller = "Home", action = "Privacy", culture = "tr" });
+
+app.MapControllerRoute(
+    name: "localized_privacy_en",
+    pattern: "en/privacy",
+    defaults: new { controller = "Home", action = "Privacy", culture = "en" });
+
+app.MapControllerRoute(
+    name: "localized_privacy_de",
+    pattern: "de/datenschutz",
+    defaults: new { controller = "Home", action = "Privacy", culture = "de" });
+
+app.MapControllerRoute(
+    name: "localized_privacy_fr",
+    pattern: "fr/confidentialite",
+    defaults: new { controller = "Home", action = "Privacy", culture = "fr" });
+
+app.MapControllerRoute(
+    name: "localized_privacy_ar",
+    pattern: "ar/privacy",
+    defaults: new { controller = "Home", action = "Privacy", culture = "ar" });
 
 app.MapControllerRoute(
     name: "admin",
