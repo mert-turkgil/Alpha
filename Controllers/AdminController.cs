@@ -108,10 +108,33 @@ public class AdminController : Controller
 
         try
         {
-            // Handle image uploads
-            carousel.CarouselImage = model.CarouselImage != null ? await SaveFile(model.CarouselImage) : string.Empty;
-            carousel.CarouselImage600w = model.CarouselImage600w != null ? await SaveFile(model.CarouselImage600w) : string.Empty;
-            carousel.CarouselImage1200w = model.CarouselImage1200w != null ? await SaveFile(model.CarouselImage1200w) : string.Empty;
+            // Handle image uploads with validation
+            if (model.CarouselImage != null)
+            {
+                carousel.CarouselImage = await ValidateImageAndSave(model.CarouselImage, "CarouselImage");
+                if (carousel.CarouselImage == null)
+                {
+                    return View(model); // Validation failed
+                }
+            }
+
+            if (model.CarouselImage600w != null)
+            {
+                carousel.CarouselImage600w = await ValidateImageAndSave(model.CarouselImage600w, "CarouselImage600w");
+                if (carousel.CarouselImage600w == null)
+                {
+                    return View(model); // Validation failed
+                }
+            }
+
+            if (model.CarouselImage1200w != null)
+            {
+                carousel.CarouselImage1200w = await ValidateImageAndSave(model.CarouselImage1200w, "CarouselImage1200w");
+                if (carousel.CarouselImage1200w == null)
+                {
+                    return View(model); // Validation failed
+                }
+            }
 
             // Save to database and retrieve entity with assigned ID
             carousel = await _carouselRepository.CreateAndReturn(carousel);
@@ -202,9 +225,9 @@ public class AdminController : Controller
             CarouselLinkTextFR = GetTranslation($"Carousel_{carousel.CarouselId}_LinkText", "fr-FR", carousel.CarouselLinkText),
 
             // AR Translations
-            CarouselTitleAR = GetTranslation($"Carousel_{id}_Title", "ar-SA", carousel.CarouselTitle),
-            CarouselDescriptionAR = GetTranslation($"Carousel_{id}_Description", "ar-SA", carousel.CarouselDescription),
-            CarouselLinkTextAR = GetTranslation($"Carousel_{id}_LinkText", "ar-SA", carousel.CarouselLinkText),
+            CarouselTitleAR = GetTranslation($"Carousel_{carousel.CarouselId}_Title", "ar-SA", carousel.CarouselTitle),
+            CarouselDescriptionAR = GetTranslation($"Carousel_{carousel.CarouselId}_Description", "ar-SA", carousel.CarouselDescription),
+            CarouselLinkTextAR = GetTranslation($"Carousel_{carousel.CarouselId}_LinkText", "ar-SA", carousel.CarouselLinkText),
         };
 
         Console.WriteLine("[INFO] Loaded carousel and translations successfully.");
@@ -325,40 +348,102 @@ public class AdminController : Controller
     // Helper method for image validation and saving
     private async Task<string> ValidateAndSaveImage(IFormFile image, string existingImagePath, string imageType)
     {
-        if (image == null) return existingImagePath;  // No new image uploaded, return the existing one.
+        if (image == null || image.Length == 0)
+        {
+            Console.WriteLine($"[INFO] No new {imageType} uploaded, keeping existing: {existingImagePath}");
+            return existingImagePath;  // No new image uploaded, return the existing one.
+        }
 
         // Validate image format and size
         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
         var fileExtension = Path.GetExtension(image.FileName).ToLower();
 
-        if (!allowedExtensions.Contains(fileExtension) || image.Length > 2 * 1024 * 1024)
+        if (!allowedExtensions.Contains(fileExtension))
         {
-            ModelState.AddModelError(imageType, "Invalid image format or size.");
+            Console.WriteLine($"[ERROR] Invalid file extension for {imageType}: {fileExtension}");
+            ModelState.AddModelError(imageType, "Invalid image format. Allowed: .jpg, .jpeg, .png, .gif");
             return existingImagePath;
+        }
+
+        if (image.Length > 2 * 1024 * 1024)
+        {
+            Console.WriteLine($"[ERROR] File too large for {imageType}: {image.Length} bytes");
+            ModelState.AddModelError(imageType, "Image size must be less than 2MB.");
+            return existingImagePath;
+        }
+
+        // Delete old image if it exists (before saving new one)
+        if (!string.IsNullOrEmpty(existingImagePath))
+        {
+            // Remove leading slash and "img/" if present
+            var cleanPath = existingImagePath.TrimStart('/').Replace("img/", "");
+            var oldImagePath = Path.Combine(_env.WebRootPath, "img", cleanPath);
+            
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                try
+                {
+                    System.IO.File.Delete(oldImagePath);
+                    Console.WriteLine($"[INFO] Deleted old {imageType} image: {oldImagePath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[WARN] Could not delete old {imageType}: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"[WARN] Old {imageType} not found at: {oldImagePath}");
+            }
         }
 
         // Save new image
         string newImagePath = await SaveFile(image);
-
-        // Delete old image if it exists
-        if (!string.IsNullOrEmpty(existingImagePath))
-        {
-            var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", existingImagePath);
-            if (System.IO.File.Exists(oldImagePath))
-            {
-                System.IO.File.Delete(oldImagePath);
-                Console.WriteLine($"[INFO] Deleted old {imageType} image: {oldImagePath}");
-            }
-        }
-
-        Console.WriteLine($"[INFO] Updated {imageType} image path: {newImagePath}");
+        Console.WriteLine($"[INFO] Saved new {imageType} image: {newImagePath}");
         return newImagePath;
     }
+
+    // Helper method for validating and saving NEW images (for Create operations)
+    private async Task<string?> ValidateImageAndSave(IFormFile image, string imageType)
+    {
+        if (image == null || image.Length == 0)
+        {
+            Console.WriteLine($"[INFO] No {imageType} provided.");
+            return string.Empty;
+        }
+
+        // Validate image format and size
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+        var fileExtension = Path.GetExtension(image.FileName).ToLower();
+
+        if (!allowedExtensions.Contains(fileExtension))
+        {
+            Console.WriteLine($"[ERROR] Invalid file extension for {imageType}: {fileExtension}");
+            ModelState.AddModelError(imageType, "Invalid image format. Allowed: .jpg, .jpeg, .png, .gif");
+            return null;
+        }
+
+        if (image.Length > 2 * 1024 * 1024)
+        {
+            Console.WriteLine($"[ERROR] File too large for {imageType}: {image.Length} bytes");
+            ModelState.AddModelError(imageType, "Image size must be less than 2MB.");
+            return null;
+        }
+
+        // Save the image
+        string imagePath = await SaveFile(image);
+        Console.WriteLine($"[INFO] Validated and saved new {imageType} image: {imagePath}");
+        return imagePath;
+    }
+
     private void DeleteFile(string filePath, string fileType)
     {
         if (!string.IsNullOrEmpty(filePath))
         {
-            var fullPath = Path.Combine(_env.WebRootPath, "img", filePath.TrimStart('/'));
+            // Clean the path - remove leading slash and "img/" prefix if present
+            var cleanPath = filePath.TrimStart('/').Replace("img/", "");
+            var fullPath = Path.Combine(_env.WebRootPath, "img", cleanPath);
+            
             if (System.IO.File.Exists(fullPath))
             {
                 try
@@ -390,13 +475,18 @@ public class AdminController : Controller
         var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
         var filePath = Path.Combine(uploadsFolder, fileName);
 
+        // Create directory if it doesn't exist
         Directory.CreateDirectory(uploadsFolder);
+        
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
             await file.CopyToAsync(stream);
         }
 
-        return $"{fileName}";
+        Console.WriteLine($"[INFO] File saved successfully: {fileName}");
+        
+        // Return just the filename (database stores relative path)
+        return fileName;
     }
 
     #endregion
